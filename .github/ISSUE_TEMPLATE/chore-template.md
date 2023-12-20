@@ -1,8 +1,8 @@
 ---
 name: Chore Template
 about: Describe this issue template's purpose here.
-title: ''
-labels: good first issue
+title: 'chore : '
+labels: chore
 assignees: ''
 
 ---

@@ -1,8 +1,8 @@
 ---
 name: Refactor Template
 about: Describe this issue template's purpose here.
-title: ''
-labels: invalid
+title: 'refactor : '
+labels: refactor
 assignees: ''
 
 ---
