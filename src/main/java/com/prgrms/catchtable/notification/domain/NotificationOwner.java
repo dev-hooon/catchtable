@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.owner.domain.Owner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity
-public class NotificationOwner {
+public class NotificationOwner extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
