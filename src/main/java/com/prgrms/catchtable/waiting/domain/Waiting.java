@@ -30,8 +30,8 @@ public class Waiting extends BaseEntity {
     @Column(name = "waiting_id")
     private Long id;
 
-    @Column(name = "rank")
-    private int rank;
+    @Column(name = "waiting_number")
+    private int waitingNumber;
 
     @Column(name = "people_count")
     private int peopleCount;
@@ -48,8 +48,8 @@ public class Waiting extends BaseEntity {
     private Shop shop;
 
     @Builder
-    public Waiting(int rank, int peopleCount) {
-        this.rank = rank;
+    public Waiting(int waitingNumber, int peopleCount) {
+        this.waitingNumber = waitingNumber;
         this.peopleCount = peopleCount;
         this.delayRemainingCount = 2;
     }
