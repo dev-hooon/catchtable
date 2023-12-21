@@ -38,6 +38,5 @@ public class NotificationMember {
     public NotificationMember(String message, Member member) {
         this.message = message;
         this.member = member;
-        member.getNotificationMemberList().add(this);
     }
 }

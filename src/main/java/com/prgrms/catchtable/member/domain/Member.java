@@ -1,19 +1,15 @@
 package com.prgrms.catchtable.member.domain;
 
-import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.prgrms.catchtable.notification.domain.NotificationMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,9 +39,6 @@ public class Member {
 
     @Column(name = "notification_activated")
     private boolean notification_activated;
-
-    @OneToMany(mappedBy = "member", cascade = REMOVE, orphanRemoval = true)
-    private List<NotificationMember> notificationMemberList;
 
     @Builder
     public Member(String name, String phoneNumber, Gender gender, LocalDate dateBirth,
