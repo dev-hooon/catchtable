@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.common;
+package com.prgrms.catchtable.common.restdocs;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
