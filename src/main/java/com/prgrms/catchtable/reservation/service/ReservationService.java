@@ -1,7 +1,11 @@
 package com.prgrms.catchtable.reservation.service;
 
-import com.prgrms.catchtable.reservation.dto.request.CreateResercationRequest;
-import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
+
+import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.ValidateReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -16,22 +20,35 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ShopRepository shopRepository;
+
     @Transactional
-    public CreateReservationResponse createReservation(Long shopId, CreateResercationRequest request) {
+    public ValidateReservationResponse validateReservationIsPossible(Long shopId,
+        CreateReservationRequest request) {
         LocalDateTime requestedReservationTime = request.date();
         int requestedPeopleCount = request.peopleCount();
 
         Shop shop = shopRepository.findById(shopId).orElseThrow();
-        /**
-         * 해당 shop의 예약하려는 날짜와 시간이 비어있는 지 확인하는 로직
-         * reservationTime = select rt from Shop s join ReservationTime rt where rt.time = :time;
-         * reservationTime.isOccupied == true? -> 이미 예약되어있다는 예외 발생
-         * reservationTime.isPreOccupied == true? -> 타인이 예약중이라는 예외 발생
-         * 선점권 스케줄러 실행
-         */
+        //예제 데이터
+        ReservationTime reservationTime = ReservationTime.builder()
+            .time(request.date())
+            .build();
+        Reservation reservation = Reservation.builder()
+            .status(COMPLETED)
+            .peopleCount(request.peopleCount())
+            .build();
 
-        // 퍼사드를 따로 빼서 이 프로세스가 끝나면 비동기 이벤트가 수행되게 해보자
-        // 퍼사드에서 이 서비스 실행 로직 , 그리고 이벤트 발행
-        return new CreateReservationResponse(shop.getName(), "member", requestedReservationTime, requestedPeopleCount);
+        if (reservationTime.isPreOccupied()) {
+            throw new RuntimeException("타인에게 선점권이 있음");
+        }
+        if (reservationTime.isOccupied()) {
+            throw new RuntimeException("이미 예약된 시간임");
+        }
+
+        reservation.insertReservvationTime(reservationTime);
+        reservation.insertShop(shop);
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        return new ValidateReservationResponse(savedReservation.getShop().getName(), savedReservation.getTime());
     }
 }
