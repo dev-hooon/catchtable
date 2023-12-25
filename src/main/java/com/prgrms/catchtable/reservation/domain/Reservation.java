@@ -57,7 +57,7 @@ public class Reservation extends BaseEntity {
         this.peopleCount = peopleCount;
     }
 
-    public void insertReservvationTime(ReservationTime reservationTime){
+    public void insertReservvationTime(ReservationTime reservationTime) {
         this.time = reservationTime;
     }
 

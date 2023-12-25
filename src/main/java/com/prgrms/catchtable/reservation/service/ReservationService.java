@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.reservation.service;
 
-import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
@@ -49,6 +49,7 @@ public class ReservationService {
 
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        return new ValidateReservationResponse(savedReservation.getShop().getName(), savedReservation.getTime());
+        return new ValidateReservationResponse(savedReservation.getShop().getName(),
+            savedReservation.getTime());
     }
 }
