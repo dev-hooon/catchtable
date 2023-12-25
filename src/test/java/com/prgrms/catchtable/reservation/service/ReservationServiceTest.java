@@ -50,7 +50,8 @@ class ReservationServiceTest {
         ValidateReservationResponse response = reservationService.validateReservationIsPossible(
             shop.getId(), createReservationRequest);
         assertAll(
-            () -> assertThat(response.reservationTime().getTime()).isEqualTo(createReservationRequest.date()),
+            () -> assertThat(response.reservationTime().getTime()).isEqualTo(
+                createReservationRequest.date()),
             () -> assertThat(response.shopName()).isEqualTo(shop.getName())
         );
     }

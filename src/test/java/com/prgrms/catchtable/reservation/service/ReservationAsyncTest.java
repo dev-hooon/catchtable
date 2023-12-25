@@ -6,8 +6,6 @@ import com.prgrms.catchtable.common.data.reservation.ReservationData;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
