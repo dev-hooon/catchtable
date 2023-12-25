@@ -56,4 +56,12 @@ public class Reservation extends BaseEntity {
         this.status = status;
         this.peopleCount = peopleCount;
     }
+
+    public void insertReservvationTime(ReservationTime reservationTime){
+        this.time = reservationTime;
+    }
+
+    public void insertShop(Shop shop) {
+        this.shop = shop;
+    }
 }
