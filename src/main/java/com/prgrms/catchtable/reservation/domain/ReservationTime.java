@@ -46,4 +46,12 @@ public class ReservationTime {
         this.time = time;
         this.isOccupied = false;
     }
+
+    public void reverseOccupied(){
+        this.isOccupied = !this.isOccupied;
+    }
+
+    public void reversePreOccupied(){
+        this.isPreOccupied = !this.isPreOccupied;
+    }
 }
