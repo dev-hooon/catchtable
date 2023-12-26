@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.member.service;
 
+import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.dto.MemberMapper;
 import com.prgrms.catchtable.member.repository.MemberRepository;
@@ -15,8 +17,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Transactional
-    public void oauthLogin(OAuthAttribute attributes) {
+    public Token oauthLogin(OAuthAttribute attributes) {
         String email = attributes.getEmail();
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);
 
@@ -25,7 +29,6 @@ public class MemberService {
             memberRepository.save(entity);
         }
 
-        //JWT 토큰 생성 & 반환
+        return jwtTokenProvider.createToken(email);
     }
-
 }
