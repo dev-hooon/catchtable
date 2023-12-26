@@ -1,5 +1,8 @@
 package com.prgrms.catchtable.security.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.service.MemberService;
 import com.prgrms.catchtable.security.dto.OAuthAttribute;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,11 +31,22 @@ public class CustomOAuth2SuccessHandler extends SavedRequestAwareAuthenticationS
 
             OAuthAttribute oAuthAttribute = OAuthAttribute.of(oauth2User, provider);
 
-            //JWT 토큰 함께 발급
-            memberService.oauthLogin(oAuthAttribute);
+            Token token = memberService.oauthLogin(oAuthAttribute);
 
-            //JWT 토큰을 Json으로 전달
-
+            sendTokenJson(response, tokenToJson(token));
         }
     }
+
+    public String tokenToJson(Token token) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(token);
+    }
+
+    private void sendTokenJson(HttpServletResponse response, String tokenJson) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setContentLength(tokenJson.getBytes().length);
+        response.getWriter().write(tokenJson);
+    }
+
+
 }
