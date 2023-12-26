@@ -4,6 +4,7 @@ import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
 import com.prgrms.catchtable.jwt.token.Token;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,4 +30,9 @@ public class RefreshTokenService {
         refreshTokenRepository.save(newRefreshToken);
     }
 
+    @Transactional(readOnly = true)
+    public RefreshToken getRefreshTokenByToken(String refreshToken){
+        return refreshTokenRepository.findRefreshTokenByToken(refreshToken)
+            .orElseThrow(() -> new UsernameNotFoundException("Not Found RefreshToken"));
+    }
 }

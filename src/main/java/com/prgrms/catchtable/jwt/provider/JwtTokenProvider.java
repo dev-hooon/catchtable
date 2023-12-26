@@ -2,12 +2,17 @@ package com.prgrms.catchtable.jwt.provider;
 
 
 import com.prgrms.catchtable.jwt.config.JwtConfig;
+import com.prgrms.catchtable.jwt.service.JwtUserDetailsService;
 import com.prgrms.catchtable.jwt.token.Token;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +20,8 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
 
     private final JwtConfig jwtConfig;
+
+    private final JwtUserDetailsService jwtUserDetailsService;
 
     public Token createToken(String email) {
 
@@ -25,7 +32,6 @@ public class JwtTokenProvider {
         String refreshToken = createRefreshToken(claims, now);
 
         return new Token(accessToken, refreshToken, email);
-
     }
 
     private String createAccessToken(Claims claims, Date now) {
@@ -51,4 +57,33 @@ public class JwtTokenProvider {
             .compact();
     }
 
+    public boolean validateToken(String token) {
+        try{
+            Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtConfig.getClientSecret())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+            return claims.getExpiration().after(new Date());
+        } catch(JwtException je){
+            return false;
+        }
+    }
+
+    public Authentication getAuthentication(String token){
+        String email = getEmail(token);
+        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    private String getEmail(String token){
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(jwtConfig.getClientSecret())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        return claims.getSubject();
+    }
 }
