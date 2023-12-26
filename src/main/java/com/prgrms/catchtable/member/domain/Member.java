@@ -28,6 +28,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -42,12 +45,12 @@ public class Member extends BaseEntity {
     private boolean notification_activated;
 
     @Builder
-    public Member(String name, String phoneNumber, Gender gender, LocalDate dateBirth,
-        boolean notification_activated) {
+    public Member(String name, String email, String phoneNumber, Gender gender, LocalDate dateBirth) {
         this.name = name;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.dateBirth = dateBirth;
-        this.notification_activated = notification_activated;
+        this.notification_activated = true;
     }
 }
