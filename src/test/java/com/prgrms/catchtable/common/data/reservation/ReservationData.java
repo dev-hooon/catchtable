@@ -2,6 +2,7 @@ package com.prgrms.catchtable.common.data.reservation;
 
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 
+import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -13,17 +14,29 @@ public class ReservationData {
         return Reservation.builder()
             .status(COMPLETED)
             .peopleCount(4)
+            .reservationTime(getReservationTimeNotPreOccupied())
             .build();
     }
 
-    public static ReservationTime getReservationTime() {
-        return ReservationTime.builder()
-            .time(LocalDateTime.of(2023, 12, 31, 19, 30))
+    public static ReservationTime getReservationTimeNotPreOccupied() {
+        ReservationTime reservationTime = ReservationTime.builder()
+            .time(LocalDateTime.of(2024, 12, 31, 19, 30))
             .build();
+        reservationTime.insertShop(ShopData.getShop());
+        return reservationTime;
+    }
+
+    public static ReservationTime getReservationTimePreOccupied() {
+        ReservationTime reservationTime = ReservationTime.builder()
+            .time(LocalDateTime.of(2024, 12, 31, 19, 30))
+            .build();
+        reservationTime.insertShop(ShopData.getShop());
+        reservationTime.reversePreOccupied();
+        return reservationTime;
     }
 
     public static CreateReservationRequest getCreateReservationRequest() {
-        return new CreateReservationRequest(LocalDateTime.of(2023, 12, 31, 19, 30), 5);
+        return new CreateReservationRequest(1L, 4);
     }
 
 }
