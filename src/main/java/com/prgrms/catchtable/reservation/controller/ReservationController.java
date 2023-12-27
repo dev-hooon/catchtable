@@ -1,11 +1,11 @@
 package com.prgrms.catchtable.reservation.controller;
 
+import com.prgrms.catchtable.facade.ReservationFacade;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
-import com.prgrms.catchtable.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationFacade reservationFacade;
 
-    @GetMapping("/{shopId}")
-    public CreateReservationResponse createReservationResponse(
-        @PathVariable("shopId") Long shopId,
+    @PostMapping
+    public ResponseEntity<CreateReservationResponse> createReservationResponse(
         CreateReservationRequest request) {
-        return null;
+        return ResponseEntity.ok(reservationFacade.preOccupyReservation(request));
     }
 }
