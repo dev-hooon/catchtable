@@ -8,7 +8,6 @@ import static lombok.AccessLevel.PROTECTED;
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -47,7 +46,7 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "shop_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shop shop;
-    
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "reservation_time_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ReservationTime reservationTime;
