@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
                 }
             }
         }
+        chain.doFilter(request, response);
     }
 
     private void setAuthentication(String accessToken) {
