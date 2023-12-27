@@ -55,7 +55,7 @@ public class ReservationTime {
         this.isPreOccupied = !this.isPreOccupied;
     }
 
-    public void insertShop(Shop shop){
+    public void insertShop(Shop shop) {
         this.shop = shop;
     }
 }

@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.facade;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +11,6 @@ import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.service.ReservationAsync;
 import com.prgrms.catchtable.reservation.service.ReservationService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,11 +30,12 @@ class ReservationFacadeTest {
 
     @Test
     @DisplayName("예약을 검증하고 선점권을 true로 바꾸는 것에 성공한다.")
-    void preOccupyReservation(){
+    void preOccupyReservation() {
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         CreateReservationRequest request = ReservationData.getCreateReservationRequest();
 
-        when(reservationService.validateReservationAndSave(any(CreateReservationRequest.class))).thenReturn(reservationTime);
+        when(reservationService.validateReservationAndSave(
+            any(CreateReservationRequest.class))).thenReturn(reservationTime);
 
         CreateReservationResponse response = reservationFacade.preOccupyReservation(
             request);

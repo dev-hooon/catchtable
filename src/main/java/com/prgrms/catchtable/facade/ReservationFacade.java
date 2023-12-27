@@ -15,7 +15,7 @@ public class ReservationFacade {
     private final ReservationService reservationService;
     private final ReservationAsync reservationAsync;
 
-    public CreateReservationResponse preOccupyReservation (
+    public CreateReservationResponse preOccupyReservation(
         CreateReservationRequest request) {
         ReservationTime reservationTime = reservationService.validateReservationAndSave(
             request);

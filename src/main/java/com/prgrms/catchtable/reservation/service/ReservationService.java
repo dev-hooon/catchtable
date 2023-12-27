@@ -7,9 +7,7 @@ import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
-import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
-import com.prgrms.catchtable.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,8 @@ public class ReservationService {
 
     @Transactional
     public ReservationTime validateReservationAndSave(CreateReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.reservationTimeId())
+        ReservationTime reservationTime = reservationTimeRepository.findById(
+                request.reservationTimeId())
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
         if (reservationTime.isPreOccupied()) {
