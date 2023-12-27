@@ -47,8 +47,8 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "shop_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shop shop;
-
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "reservation_time_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ReservationTime reservationTime;
 
