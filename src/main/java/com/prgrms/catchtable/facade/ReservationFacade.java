@@ -24,8 +24,12 @@ public class ReservationFacade {
 
         reservationAsync.setPreOcuppied(reservationTime);
 
-        return new CreateReservationResponse(shopName, "memberA", reservationTime.getTime(),
-            request.peopleCount());
+        return CreateReservationResponse.builder()
+            .shopName(shopName)
+            .memberName("memberA")
+            .date(reservationTime.getTime())
+            .peopleCount(request.peopleCount())
+            .build();
     }
 
 }

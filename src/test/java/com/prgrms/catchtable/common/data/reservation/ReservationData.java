@@ -36,7 +36,10 @@ public class ReservationData {
     }
 
     public static CreateReservationRequest getCreateReservationRequest() {
-        return new CreateReservationRequest(1L, 4);
+        return CreateReservationRequest.builder()
+            .reservationTimeId(1L)
+            .peopleCount(4)
+            .build();
     }
 
 }
