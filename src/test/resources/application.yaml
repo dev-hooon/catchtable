@@ -17,16 +17,16 @@ spring:
             client-name: kakao
             client-id: e3a7bd1f8c24fe6a0c9d56789213abef
             client-secret: QWu9hBgFzT1nRc3mXxNvLpK4aD7Jg0Vf
-             redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
-             authorization-grant-type: authorization_code
-             client-authentication-method: client_secret_post
-             scope:
-               - account_email
-               - profile_nickname
-               - gender
-               - birthday
-               - phone_number
-               - birthyear
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - account_email
+              - profile_nickname
+              - gender
+              - birthday
+              - phone_number
+              - birthyear
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
