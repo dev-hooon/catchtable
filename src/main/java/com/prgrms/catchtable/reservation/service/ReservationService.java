@@ -1,15 +1,15 @@
 package com.prgrms.catchtable.reservation.service;
 
-import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
+import static com.prgrms.catchtable.common.exception.ErrorCode.IS_PRE_OCCUPIED;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
 
-import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
-import com.prgrms.catchtable.reservation.dto.response.ValidateReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
-import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,38 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
-    private final ShopRepository shopRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional
-    public ValidateReservationResponse validateReservationIsPossible(Long shopId,
-        CreateReservationRequest request) {
-        LocalDateTime requestedReservationTime = request.date();
-        int requestedPeopleCount = request.peopleCount();
-
-        Shop shop = shopRepository.findById(shopId).orElseThrow();
-        //예제 데이터
-        ReservationTime reservationTime = ReservationTime.builder()
-            .time(request.date())
-            .build();
-        Reservation reservation = Reservation.builder()
-            .status(COMPLETED)
-            .peopleCount(request.peopleCount())
-            .build();
+    public ReservationTime validateReservationAndSave(CreateReservationRequest request) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.reservationTimeId())
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
         if (reservationTime.isPreOccupied()) {
-            throw new RuntimeException("타인에게 선점권이 있음");
-        }
-        if (reservationTime.isOccupied()) {
-            throw new RuntimeException("이미 예약된 시간임");
+            throw new BadRequestCustomException(IS_PRE_OCCUPIED);
         }
 
-        reservation.insertReservvationTime(reservationTime);
-        reservation.insertShop(shop);
-
-        Reservation savedReservation = reservationRepository.save(reservation);
-
-        return new ValidateReservationResponse(savedReservation.getShop().getName(),
-            savedReservation.getTime());
+        return reservationTime;
     }
 }
