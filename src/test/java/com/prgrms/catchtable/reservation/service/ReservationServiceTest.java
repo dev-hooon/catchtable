@@ -2,17 +2,14 @@ package com.prgrms.catchtable.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.prgrms.catchtable.common.data.reservation.ReservationData;
-import com.prgrms.catchtable.common.data.shop.ShopData;
-import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
-import com.prgrms.catchtable.reservation.dto.response.ValidateReservationResponse;
-import com.prgrms.catchtable.reservation.repository.ReservationRepository;
-import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.repository.ShopRepository;
+import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,33 +23,47 @@ import org.springframework.test.util.ReflectionTestUtils;
 class ReservationServiceTest {
 
     @Mock
-    private ReservationRepository reservationRepository;
-    @Mock
-    private ShopRepository shopRepository;
+    private ReservationTimeRepository reservationTimeRepository;
     @InjectMocks
     private ReservationService reservationService;
 
     @Test
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
     void validateReservation() {
-        Reservation reservation = ReservationData.getReservation();
-        CreateReservationRequest createReservationRequest = ReservationData.getCreateReservationRequest();
-        Shop shop = ShopData.getShop();
+        //given
+        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
+        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReflectionTestUtils.setField(reservationTime, "id", 1L);
 
-        reservation.insertShop(shop);
-        reservation.insertReservvationTime(ReservationData.getReservationTime());
+        when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
 
-        ReflectionTestUtils.setField(shop, "id", 1L);
+        //when
+        ReservationTime savedReservationTime = reservationService.validateReservationAndSave(
+            request);
 
-        when(shopRepository.findById(any(Long.class))).thenReturn(Optional.of(shop));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-
-        ValidateReservationResponse response = reservationService.validateReservationIsPossible(
-            shop.getId(), createReservationRequest);
+        //then
         assertAll(
-            () -> assertThat(response.reservationTime().getTime()).isEqualTo(
-                createReservationRequest.date()),
-            () -> assertThat(response.shopName()).isEqualTo(shop.getName())
+            () -> assertThat(savedReservationTime.getTime()).isEqualTo(reservationTime.getTime()),
+            () -> assertThat(savedReservationTime.getShop()).isEqualTo(reservationTime.getShop())
         );
+
+
+    }
+
+    @Test
+    @DisplayName("예약시간 선점권이 이미 타인에게 있는 경우 예외가 발생한다.")
+    void alreadyPreOccupied() {
+        //given
+        ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
+        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
+        ReflectionTestUtils.setField(reservationTime, "id", 1L);
+
+        when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
+
+        //when
+        assertThrows(BadRequestCustomException.class,
+            () -> reservationService.validateReservationAndSave(request));
+
+
     }
 }
