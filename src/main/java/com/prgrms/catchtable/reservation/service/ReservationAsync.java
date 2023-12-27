@@ -1,29 +1,26 @@
 package com.prgrms.catchtable.reservation.service;
 
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
-
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationAsync {
 
-    @Async
-    @Transactional(propagation = REQUIRES_NEW)
+    @Transactional
     public void setPreOcuppied(ReservationTime reservationTime) {
         reservationTime.reversePreOccupied();
 
-        try {
-            Thread.sleep(5_000);
-        } catch (InterruptedException exception) {
-            exception.printStackTrace();
-        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(reservationTime::reversePreOccupied, 10, TimeUnit.SECONDS);
 
-        reservationTime.reversePreOccupied();
+        scheduler.shutdown();
     }
-
 }
