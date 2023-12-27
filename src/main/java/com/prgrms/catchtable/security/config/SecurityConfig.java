@@ -35,7 +35,8 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler));
 
-        http.addFilterBefore(jwtAuthenticationFilter, OAuth2AuthorizationRequestRedirectFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter,
+            OAuth2AuthorizationRequestRedirectFilter.class);
 
         return http.build();
     }

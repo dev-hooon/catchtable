@@ -33,23 +33,23 @@ public class JwtAuthenticationFilter extends GenericFilter {
         String accessToken = ((HttpServletRequest) request).getHeader("AccessToken");
         String refreshToken = ((HttpServletRequest) request).getHeader("RefreshToken");
 
-        if(accessToken!=null){
+        if (accessToken != null) {
             //AccessToken 유효
-            if(jwtTokenProvider.validateToken(accessToken)){
+            if (jwtTokenProvider.validateToken(accessToken)) {
                 setAuthentication(accessToken);
             }
             //RefreshToken 유효
-            else{
-                if(jwtTokenProvider.validateToken(refreshToken)){
+            else {
+                if (jwtTokenProvider.validateToken(refreshToken)) {
                     RefreshToken refreshTokenEntity = refreshTokenService.getRefreshTokenByToken(
                         refreshToken);
                     String email = refreshTokenEntity.getEmail();
                     Token newToken = jwtTokenProvider.createToken(email);
 
-                    ((HttpServletResponse) response).setHeader("AccessToken", newToken.getAccessToken());
+                    ((HttpServletResponse) response).setHeader("AccessToken",
+                        newToken.getAccessToken());
                     setAuthentication(newToken.getAccessToken());
-                }
-                else{
+                } else {
                     throw new UsernameNotFoundException("Please Login again");
                 }
             }

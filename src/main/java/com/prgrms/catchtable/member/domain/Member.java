@@ -55,7 +55,8 @@ public class Member extends BaseEntity implements UserDetails {
     private boolean notification_activated;
 
     @Builder
-    public Member(String name, String email, String phoneNumber, Gender gender, LocalDate dateBirth) {
+    public Member(String name, String email, String phoneNumber, Gender gender,
+        LocalDate dateBirth) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

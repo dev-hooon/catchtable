@@ -15,10 +15,10 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void saveRefreshToken(Token totalToken){
+    public void saveRefreshToken(Token totalToken) {
         String email = totalToken.getEmail();
 
-        if(refreshTokenRepository.existsRefreshTokenByEmail(email)){
+        if (refreshTokenRepository.existsRefreshTokenByEmail(email)) {
             refreshTokenRepository.deleteRefreshTokenByEmail(email);
         }
 
@@ -31,7 +31,7 @@ public class RefreshTokenService {
     }
 
     @Transactional(readOnly = true)
-    public RefreshToken getRefreshTokenByToken(String refreshToken){
+    public RefreshToken getRefreshTokenByToken(String refreshToken) {
         return refreshTokenRepository.findRefreshTokenByToken(refreshToken)
             .orElseThrow(() -> new UsernameNotFoundException("Not Found RefreshToken"));
     }

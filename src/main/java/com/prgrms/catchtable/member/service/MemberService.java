@@ -35,7 +35,7 @@ public class MemberService {
         return createTotalToken(email);
     }
 
-    private Token createTotalToken(String email){
+    private Token createTotalToken(String email) {
         Token totalToken = jwtTokenProvider.createToken(email);
         refreshTokenService.saveRefreshToken(totalToken);
         return totalToken;

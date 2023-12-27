@@ -58,7 +58,7 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
-        try{
+        try {
             Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtConfig.getClientSecret())
                 .build()
@@ -66,18 +66,19 @@ public class JwtTokenProvider {
                 .getBody();
 
             return claims.getExpiration().after(new Date());
-        } catch(JwtException je){
+        } catch (JwtException je) {
             return false;
         }
     }
 
-    public Authentication getAuthentication(String token){
+    public Authentication getAuthentication(String token) {
         String email = getEmail(token);
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "",
+            userDetails.getAuthorities());
     }
 
-    private String getEmail(String token){
+    private String getEmail(String token) {
         Claims claims = Jwts.parserBuilder()
             .setSigningKey(jwtConfig.getClientSecret())
             .build()
