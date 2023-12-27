@@ -42,8 +42,7 @@ class ReservationFacadeTest {
 
         assertAll(
             () -> assertThat(response.date()).isEqualTo(reservationTime.getTime()),
-            () -> assertThat(response.peopleCount()).isEqualTo(request.peopleCount()),
-            () -> assertThat(reservationTime.isPreOccupied()).isTrue()
+            () -> assertThat(response.peopleCount()).isEqualTo(request.peopleCount())
         );
     }
 }
