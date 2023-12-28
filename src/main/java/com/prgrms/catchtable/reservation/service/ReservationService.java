@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.reservation.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.IS_PRE_OCCUPIED;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
@@ -25,7 +25,7 @@ public class ReservationService {
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
         if (reservationTime.isPreOccupied()) {
-            throw new BadRequestCustomException(IS_PRE_OCCUPIED);
+            throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
         }
 
         return reservationTime;
