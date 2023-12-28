@@ -34,6 +34,9 @@ public class ReservationTime {
     @Column(name = "is_occupied")
     private boolean isOccupied;
 
+    @Column(name = "is_pre_occupied")
+    private boolean isPreOccupied;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shop shop;
@@ -42,5 +45,17 @@ public class ReservationTime {
     public ReservationTime(LocalDateTime time) {
         this.time = time;
         this.isOccupied = false;
+    }
+
+    public void reverseOccupied() {
+        this.isOccupied = !this.isOccupied;
+    }
+
+    public void reversePreOccupied() {
+        this.isPreOccupied = !this.isPreOccupied;
+    }
+
+    public void insertShop(Shop shop) {
+        this.shop = shop;
     }
 }
