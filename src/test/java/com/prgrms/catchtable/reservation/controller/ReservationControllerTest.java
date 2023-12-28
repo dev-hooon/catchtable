@@ -44,7 +44,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     @Test
     @Transactional
     @DisplayName("선점 api 호출 시 선점권이 획득 되었다가 지정 시간 이후에 획득이 풀린다.")
-    void test() throws Exception{
+    void schedulerTest() throws Exception{
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         CreateReservationRequest request = ReservationData.getCreateReservationRequest(
