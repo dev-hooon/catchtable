@@ -52,13 +52,11 @@ public class Reservation extends BaseEntity {
     private ReservationTime reservationTime;
 
     @Builder
-    public Reservation(ReservationStatus status, int peopleCount, ReservationTime reservationTime) {
+    public Reservation(ReservationStatus status, int peopleCount, Shop shop, ReservationTime reservationTime) {
         this.status = status;
         this.peopleCount = peopleCount;
+        this.shop = shop;
         this.reservationTime = reservationTime;
     }
 
-    public void insertShop(Shop shop) {
-        this.shop = shop;
-    }
 }
