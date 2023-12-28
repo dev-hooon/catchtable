@@ -49,11 +49,15 @@ public class Reservation extends BaseEntity {
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "reservation_time_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private ReservationTime time;
+    private ReservationTime reservationTime;
 
     @Builder
-    public Reservation(ReservationStatus status, int peopleCount) {
+    public Reservation(ReservationStatus status, int peopleCount, Shop shop,
+        ReservationTime reservationTime) {
         this.status = status;
         this.peopleCount = peopleCount;
+        this.shop = shop;
+        this.reservationTime = reservationTime;
     }
+
 }

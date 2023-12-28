@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8:///
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 10
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-name: kakao
+            client-id: e3a7bd1f8c24fe6a0c9d56789213abef
+            client-secret: QWu9hBgFzT1nRc3mXxNvLpK4aD7Jg0Vf
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - account_email
+              - profile_nickname
+              - gender
+              - birthday
+              - phone_number
+              - birthyear
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+jwt:
+  client-secret: S0gKf9bwPzT7eAJN3RyWvQlKcY4uGh1jIxDp5VrC8EoH2dL6sMkXaF7ZtL9W6dR1
+  expiry-minute: 5           #5분
+  expiry-minute-refresh: 30  #30분
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.orm.jdbc.bind: trace
+  

@@ -7,8 +7,12 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-    NOT_EXIST_MEMBER("존재하지 않는 아이디입니다."),
-    NOT_EXIST_SHOP("존재하지 않는 가게 아이디입니다."),
+    NOT_EXIST_MEMBER("존재하지 않는 회원입니다."),
+
+    ALREADY_PREOCCUPIED_RESERVATION_TIME("이미 타인에게 선점권이 있는 예약시간입니다."),
+    ALREADY_OCCUPIED_RESERVATION_TIME("이미 예약된 시간입니다."),
+    NOT_EXIST_SHOP("존재하지 않는 매장입니다."),
+    NOT_EXIST_TIME("존재하지 않는 예약 시간입니다.");
 
     ALREADY_CANCELED_WAITING("이미 웨이팅을 취소하였습니다."),
     EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),
