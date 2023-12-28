@@ -55,8 +55,8 @@ class WaitingServiceTest {
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
-            () -> assertThat(response.waitingOrder()).isEqualTo(1L),
-            () -> assertThat(response.waitingNumber()).isEqualTo(1L)
+            () -> assertThat(response.waitingOrder()).isEqualTo(1),
+            () -> assertThat(response.waitingNumber()).isEqualTo(1)
         );
     }
 }

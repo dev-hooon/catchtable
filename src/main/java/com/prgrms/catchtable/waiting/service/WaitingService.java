@@ -27,7 +27,7 @@ public class WaitingService {
     private final WaitingFacade waitingFacade;
     public CreateWaitingResponse createWaiting(Long shopId, CreateWaitingRequest request) {
         // 연관 엔티티 조회
-        Member member = waitingFacade.getMemberEntity(1L); //member, shop 아이디 임시 1L
+        Member member = waitingFacade.getMemberEntity(1L);
         Shop shop = waitingFacade.getShopEntity(shopId);
 
         // shop 영업 중인지 검증
