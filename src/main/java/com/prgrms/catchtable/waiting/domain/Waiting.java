@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.waiting.domain;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_CANCELED_WAITING;
 import static jakarta.persistence.ConstraintMode.NO_CONSTRAINT;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -8,7 +7,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
-import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import jakarta.persistence.Column;
