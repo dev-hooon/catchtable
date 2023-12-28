@@ -60,7 +60,6 @@ class ReservationServiceTest {
         CreateReservationRequest request = ReservationData.getCreateReservationRequest(
             reservationTime.getId());
 
-
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
 
         //when

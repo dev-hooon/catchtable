@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AutoConfigureMockMvc
 public class BaseIntegrationTest {
+
     @Autowired
     public MockMvc mvc;
 
