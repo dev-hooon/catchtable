@@ -8,13 +8,15 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
-import com.prgrms.catchtable.waiting.facade.WaitingFacade;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import java.time.LocalTime;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +29,9 @@ class WaitingServiceTest {
     @Mock
     private WaitingRepository waitingRepository;
     @Mock
-    private WaitingFacade waitingFacade;
+    private ShopRepository shopRepository;
+    @Mock
+    private MemberRepository memberRepository;
     @InjectMocks
     private WaitingService waitingService;
 
@@ -47,8 +51,8 @@ class WaitingServiceTest {
             .peopleCount(2)
             .build();
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
-        given(waitingFacade.getShopEntity(1L)).willReturn(shop);
-        given(waitingFacade.getMemberEntity(1L)).willReturn(member);
+        given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.existsByMember(member)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
 
