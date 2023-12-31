@@ -46,6 +46,8 @@ public class ReservationService {
             throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
         }
 
+        reservationTime.reverseOccupied();
+
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
