@@ -16,7 +16,7 @@ public class BaseIntegrationTest {
     public MockMvc mockMvc;
     public static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String asJsonString(final Object object) throws Exception{
+    public static String asJsonString(final Object object) throws Exception {
         return objectMapper.writeValueAsString(object);
     }
 }
