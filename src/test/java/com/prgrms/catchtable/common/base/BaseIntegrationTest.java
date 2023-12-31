@@ -13,13 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BaseIntegrationTest {
 
     @Autowired
-    public MockMvc mvc;
+    public MockMvc mockMvc;
+    public static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static String asJsonString(final Object object) throws Exception{
+        return objectMapper.writeValueAsString(object);
     }
 }
