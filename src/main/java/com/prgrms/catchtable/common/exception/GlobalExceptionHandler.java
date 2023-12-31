@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex) {
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         StringBuilder sb = new StringBuilder();
-        for (FieldError e : ex.getBindingResult().getFieldErrors()) {
-            sb.append(e.getDefaultMessage());
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            sb.append(fieldError.getDefaultMessage());
             sb.append(", ");
         }
         return ResponseEntity
@@ -23,23 +23,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundCustomException.class)
-    protected ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundCustomException ex) {
+    protected ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundCustomException exception) {
         return ResponseEntity
             .badRequest()
-            .body(new ErrorResponse(ex.getErrorCode()));
+            .body(new ErrorResponse(exception.getErrorCode()));
     }
 
     @ExceptionHandler(BadRequestCustomException.class)
-    protected ResponseEntity<ErrorResponse> handleBadRequestException(final BadRequestCustomException ex){
+    protected ResponseEntity<ErrorResponse> handleBadRequestException(final BadRequestCustomException exception){
         return ResponseEntity
             .badRequest()
-            .body(new ErrorResponse(ex.getErrorCode()));
-    }
-
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleServerException(final Exception ex) {
-        return ResponseEntity
-            .internalServerError()
-            .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR));
+            .body(new ErrorResponse(exception.getErrorCode()));
     }
 }
