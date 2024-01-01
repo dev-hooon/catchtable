@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+        final MethodArgumentNotValidException exception) {
         StringBuilder sb = new StringBuilder();
         for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
             sb.append(fieldError.getDefaultMessage());
@@ -23,14 +25,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundCustomException.class)
-    protected ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundCustomException exception) {
+    protected ResponseEntity<ErrorResponse> handleNotFoundException(
+        final NotFoundCustomException exception) {
         return ResponseEntity
             .badRequest()
             .body(new ErrorResponse(exception.getErrorCode()));
     }
 
     @ExceptionHandler(BadRequestCustomException.class)
-    protected ResponseEntity<ErrorResponse> handleBadRequestException(final BadRequestCustomException exception){
+    protected ResponseEntity<ErrorResponse> handleBadRequestException(
+        final BadRequestCustomException exception) {
         return ResponseEntity
             .badRequest()
             .body(new ErrorResponse(exception.getErrorCode()));

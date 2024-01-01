@@ -52,9 +52,9 @@ public class Shop extends BaseEntity {
     private LocalTime closingTime;
 
 
-
     @Builder
-    public Shop(String name, BigDecimal rating, Category category, Address address, int capacity, LocalTime openingTime, LocalTime closingTime) {
+    public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
+        LocalTime openingTime, LocalTime closingTime) {
         this.name = name;
         this.rating = rating;
         this.category = category;
@@ -65,7 +65,7 @@ public class Shop extends BaseEntity {
     }
 
     public void validateIfShopOpened(LocalTime localTime) {
-        if (localTime.isBefore(openingTime)|| localTime.isAfter(closingTime)){
+        if (localTime.isBefore(openingTime) || localTime.isAfter(closingTime)) {
             throw new BadRequestCustomException(SHOP_NOT_RUNNING);
         }
     }

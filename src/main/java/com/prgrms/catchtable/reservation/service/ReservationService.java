@@ -35,14 +35,14 @@ public class ReservationService {
 
         return reservationTime;
     }
-    
+
     @Transactional
-    public Reservation validateReservationAndSaveIsEmpty(CreateReservationRequest request){
+    public Reservation validateReservationAndSaveIsEmpty(CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
-            request.reservationTimeId()).
+                request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
-        
-        if(reservationTime.isOccupied()){
+
+        if (reservationTime.isOccupied()) {
             throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
         }
 

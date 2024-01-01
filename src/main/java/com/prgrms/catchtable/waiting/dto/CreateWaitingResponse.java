@@ -10,4 +10,6 @@ public record CreateWaitingResponse(
     int peopleCount,
     int waitingNumber,
     int waitingOrder
-){}
+) {
+
+}

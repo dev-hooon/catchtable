@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReservationTimeRepository extends JpaRepository<ReservationTime, Long> {
+
     @Query("select rt from ReservationTime rt join fetch rt.shop s where rt.id = :id")
     Optional<ReservationTime> findByIdWithShop(@Param("id") Long id);
 }
