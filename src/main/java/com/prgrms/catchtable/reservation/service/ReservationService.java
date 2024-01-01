@@ -54,7 +54,6 @@ public class ReservationService {
             .shop(reservationTime.getShop())
             .reservationTime(reservationTime)
             .build();
-        Reservation savedReservation = reservationRepository.save(reservation);
-        return savedReservation;
+        return reservationRepository.save(reservation);
     }
 }
