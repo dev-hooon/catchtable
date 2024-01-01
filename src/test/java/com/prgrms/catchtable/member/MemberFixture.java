@@ -12,7 +12,6 @@ public class MemberFixture {
             .phoneNumber("010-1111-1111")
             .gender(Gender.FEMALE)
             .dateBirth(LocalDate.parse("2008-12-18"))
-            .notification_activated(true)
             .build();
     }
 }
