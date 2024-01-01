@@ -8,17 +8,17 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @Getter
 public class OAuthAttribute {
 
-    String name;
+    private final String name;
 
-    String email;
+    private final String email;
 
-    String phoneNumber;
+    private final String phoneNumber;
 
-    String birthYear;
+    private final String birthYear;
 
-    String birthDay;
+    private final String birthDay;
 
-    String gender;
+    private final String gender;
 
     @Builder
     public OAuthAttribute(String name, String email, String phoneNumber, String birthYear,
