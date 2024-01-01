@@ -1,8 +1,9 @@
 package com.prgrms.catchtable.facade;
 
+import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCreateReservationResponse;
+
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
-import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.service.ReservationAsync;
@@ -36,7 +37,7 @@ public class ReservationFacade {
 
     public CreateReservationResponse registerReservation(CreateReservationRequest request) {
         Reservation reservation = reservationService.validateReservationAndSaveIsEmpty(request);
-        return ReservationMapper.toCreateReservationResponse(reservation);
+        return toCreateReservationResponse(reservation);
     }
 
 }
