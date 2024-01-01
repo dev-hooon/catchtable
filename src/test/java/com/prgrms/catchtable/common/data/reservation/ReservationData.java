@@ -35,9 +35,9 @@ public class ReservationData {
         return reservationTime;
     }
 
-    public static CreateReservationRequest getCreateReservationRequest() {
+    public static CreateReservationRequest getCreateReservationRequest(Long reservationTimeId) {
         return CreateReservationRequest.builder()
-            .reservationTimeId(1L)
+            .reservationTimeId(reservationTimeId)
             .peopleCount(4)
             .build();
     }

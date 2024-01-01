@@ -17,7 +17,7 @@ public class ReservationAsync {
         reservationTime.reversePreOccupied();
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(reservationTime::reversePreOccupied, 10, TimeUnit.SECONDS);
+        scheduler.schedule(reservationTime::reversePreOccupied, 2, TimeUnit.SECONDS);
 
         scheduler.shutdown();
     }

@@ -31,9 +31,10 @@ class ReservationServiceTest {
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
     void validateReservation() {
         //given
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
+        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+            reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
 
@@ -55,8 +56,9 @@ class ReservationServiceTest {
     void alreadyPreOccupied() {
         //given
         ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
+        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+            reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
 
