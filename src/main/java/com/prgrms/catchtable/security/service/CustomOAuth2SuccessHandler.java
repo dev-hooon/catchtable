@@ -43,6 +43,7 @@ public class CustomOAuth2SuccessHandler extends SavedRequestAwareAuthenticationS
     }
 
     private void sendTokenJson(HttpServletResponse response, String tokenJson) throws IOException {
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
         response.setContentLength(tokenJson.getBytes().length);
         response.getWriter().write(tokenJson);
