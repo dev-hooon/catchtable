@@ -15,8 +15,8 @@ public class ShopFixture {
             .category(Category.WESTERN_FOOD)
             .address(new Address("서울시", "중구"))
             .capacity(30)
-            .openingTime(LocalTime.of(11, 0))
-            .closingTime(LocalTime.of(21, 0))
+            .openingTime(LocalTime.of(6, 0))
+            .closingTime(LocalTime.of(23, 0))
             .build();
     }
 }
