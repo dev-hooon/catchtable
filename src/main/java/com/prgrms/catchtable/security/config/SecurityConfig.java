@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.security.config;
 
 import com.prgrms.catchtable.jwt.filter.JwtAuthenticationFilter;
+import com.prgrms.catchtable.security.filter.ExceptionHandlerFilter;
 import com.prgrms.catchtable.security.service.CustomOAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class SecurityConfig {
 
     private final CustomOAuth2SuccessHandler successHandler;
-
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -34,6 +35,9 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             )
             .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler));
+
+        http.addFilterBefore(exceptionHandlerFilter,
+            OAuth2AuthorizationRequestRedirectFilter.class);
 
         http.addFilterBefore(jwtAuthenticationFilter,
             OAuth2AuthorizationRequestRedirectFilter.class);

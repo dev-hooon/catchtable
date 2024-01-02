@@ -27,10 +27,8 @@ class WaitingRepositoryTest {
 
     @Autowired
     private WaitingRepository waitingRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private ShopRepository shopRepository;
     private Shop shop;

@@ -1,5 +1,8 @@
 package com.prgrms.catchtable.jwt.service;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
+
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +19,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return memberRepository.findMemberByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("Not Found Member"));
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_MEMBER));
     }
 }
