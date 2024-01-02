@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
@@ -37,9 +37,9 @@ class ReservationServiceTest {
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
     void validateReservation() {
         //given
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
@@ -61,9 +61,9 @@ class ReservationServiceTest {
     @DisplayName("예약시간 선점권이 이미 타인에게 있는 경우 예외가 발생한다.")
     void alreadyPreOccupied() {
         //given
-        ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
@@ -78,8 +78,8 @@ class ReservationServiceTest {
     @Test
     @DisplayName("최종예약을 등록할 때 예약시간이 비었으면 성공적으로 예약 등록을 완료한다.")
     void registerReservation() {
-        ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
@@ -103,8 +103,8 @@ class ReservationServiceTest {
     @Test
     @DisplayName("최종예약을 등록할 때 타인이 이미 예약한 경우 예외가 발생한다.")
     void registerReservationAlreadyOccupied() {
-        ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
 
         reservationTime.reverseOccupied();
         when(reservationTimeRepository.findByIdWithShop(any(Long.class))).thenReturn(

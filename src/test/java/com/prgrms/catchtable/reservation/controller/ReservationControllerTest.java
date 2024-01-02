@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -36,7 +36,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(savedShop);
         reservationTimeRepository.save(reservationTime);
     }
@@ -47,7 +47,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
         List<ReservationTime> all = reservationTimeRepository.findAll();
         ReservationTime reservationTime = all.get(0);
 
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations")
@@ -65,7 +65,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
         List<ReservationTime> all = reservationTimeRepository.findAll();
         ReservationTime reservationTime = all.get(0);
 
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations")
@@ -83,7 +83,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
         List<ReservationTime> all = reservationTimeRepository.findAll();
         ReservationTime reservationTime = all.get(0);
 
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations/success")
@@ -100,7 +100,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("이미 예약이 된 시간에 대해 예약 등록 api 호출 시 에러 메세지가 반환된다.")
     void registerReservationWithException() throws Exception {
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.reverseOccupied();
         List<Shop> shops = shopRepository.findAll();
         Shop shop = shops.get(0);
@@ -108,7 +108,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
 
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             savedReservationTime.getId());
         mockMvc.perform(post("/reservations/success")
                 .contentType(APPLICATION_JSON)

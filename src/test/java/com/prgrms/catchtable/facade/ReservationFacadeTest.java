@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
@@ -31,8 +31,8 @@ class ReservationFacadeTest {
     @Test
     @DisplayName("예약을 검증하고 선점권을 true로 바꾸는 것에 성공한다.")
     void preOccupyReservation() {
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationService.validateReservationAndSave(
