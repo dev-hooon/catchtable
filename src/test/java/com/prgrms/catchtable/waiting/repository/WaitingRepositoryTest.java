@@ -26,21 +26,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 @SpringBootTest
 class WaitingRepositoryTest {
 
+    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(0, 0, 0));
+    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(23, 59, 59));
     @Autowired
     private WaitingRepository waitingRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private ShopRepository shopRepository;
     private Shop shop;
     private Member member1, member2, member3;
     private Waiting yesterdayWaiting, completedWaiting, normalWaiting;
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(0, 0, 0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(23, 59, 59));
 
     @BeforeEach
     void setUp() {

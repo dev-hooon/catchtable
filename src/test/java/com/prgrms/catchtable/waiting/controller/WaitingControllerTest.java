@@ -25,16 +25,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 class WaitingControllerTest extends BaseIntegrationTest {
 
     @Autowired
-    private ShopRepository shopRepository;
-
-    @Autowired
     MemberRepository memberRepository;
-
     @Autowired
     WaitingRepository waitingRepository;
-
-    private Shop shop;
     List<Waiting> waitings;
+    @Autowired
+    private ShopRepository shopRepository;
+    private Shop shop;
 
     @BeforeEach
     void setUp() {
