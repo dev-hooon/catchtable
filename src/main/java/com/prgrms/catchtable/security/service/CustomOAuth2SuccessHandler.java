@@ -48,6 +48,4 @@ public class CustomOAuth2SuccessHandler extends SavedRequestAwareAuthenticationS
         response.setContentLength(tokenJson.getBytes().length);
         response.getWriter().write(tokenJson);
     }
-
-
 }
