@@ -1,5 +1,9 @@
 package com.prgrms.catchtable.jwt.service;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+
+import com.prgrms.catchtable.common.exception.ErrorCode;
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -33,6 +37,6 @@ public class RefreshTokenService {
     @Transactional(readOnly = true)
     public RefreshToken getRefreshTokenByToken(String refreshToken) {
         return refreshTokenRepository.findRefreshTokenByToken(refreshToken)
-            .orElseThrow(() -> new UsernameNotFoundException("Not Found RefreshToken"));
+            .orElseThrow(() -> new NotFoundCustomException(NOT_FOUND_REFRESH_TOKEN));
     }
 }

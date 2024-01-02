@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
     NOT_EXIST_MEMBER("존재하지 않는 회원입니다."),
+    NOT_FOUND_REFRESH_TOKEN("알 수 없는 RefreshToken입니다."),
+    TOKEN_EXPIRES("토큰이 만료되었습니다. 다시 로그인 해 주세요."),
 
     ALREADY_PREOCCUPIED_RESERVATION_TIME("이미 타인에게 선점권이 있는 예약시간입니다."),
     ALREADY_OCCUPIED_RESERVATION_TIME("이미 예약된 시간입니다."),

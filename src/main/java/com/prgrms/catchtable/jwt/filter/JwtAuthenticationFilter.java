@@ -1,5 +1,9 @@
 package com.prgrms.catchtable.jwt.filter;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+
+import com.prgrms.catchtable.common.exception.ErrorCode;
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
@@ -50,7 +54,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
                         newToken.getAccessToken());
                     setAuthentication(newToken.getAccessToken());
                 } else {
-                    throw new UsernameNotFoundException("Please Login again");
+                    throw new BadRequestCustomException(TOKEN_EXPIRES);
                 }
             }
         }
