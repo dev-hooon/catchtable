@@ -1,8 +1,7 @@
 package com.prgrms.catchtable.jwt.filter;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.TOKEN_EXPIRES;
 
-import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component

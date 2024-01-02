@@ -1,8 +1,7 @@
 package com.prgrms.catchtable.jwt.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 
-import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

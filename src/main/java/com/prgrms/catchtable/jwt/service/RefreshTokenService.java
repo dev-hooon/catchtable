@@ -1,14 +1,12 @@
 package com.prgrms.catchtable.jwt.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_FOUND_REFRESH_TOKEN;
 
-import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
 import com.prgrms.catchtable.jwt.token.Token;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

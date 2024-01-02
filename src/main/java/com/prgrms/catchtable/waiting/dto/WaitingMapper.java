@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
 public class WaitingMapper {
+
     // dto -> entity
-    public static Waiting toWaiting(CreateWaitingRequest request, int waitingNumber, int waitingOrder, Member member, Shop shop){
+    public static Waiting toWaiting(CreateWaitingRequest request, int waitingNumber,
+        int waitingOrder, Member member, Shop shop) {
         return Waiting.builder()
             .waitingNumber(waitingNumber)
             .waitingOrder(waitingOrder)
@@ -20,7 +22,7 @@ public class WaitingMapper {
     }
 
     // entity -> dto
-    public static CreateWaitingResponse toCreateWaitingResponse(Waiting waiting){
+    public static CreateWaitingResponse toCreateWaitingResponse(Waiting waiting) {
         return CreateWaitingResponse.builder()
             .createdWaitingId(waiting.getId())
             .shopId(waiting.getShop().getId())

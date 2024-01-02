@@ -25,23 +25,23 @@ import org.springframework.test.util.ReflectionTestUtils;
 @SpringBootTest
 class WaitingRepositoryTest {
 
+    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(0, 0, 0));
+    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(23, 59, 59));
     @Autowired
     private WaitingRepository waitingRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private ShopRepository shopRepository;
     private Shop shop;
     private Waiting waiting1;
     private Waiting waiting2;
     private Waiting waiting3;
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Member member1 = MemberFixture.member("test1");
         Member member2 = MemberFixture.member("test2");
         Member member3 = MemberFixture.member("test3");
@@ -91,7 +91,8 @@ class WaitingRepositoryTest {
         waitingRepository.save(waiting2); //입장상태 대기 생성
 
         //when
-        Long count = waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,PROGRESS,START_DATE_TIME, END_DATE_TIME);
+        Long count = waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop, PROGRESS,
+            START_DATE_TIME, END_DATE_TIME);
         //then
         assertThat(count).isEqualTo(1L);
     }
@@ -106,7 +107,8 @@ class WaitingRepositoryTest {
         waitingRepository.save(waiting2);
 
         //when
-        Long count = waitingRepository.countByShopAndCreatedAtBetween(shop,START_DATE_TIME, END_DATE_TIME);
+        Long count = waitingRepository.countByShopAndCreatedAtBetween(shop, START_DATE_TIME,
+            END_DATE_TIME);
         //then
         assertThat(count).isEqualTo(2L);
     }

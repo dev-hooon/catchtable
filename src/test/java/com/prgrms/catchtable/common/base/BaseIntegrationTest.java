@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 public abstract class BaseIntegrationTest {
 
+    public static ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     public MockMvc mockMvc;
-    public static ObjectMapper objectMapper = new ObjectMapper();
 
     public static String asJsonString(final Object object) throws Exception {
         return objectMapper.writeValueAsString(object);
