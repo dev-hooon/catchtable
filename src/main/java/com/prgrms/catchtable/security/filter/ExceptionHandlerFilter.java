@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExceptionHandlerFilter extends GenericFilter {
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
@@ -35,7 +37,6 @@ public class ExceptionHandlerFilter extends GenericFilter {
     }
 
     private String toJson(ErrorResponse response) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(response);
     }
 

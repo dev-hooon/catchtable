@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final MemberService memberService;
 
     @Override
@@ -38,7 +39,6 @@ public class CustomOAuth2SuccessHandler extends SavedRequestAwareAuthenticationS
     }
 
     public String tokenToJson(Token token) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(token);
     }
 
