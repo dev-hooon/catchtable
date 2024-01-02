@@ -3,6 +3,7 @@ package com.prgrms.catchtable.waiting.controller;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
 import com.prgrms.catchtable.waiting.service.WaitingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ public class WaitingController {
 
     @PostMapping("/{shopId}")
     public ResponseEntity<CreateWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
-        @RequestBody CreateWaitingRequest request) {
+        @Valid @RequestBody CreateWaitingRequest request) {
         CreateWaitingResponse response = waitingService.createWaiting(shopId, request);
         return ResponseEntity.ok(response);
     }
