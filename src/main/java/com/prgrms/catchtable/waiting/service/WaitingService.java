@@ -46,19 +46,18 @@ public class WaitingService {
         validateIfMemberWaitingExists(member);
 
         // 대기 번호 생성
-        int waitingNumber = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
-            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
-
-        // 대기 순서 생성
-        int waitingOrder = (waitingRepository.countByShopAndCreatedAtBetween(shop,
+        int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
             START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
+        // 대기 순서 생성
+        int waitingOrder = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
+            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
+
         // waiting 저장
-        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, waitingOrder, member,
-            shop);
+        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, member, shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        return WaitingMapper.toCreateWaitingResponse(savedWaiting);
+        return WaitingMapper.toCreateWaitingResponse(savedWaiting, waitingOrder);
     }
 
     private void validateIfMemberWaitingExists(Member member) {
