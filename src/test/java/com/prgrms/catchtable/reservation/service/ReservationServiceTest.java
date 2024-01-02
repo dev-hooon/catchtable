@@ -117,16 +117,18 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 전체 조회를 할 수 있다")
-    void getAllReservation(){
+    void getAllReservation() {
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         Reservation reservation = ReservationData.getReservation(reservationTime);
 
-        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of(reservation));
+        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(
+            List.of(reservation));
         List<GetAllReservationResponse> all = reservationService.getAllReservation();
         GetAllReservationResponse findReservation = all.get(0);
 
         assertAll(
-            () -> assertThat(findReservation.date()).isEqualTo(reservation.getReservationTime().getTime()),
+            () -> assertThat(findReservation.date()).isEqualTo(
+                reservation.getReservationTime().getTime()),
             () -> assertThat(findReservation.peopleCount()).isEqualTo(reservation.getPeopleCount()),
             () -> assertThat(findReservation.shopName()).isEqualTo(reservation.getShop().getName()),
             () -> assertThat(findReservation.status()).isEqualTo(reservation.getStatus())
@@ -135,7 +137,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
-    void getAllReservationWithNoResult(){
+    void getAllReservationWithNoResult() {
         when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
 
         List<GetAllReservationResponse> all = reservationService.getAllReservation();

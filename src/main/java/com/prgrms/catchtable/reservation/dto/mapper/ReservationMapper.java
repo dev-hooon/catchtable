@@ -19,7 +19,7 @@ public class ReservationMapper {
             .build();
     }
 
-    public static GetAllReservationResponse toGetAllReservationRepsonse(Reservation reservation){
+    public static GetAllReservationResponse toGetAllReservationRepsonse(Reservation reservation) {
         return GetAllReservationResponse.builder()
             .reservationId(reservation.getId())
             .date(reservation.getReservationTime().getTime())

@@ -60,7 +60,7 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<GetAllReservationResponse> getAllReservation(){
+    public List<GetAllReservationResponse> getAllReservation() {
         List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();
         return reservations.stream()
             .map(ReservationMapper::toGetAllReservationRepsonse)
