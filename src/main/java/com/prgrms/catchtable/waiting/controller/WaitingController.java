@@ -19,10 +19,11 @@ public class WaitingController {
 
     private final WaitingService waitingService;
 
-    @PostMapping("/{shopId}")
+    @PostMapping("/{shopId}/{memberId}")
     public ResponseEntity<CreateWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
+        @PathVariable("memberId") Long memberId,
         @Valid @RequestBody CreateWaitingRequest request) {
-        CreateWaitingResponse response = waitingService.createWaiting(shopId, request);
+        CreateWaitingResponse response = waitingService.createWaiting(shopId, memberId, request);
         return ResponseEntity.ok(response);
     }
 }

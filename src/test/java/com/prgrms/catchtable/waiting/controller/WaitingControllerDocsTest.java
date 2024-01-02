@@ -45,9 +45,9 @@ class WaitingControllerDocsTest extends RestDocsSupport {
             .peopleCount(2)
             .build();
 
-        given(waitingService.createWaiting(1L, request)).willReturn(response);
+        given(waitingService.createWaiting(1L, 1L, request)).willReturn(response);
 
-        mockMvc.perform(post("/waitings/{shopId}", 1)
+        mockMvc.perform(post("/waitings/{shopId}/{memberId}", 1, 1)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())

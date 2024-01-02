@@ -34,9 +34,10 @@ public class WaitingService {
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
 
-    public CreateWaitingResponse createWaiting(Long shopId, CreateWaitingRequest request) {
+    public CreateWaitingResponse createWaiting(Long shopId, Long memberId,
+        CreateWaitingRequest request) {
         // 연관 엔티티 조회
-        Member member = getMemberEntity(1L);
+        Member member = getMemberEntity(memberId);
         Shop shop = getShopEntity(shopId);
 
         // shop 영업 중인지 검증

@@ -15,15 +15,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
+@Transactional
 class WaitingRepositoryTest {
 
     private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
@@ -49,6 +52,13 @@ class WaitingRepositoryTest {
 
         shop = ShopFixture.shop();
         shopRepository.save(shop);
+    }
+
+    @AfterEach
+    void clear() {
+        memberRepository.deleteAll();
+        waitingRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
     @DisplayName("특정 가게의 당일 대기 번호를 조회할 수 있다.")
