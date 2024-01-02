@@ -24,7 +24,8 @@ public class ReservationController {
     }
 
     @PostMapping("/success")
-    public ResponseEntity<CreateReservationResponse> registerReservation(@RequestBody CreateReservationRequest request){
+    public ResponseEntity<CreateReservationResponse> registerReservation(
+        @RequestBody CreateReservationRequest request) {
         return ResponseEntity.ok(reservationFacade.registerReservation(request));
     }
 }

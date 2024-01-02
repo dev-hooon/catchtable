@@ -32,7 +32,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     private ShopRepository shopRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
@@ -87,8 +87,8 @@ class ReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations/success")
-            .contentType(APPLICATION_JSON)
-            .content(asJsonString(request)))
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
@@ -108,7 +108,8 @@ class ReservationControllerTest extends BaseIntegrationTest {
 
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(savedReservationTime.getId());
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+            savedReservationTime.getId());
         mockMvc.perform(post("/reservations/success")
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
