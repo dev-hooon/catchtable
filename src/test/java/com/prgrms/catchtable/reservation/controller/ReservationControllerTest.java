@@ -26,7 +26,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     void preOccupyReservation() throws Exception {
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
             savedReservationTime.getId());
 
         mockMvc.perform(post("/reservations")
@@ -43,7 +43,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     void schedulerTest() throws Exception {
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
             savedReservationTime.getId());
 
         mockMvc.perform(post("/reservations")

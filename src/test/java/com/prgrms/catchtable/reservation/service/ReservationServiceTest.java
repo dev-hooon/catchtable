@@ -39,7 +39,7 @@ class ReservationServiceTest {
         //given
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
@@ -63,7 +63,7 @@ class ReservationServiceTest {
         //given
         ReservationTime reservationTime = ReservationData.getReservationTimePreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
