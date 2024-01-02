@@ -47,7 +47,6 @@ class WaitingServiceTest {
             .member(member)
             .shop(shop)
             .waitingNumber(1)
-            .waitingOrder(1)
             .peopleCount(2)
             .build();
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
