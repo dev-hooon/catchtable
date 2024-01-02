@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.reservation.controller;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,6 +78,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @DisplayName("예약 등록 api 호출에 성공한다.")
     void resigerReservation() throws Exception {
         List<ReservationTime> all = reservationTimeRepository.findAll();
         ReservationTime reservationTime = all.get(0);
@@ -93,6 +95,27 @@ class ReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
 
         assertThat(reservationTime.isOccupied()).isTrue();
+    }
+
+    @Test
+    @DisplayName("이미 예약이 된 시간에 대해 예약 등록 api 호출 시 에러 메세지가 반환된다.")
+    void registerReservationWithException() throws Exception {
+        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        reservationTime.reverseOccupied();
+        List<Shop> shops = shopRepository.findAll();
+        Shop shop = shops.get(0);
+        reservationTime.insertShop(shop);
+
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(savedReservationTime.getId());
+        mockMvc.perform(post("/reservations/success")
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(ALREADY_OCCUPIED_RESERVATION_TIME.getMessage()));
+
+
     }
 
 }
