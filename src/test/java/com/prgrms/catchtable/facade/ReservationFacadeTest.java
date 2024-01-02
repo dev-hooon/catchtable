@@ -32,7 +32,7 @@ class ReservationFacadeTest {
     @DisplayName("예약을 검증하고 선점권을 true로 바꾸는 것에 성공한다.")
     void preOccupyReservation() {
         ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
-        CreateReservationRequest request = ReservationData.getCreateReservationRequest(
+        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
             reservationTime.getId());
 
         when(reservationService.validateReservationAndSave(
