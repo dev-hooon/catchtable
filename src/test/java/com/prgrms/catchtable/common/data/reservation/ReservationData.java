@@ -6,7 +6,9 @@ import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.shop.domain.Shop;
 import java.time.LocalDateTime;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class ReservationData {
 
@@ -30,7 +32,9 @@ public class ReservationData {
         ReservationTime reservationTime = ReservationTime.builder()
             .time(LocalDateTime.of(2024, 12, 31, 19, 30))
             .build();
-        reservationTime.insertShop(ShopData.getShop());
+        Shop shop = ShopData.getShop();
+        ReflectionTestUtils.setField(shop, "id", 1L);
+        reservationTime.insertShop(shop);
         reservationTime.reversePreOccupied();
         return reservationTime;
     }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ShopTest {
+
     @DisplayName("가게 영업 시간이 아닐 때는 예외를 발생시킨다.")
     @Test
     void validate_shop_not_running_time() {
@@ -28,15 +29,15 @@ class ShopTest {
 
     @DisplayName("가게 영업 시간 내에서는 예외를 발생시키지 않는다.")
     @Test
-    void validate_shop_running_time(){
+    void validate_shop_running_time() {
         //given
         LocalTime openingTime = LocalTime.of(11, 0);
-        LocalTime closingTime = LocalTime.of(21,0);
+        LocalTime closingTime = LocalTime.of(21, 0);
         Shop shop = ShopFixture.shop();
         //when, then
         assertDoesNotThrow(
-            ()->shop.validateIfShopOpened(openingTime));
+            () -> shop.validateIfShopOpened(openingTime));
         assertDoesNotThrow(
-            ()->shop.validateIfShopOpened(closingTime));
+            () -> shop.validateIfShopOpened(closingTime));
     }
 }

@@ -25,11 +25,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class WaitingService {
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+
+    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(0, 0, 0));
+    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(23, 59, 59));
     private final WaitingRepository waitingRepository;
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
+
     public CreateWaitingResponse createWaiting(Long shopId, CreateWaitingRequest request) {
         // 연관 엔티티 조회
         Member member = getMemberEntity(1L);
@@ -43,32 +47,33 @@ public class WaitingService {
 
         // 대기 번호 생성
         int waitingNumber = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
-            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue()+1;
+            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
         // 대기 순서 생성
         int waitingOrder = (waitingRepository.countByShopAndCreatedAtBetween(shop,
-            START_DATE_TIME, END_DATE_TIME)).intValue()+1;
+            START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
         // waiting 저장
-        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, waitingOrder, member, shop);
+        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, waitingOrder, member,
+            shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
         return WaitingMapper.toCreateWaitingResponse(savedWaiting);
     }
 
     private void validateIfMemberWaitingExists(Member member) {
-        if (waitingRepository.existsByMember(member)){
+        if (waitingRepository.existsByMember(member)) {
             throw new BadRequestCustomException(EXISTING_MEMBER_WAITING);
         }
     }
 
-    public Member getMemberEntity(Long memberId){
+    public Member getMemberEntity(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(
-            ()-> new NotFoundCustomException(NOT_EXIST_MEMBER)
+            () -> new NotFoundCustomException(NOT_EXIST_MEMBER)
         );
     }
 
-    public Shop getShopEntity(Long shopId){
+    public Shop getShopEntity(Long shopId) {
         return shopRepository.findById(shopId).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_SHOP)
         );
