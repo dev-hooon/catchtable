@@ -25,6 +25,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 @SpringBootTest
 class WaitingRepositoryTest {
 
+    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(0, 0, 0));
+    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
+        LocalTime.of(23, 59, 59));
     @Autowired
     private WaitingRepository waitingRepository;
     @Autowired
@@ -35,10 +39,6 @@ class WaitingRepositoryTest {
     private Waiting waiting1;
     private Waiting waiting2;
     private Waiting waiting3;
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(0, 0, 0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(23, 59, 59));
 
     @BeforeEach
     void setUp() {

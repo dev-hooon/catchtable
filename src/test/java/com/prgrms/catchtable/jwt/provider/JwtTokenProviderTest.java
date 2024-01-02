@@ -17,14 +17,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
+
+    private final String email = "abc1234@naver.com";
+    private final String clientKey = "FLGs0worldbOS8CEdfSPW04mb0dkD9SKFlsob9WK9wW0WkdlskYof5142u3jdmsk";
     @Mock
     private JwtConfig config;
     @Mock
     private JwtUserDetailsService jwtUserDetailsService;
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
-    private final String email = "abc1234@naver.com";
-    private final String clientKey = "FLGs0worldbOS8CEdfSPW04mb0dkD9SKFlsob9WK9wW0WkdlskYof5142u3jdmsk";
 
     @Test
     @DisplayName("유효한 토큰 발급 후 토큰 검증 시, true를 반환한다.")

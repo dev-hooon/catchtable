@@ -15,7 +15,7 @@ public class MemberFixture {
             .build();
     }
 
-    public static Member userDetailsMember(String email){
+    public static Member userDetailsMember(String email) {
         return Member.builder()
             .name("예시용")
             .email(email)
