@@ -9,9 +9,12 @@ import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,9 +54,16 @@ public class ReservationService {
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
-            .shop(reservationTime.getShop())
             .reservationTime(reservationTime)
             .build();
         return reservationRepository.save(reservation);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetAllReservationResponse> getAllReservation() {
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();
+        return reservations.stream()
+            .map(ReservationMapper::toGetAllReservationRepsonse)
+            .toList();
     }
 }

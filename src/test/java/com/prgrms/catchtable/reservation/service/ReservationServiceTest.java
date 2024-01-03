@@ -12,8 +12,10 @@ import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,7 +85,6 @@ class ReservationServiceTest {
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
-            .shop(reservationTime.getShop())
             .reservationTime(reservationTime)
             .build();
 
@@ -112,6 +113,35 @@ class ReservationServiceTest {
 
         assertThrows(BadRequestCustomException.class,
             () -> reservationService.validateReservationAndSaveIsEmpty(request));
+    }
+
+    @Test
+    @DisplayName("예약 전체 조회를 할 수 있다")
+    void getAllReservation() {
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+
+        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(
+            List.of(reservation));
+        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        GetAllReservationResponse findReservation = all.get(0);
+
+        assertAll(
+            () -> assertThat(findReservation.date()).isEqualTo(
+                reservation.getReservationTime().getTime()),
+            () -> assertThat(findReservation.peopleCount()).isEqualTo(reservation.getPeopleCount()),
+            () -> assertThat(findReservation.shopName()).isEqualTo(reservation.getShop().getName()),
+            () -> assertThat(findReservation.status()).isEqualTo(reservation.getStatus())
+        );
+    }
+
+    @Test
+    @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
+    void getAllReservationWithNoResult() {
+        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
+
+        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        assertThat(all.size()).isZero();
     }
 
 }
