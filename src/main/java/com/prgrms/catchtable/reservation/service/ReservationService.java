@@ -36,7 +36,7 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
-        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))){
+        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
                 Thread.sleep(1_500);
             } catch (InterruptedException e) {

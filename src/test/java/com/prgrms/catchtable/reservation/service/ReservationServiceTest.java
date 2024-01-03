@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.reservation.service;
 
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
