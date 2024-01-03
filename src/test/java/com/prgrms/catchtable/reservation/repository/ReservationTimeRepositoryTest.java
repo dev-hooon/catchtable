@@ -3,11 +3,11 @@ package com.prgrms.catchtable.reservation.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import org.junit.jupiter.api.DisplayName;
