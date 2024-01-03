@@ -5,6 +5,7 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPI
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCreateReservationResponse;
+import static java.lang.Boolean.FALSE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -14,6 +15,7 @@ import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
+import com.prgrms.catchtable.reservation.repository.ReservationLockRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
@@ -29,19 +31,34 @@ public class ReservationService {
     private final ReservationTimeRepository reservationTimeRepository;
     private final ReservationRepository reservationRepository;
     private final ReservationAsync reservationAsync;
+    private final ReservationLockRepository reservationLockRepository;
 
     @Transactional
     public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(
-                request.reservationTimeId())
-            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
+        Long reservationTimeId = request.reservationTimeId();
+        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))){
+            try {
+                Thread.sleep(1_500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId)
+            .orElseThrow(() -> {
+                    reservationLockRepository.unlock(reservationTimeId);
+                    return new NotFoundCustomException(NOT_EXIST_TIME);
+                }
+            );
 
         if (reservationTime.isPreOccupied()) {
+            reservationLockRepository.unlock(reservationTimeId);
             throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
         }
 
         reservationAsync.setPreOcuppied(reservationTime);
+
         Shop shop = reservationTime.getShop();
+        reservationLockRepository.unlock(reservationTimeId);
 
         return CreateReservationResponse.builder()
             .shopName(shop.getName())
