@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
@@ -31,13 +31,13 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약 엔티티 조회 시 페치 조인을 통해 예약시간과 매장 엔티티를 한번에 조회한다.")
     void findAllWithReservationTimeAndShop() {
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
         reservationTime.insertShop(savedShop);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        Reservation reservation = ReservationData.getReservation(savedReservationTime);
+        Reservation reservation = ReservationFixture.getReservation(savedReservationTime);
         reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();

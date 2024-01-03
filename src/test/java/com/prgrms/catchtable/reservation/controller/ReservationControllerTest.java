@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
@@ -24,9 +24,9 @@ class ReservationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("예약 선점 api 호출에 성공한다.")
     void preOccupyReservation() throws Exception {
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             savedReservationTime.getId());
 
         mockMvc.perform(post("/reservations")
@@ -41,9 +41,9 @@ class ReservationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("선점 api 호출 시 선점권이 획득 되었다가 지정 시간 이후에 획득이 풀린다.")
     void schedulerTest() throws Exception {
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        CreateReservationRequest request = ReservationData.getCreateReservationRequestWithId(
+        CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             savedReservationTime.getId());
 
         mockMvc.perform(post("/reservations")
