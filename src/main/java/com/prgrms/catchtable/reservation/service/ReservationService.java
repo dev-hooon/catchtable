@@ -21,11 +21,13 @@ import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
 
     private final ReservationTimeRepository reservationTimeRepository;
@@ -36,26 +38,29 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
-        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) { // 락 획득 시도
+        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))){
             try {
+                log.info("대기");
                 Thread.sleep(1_500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
+        log.info("이제 획득");
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId)
             .orElseThrow(() -> {
                     reservationLockRepository.unlock(reservationTimeId);
                     return new NotFoundCustomException(NOT_EXIST_TIME);
                 }
-            ); //예약시간 조회 후 없으면 락 해제 + 예외 발생
+            );
 
-        if (reservationTime.isPreOccupied()) { //이미 선점 된 예약시간이면 락 해제 후 예외 발생
+        if (reservationTime.isPreOccupied()) {
             reservationLockRepository.unlock(reservationTimeId);
+            log.info("발생~");
             throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
         }
 
-        reservationAsync.setPreOcuppied(reservationTime); //예약 선점 여부 7분동안 true로 바꾸는 스케줄러 실행
+        reservationAsync.setPreOcuppied(reservationTime);
 
         Shop shop = reservationTime.getShop();
         reservationLockRepository.unlock(reservationTimeId);
@@ -70,15 +75,15 @@ public class ReservationService {
 
     @Transactional
     public CreateReservationResponse registerReservation(CreateReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop( //예약시간과 매장 한번에 가져옴
+        ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
                 request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
-        if (reservationTime.isOccupied()) { //이미 차지된 예약이면 예외 발생
+        if (reservationTime.isOccupied()) {
             throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
         }
 
-        reservationTime.reverseOccupied(); //예약 차지된 상태로 변경
+        reservationTime.reverseOccupied();
 
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
