@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.reservation.controller;
 
-import com.prgrms.catchtable.facade.ReservationFacade;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.service.ReservationService;
@@ -27,6 +26,6 @@ public class ReservationController {
     @PostMapping("/success")
     public ResponseEntity<CreateReservationResponse> registerReservation(
         @RequestBody CreateReservationRequest request) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(reservationService.registerReservation(request));
     }
 }
