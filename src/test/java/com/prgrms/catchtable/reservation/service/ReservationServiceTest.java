@@ -8,13 +8,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
-import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import java.util.List;
@@ -53,7 +53,6 @@ class ReservationServiceTest {
         //when
         CreateReservationResponse response = reservationService.preOccupyReservation(
             request);
-
 
         //then
         assertAll(
