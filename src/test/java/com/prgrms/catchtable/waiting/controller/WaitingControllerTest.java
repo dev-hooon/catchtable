@@ -36,7 +36,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        shop = ShopFixture.shop();
+        shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
         member1 = MemberFixture.member("test1@naver.com");
         member2 = MemberFixture.member("test2@naver.com");
@@ -63,9 +63,6 @@ class WaitingControllerTest extends BaseIntegrationTest {
     @DisplayName("웨이팅 생성 API를 호출할 수 있다.")
     @Test
     void createWaiting() throws Exception {
-        System.out.println("member1.getId( = " + member1.getId());
-        System.out.println("member2.getId( = " + member2.getId());
-        System.out.println("member3.getId( = " + member3.getId());
         //given
         CreateWaitingRequest request = CreateWaitingRequest
             .builder()
