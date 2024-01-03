@@ -21,14 +21,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class WaitingControllerTest extends BaseIntegrationTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    WaitingRepository waitingRepository;
-    List<Waiting> waitings;
+    private WaitingRepository waitingRepository;
+    private List<Waiting> waitings;
     @Autowired
     private ShopRepository shopRepository;
     private Shop shop;
