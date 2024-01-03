@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.reservation.service;
 
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
+import static java.lang.Boolean.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,6 +16,7 @@ import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
+import com.prgrms.catchtable.reservation.repository.ReservationLockRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import java.util.List;
@@ -33,6 +35,8 @@ class ReservationServiceTest {
     @Mock
     private ReservationRepository reservationRepository;
     @Mock
+    private ReservationLockRepository reservationLockRepository;
+    @Mock
     private ReservationAsync reservationAsync;
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
@@ -49,6 +53,8 @@ class ReservationServiceTest {
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
+        when(reservationLockRepository.unlock(1L)).thenReturn(TRUE);
         doNothing().when(reservationAsync).setPreOcuppied(reservationTime);
         //when
         CreateReservationResponse response = reservationService.preOccupyReservation(
@@ -74,6 +80,7 @@ class ReservationServiceTest {
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
 
         //when
         assertThrows(BadRequestCustomException.class,
@@ -96,6 +103,7 @@ class ReservationServiceTest {
         when(reservationTimeRepository.findByIdWithShop(any(Long.class))).thenReturn(
             Optional.of(reservationTime));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+
         CreateReservationResponse response = reservationService.registerReservation(request);
 
         assertAll(
@@ -145,7 +153,7 @@ class ReservationServiceTest {
         when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
 
         List<GetAllReservationResponse> all = reservationService.getAllReservation();
-        assertThat(all.size()).isZero();
+        assertThat(all).isEmpty();
     }
 
 }
