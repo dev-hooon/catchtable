@@ -28,7 +28,7 @@ public class ShopFixture {
             .address(new Address("서울시", "중구"))
             .capacity(30)
             .openingTime(LocalTime.of(0, 0))
-            .closingTime(LocalTime.of(23, 59,59))
+            .closingTime(LocalTime.of(23, 59, 59))
             .build();
     }
 }
