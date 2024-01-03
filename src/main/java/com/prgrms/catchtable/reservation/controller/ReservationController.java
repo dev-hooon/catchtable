@@ -18,8 +18,14 @@ public class ReservationController {
     private final ReservationFacade reservationFacade;
 
     @PostMapping
-    public ResponseEntity<CreateReservationResponse> createReservationResponse(
+    public ResponseEntity<CreateReservationResponse> preOccupyReservation(
         @RequestBody CreateReservationRequest request) {
         return ResponseEntity.ok(reservationFacade.preOccupyReservation(request));
+    }
+
+    @PostMapping("/success")
+    public ResponseEntity<CreateReservationResponse> registerReservation(
+        @RequestBody CreateReservationRequest request) {
+        return ResponseEntity.ok(reservationFacade.registerReservation(request));
     }
 }

@@ -3,7 +3,7 @@ package com.prgrms.catchtable.reservation.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.prgrms.catchtable.common.data.reservation.ReservationData;
+import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -31,7 +31,7 @@ class ReservationTimeRepositoryTest {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
-        ReservationTime reservationTime = ReservationData.getReservationTimeNotPreOccupied();
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(savedShop);
         ReservationTime savedTime = reservationTimeRepository.save(reservationTime);
 
