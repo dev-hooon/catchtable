@@ -16,24 +16,7 @@ import org.springframework.stereotype.Service;
 public class ReservationFacade {
 
     private final ReservationService reservationService;
-    private final ReservationAsync reservationAsync;
 
-    public CreateReservationResponse preOccupyReservation(
-        CreateReservationRequest request) {
-        ReservationTime reservationTime = reservationService.validateReservationAndSave(
-            request);
-
-        String shopName = reservationTime.getShop().getName();
-
-        reservationAsync.setPreOcuppied(reservationTime);
-
-        return CreateReservationResponse.builder()
-            .shopName(shopName)
-            .memberName("memberA")
-            .date(reservationTime.getTime())
-            .peopleCount(request.peopleCount())
-            .build();
-    }
 
     public CreateReservationResponse registerReservation(CreateReservationRequest request) {
         Reservation reservation = reservationService.validateReservationAndSaveIsEmpty(request);
