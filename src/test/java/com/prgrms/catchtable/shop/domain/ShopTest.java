@@ -15,8 +15,8 @@ class ShopTest {
     @Test
     void validate_shop_not_running_time() {
         //given
-        LocalTime beforeOpeningTime = LocalTime.of(10, 59);
-        LocalTime afterClosingTime = LocalTime.of(21, 1);
+        LocalTime beforeOpeningTime = LocalTime.of(5, 59);
+        LocalTime afterClosingTime = LocalTime.of(23, 1);
         Shop shop = ShopFixture.shop();
         //when, then
         assertThrows(
@@ -31,8 +31,8 @@ class ShopTest {
     @Test
     void validate_shop_running_time() {
         //given
-        LocalTime openingTime = LocalTime.of(11, 0);
-        LocalTime closingTime = LocalTime.of(21, 0);
+        LocalTime openingTime = LocalTime.of(6, 0);
+        LocalTime closingTime = LocalTime.of(23, 0);
         Shop shop = ShopFixture.shop();
         //when, then
         assertDoesNotThrow(

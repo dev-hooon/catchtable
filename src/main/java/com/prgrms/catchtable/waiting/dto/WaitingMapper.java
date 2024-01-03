@@ -11,25 +11,24 @@ import lombok.NoArgsConstructor;
 public class WaitingMapper {
 
     // dto -> entity
-    public static Waiting toWaiting(CreateWaitingRequest request, int waitingNumber,
-        int waitingOrder, Member member, Shop shop) {
+    public static Waiting toWaiting(CreateWaitingRequest request, int waitingNumber, Member member,
+        Shop shop) {
         return Waiting.builder()
             .waitingNumber(waitingNumber)
-            .waitingOrder(waitingOrder)
             .peopleCount(request.peopleCount())
             .member(member)
             .shop(shop).build();
     }
 
     // entity -> dto
-    public static CreateWaitingResponse toCreateWaitingResponse(Waiting waiting) {
+    public static CreateWaitingResponse toCreateWaitingResponse(Waiting waiting, int waitingOrder) {
         return CreateWaitingResponse.builder()
             .createdWaitingId(waiting.getId())
             .shopId(waiting.getShop().getId())
             .shopName(waiting.getShop().getName())
             .peopleCount(waiting.getPeopleCount())
             .waitingNumber(waiting.getWaitingNumber())
-            .waitingOrder(waiting.getWaitingOrder())
+            .waitingOrder(waitingOrder)
             .build();
     }
 }
