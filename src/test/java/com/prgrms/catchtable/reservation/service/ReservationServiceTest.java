@@ -5,15 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +31,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 class ReservationServiceTest {
 
     @Mock
-    ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
+    @Mock
+    private ReservationAsync reservationAsync;
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
     @InjectMocks
@@ -43,15 +49,17 @@ class ReservationServiceTest {
             reservationTime.getId());
 
         when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
-
+        doNothing().when(reservationAsync).setPreOcuppied(reservationTime);
         //when
-        ReservationTime savedReservationTime = reservationService.validateReservationAndSave(
+        CreateReservationResponse response = reservationService.preOccupyReservation(
             request);
+
 
         //then
         assertAll(
-            () -> assertThat(savedReservationTime.getTime()).isEqualTo(reservationTime.getTime()),
-            () -> assertThat(savedReservationTime.getShop()).isEqualTo(reservationTime.getShop())
+            () -> assertThat(response.shopName()).isEqualTo(reservationTime.getShop().getName()),
+            () -> assertThat(response.date()).isEqualTo(reservationTime.getTime()),
+            () -> assertThat(response.peopleCount()).isEqualTo(request.peopleCount())
         );
 
 
@@ -70,7 +78,7 @@ class ReservationServiceTest {
 
         //when
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.validateReservationAndSave(request));
+            () -> reservationService.preOccupyReservation(request));
 
 
     }
@@ -83,20 +91,18 @@ class ReservationServiceTest {
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
-            .shop(reservationTime.getShop())
             .reservationTime(reservationTime)
             .build();
 
         when(reservationTimeRepository.findByIdWithShop(any(Long.class))).thenReturn(
             Optional.of(reservationTime));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-        Reservation findReservation = reservationService.validateReservationAndSaveIsEmpty(request);
+        CreateReservationResponse response = reservationService.registerReservation(request);
 
         assertAll(
-            () -> assertThat(findReservation.getReservationTime().getTime()).isEqualTo(
-                reservationTime.getTime()),
-            () -> assertThat(findReservation.getPeopleCount()).isEqualTo(request.peopleCount()),
-            () -> assertThat(findReservation.getStatus()).isEqualTo(COMPLETED)
+            () -> assertThat(response.date()).isEqualTo(reservationTime.getTime()),
+            () -> assertThat(response.shopName()).isEqualTo(reservationTime.getShop().getName()),
+            () -> assertThat(response.peopleCount()).isEqualTo(request.peopleCount())
         );
     }
 
@@ -111,7 +117,36 @@ class ReservationServiceTest {
             Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.validateReservationAndSaveIsEmpty(request));
+            () -> reservationService.registerReservation(request));
+    }
+
+    @Test
+    @DisplayName("예약 전체 조회를 할 수 있다")
+    void getAllReservation() {
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+
+        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(
+            List.of(reservation));
+        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        GetAllReservationResponse findReservation = all.get(0);
+
+        assertAll(
+            () -> assertThat(findReservation.date()).isEqualTo(
+                reservation.getReservationTime().getTime()),
+            () -> assertThat(findReservation.peopleCount()).isEqualTo(reservation.getPeopleCount()),
+            () -> assertThat(findReservation.shopName()).isEqualTo(reservation.getShop().getName()),
+            () -> assertThat(findReservation.status()).isEqualTo(reservation.getStatus())
+        );
+    }
+
+    @Test
+    @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
+    void getAllReservationWithNoResult() {
+        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
+
+        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        assertThat(all.size()).isZero();
     }
 
 }
