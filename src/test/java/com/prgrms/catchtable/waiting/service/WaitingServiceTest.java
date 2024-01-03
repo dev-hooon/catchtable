@@ -47,17 +47,16 @@ class WaitingServiceTest {
             .member(member)
             .shop(shop)
             .waitingNumber(1)
-            .waitingOrder(1)
             .peopleCount(2)
             .build();
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
         given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
         given(waitingRepository.existsByMember(member)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
 
         //when
-        CreateWaitingResponse response = waitingService.createWaiting(1L, request);
+        CreateWaitingResponse response = waitingService.createWaiting(1L, member.getId(), request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),

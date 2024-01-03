@@ -12,6 +12,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class ReservationFixture {
 
+
     public static Reservation getReservation(ReservationTime reservationTime) {
         return Reservation.builder()
             .status(COMPLETED)
