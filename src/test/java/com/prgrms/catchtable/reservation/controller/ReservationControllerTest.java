@@ -1,8 +1,10 @@
 package com.prgrms.catchtable.reservation.controller;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.reservation.domain.ReservationStatus;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
@@ -146,6 +149,19 @@ class ReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
 
         assertThat(savedReservation.getReservationTime()).isEqualTo(modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
+    }
+
+    @Test
+    @DisplayName("예약 삭제 api 호출에 성공한다")
+    void cancelReservation() throws Exception {
+        ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
+        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value(CANCELLED.toString()));
     }
 
 }
