@@ -41,7 +41,7 @@ public class OwnerService {
 
     }
 
-    public Token ownerLogin(LoginOwnerRequest loginRequest){
+    public Token loginOwner(LoginOwnerRequest loginRequest){
 
         //email 확인
         Owner loginOwner = ownerRepository.findOwnerByEmail(loginRequest.email())
