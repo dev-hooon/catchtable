@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.jwt.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;

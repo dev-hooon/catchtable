@@ -14,15 +14,12 @@ import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
@@ -32,8 +29,9 @@ class ReservationTimeRepositoryTest {
     private ReservationTimeRepository reservationTimeRepository;
     @Autowired
     private ShopRepository shopRepository;
+
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
@@ -41,6 +39,7 @@ class ReservationTimeRepositoryTest {
         reservationTime.insertShop(savedShop);
         reservationTimeRepository.save(reservationTime);
     }
+
     @Test
     @DisplayName("예약시간과 그 시간의 매장까지 한번의 쿼리로 조회할 수 있다.")
     void findReservationTimeWithShop() {
@@ -63,7 +62,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("특정 매장에 특정 예약시간이 존재 하는지 조회할 수 있다")
-    void findReservationTimeByShop(){
+    void findReservationTimeByShop() {
         //given
         List<ReservationTime> all = reservationTimeRepository.findAll();
         ReservationTime reservationTime = all.get(0);
@@ -82,7 +81,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("조회하려는 예약시간이 해당 매장에 없는 시간이면 null이 반환된다.")
-    void findReservationTimeNotInShop(){
+    void findReservationTimeNotInShop() {
         //given
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
@@ -90,7 +89,8 @@ class ReservationTimeRepositoryTest {
 
         //when
         Optional<ReservationTime> findReservationTime = reservationTimeRepository.findByIdAndShoId(
-            reservationTime.getId(), savedShop.getId()); // 해당 예약시간은 존재하지만 찾으려는 매장의 예약시간이 아니므로 null 리턴 예상
+            reservationTime.getId(),
+            savedShop.getId()); // 해당 예약시간은 존재하지만 찾으려는 매장의 예약시간이 아니므로 null 리턴 예상
 
         //then
         assertThat(findReservationTime).isEmpty();

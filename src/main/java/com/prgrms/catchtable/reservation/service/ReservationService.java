@@ -40,7 +40,7 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
-        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))){
+        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
                 Thread.sleep(1_500);
             } catch (InterruptedException e) {
@@ -96,20 +96,24 @@ public class ReservationService {
     }
 
     @Transactional
-    public ModifyReservationResponse modifyReservation(Long reservavtionId, ModifyReservationRequest request){
-        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(reservavtionId)
+    public ModifyReservationResponse modifyReservation(Long reservavtionId,
+        ModifyReservationRequest request) {
+        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(
+                reservavtionId)
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_RESERVATION)); //예약 Id로 예약 조회
         Shop shop = reservation.getShop();
 
         ReservationTime reservationTime = reservationTimeRepository.findByIdAndShoId(
                 request.reservationTimeId(), shop.getId())
-            .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_TIME)); // 예약한 매장의 수정하려는 시간을 조회
+            .orElseThrow(
+                () -> new BadRequestCustomException(NOT_EXIST_TIME)); // 예약한 매장의 수정하려는 시간을 조회
 
         validateIsPreOccupied(reservationTime); // 예약시간이 선점되었는 지 확인
 
         validateIsOccupied(reservationTime); // 예약시간이 이미 차지되었는 지 확인
 
-        reservation.modifyReservation(reservationTime, request.peopleCount()); // 예약 필드 값 수정하는 엔티티의 메소드
+        reservation.modifyReservation(reservationTime,
+            request.peopleCount()); // 예약 필드 값 수정하는 엔티티의 메소드
 
         return toModifyReservationResponse(reservation);
     }
@@ -122,7 +126,7 @@ public class ReservationService {
     }
 
     private void validateIsOccupied(ReservationTime reservationTime) {
-        if(reservationTime.isOccupied()){
+        if (reservationTime.isOccupied()) {
             reservationLockRepository.unlock(reservationTime.getId());
             throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
         }

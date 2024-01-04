@@ -30,7 +30,7 @@ public class ReservationMapper {
             .build();
     }
 
-    public static ModifyReservationResponse toModifyReservationResponse (Reservation reservation){
+    public static ModifyReservationResponse toModifyReservationResponse(Reservation reservation) {
         return ModifyReservationResponse.builder()
             .shopName(reservation.getShop().getName())
             .memberName("memberA")

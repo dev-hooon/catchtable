@@ -162,7 +162,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 수정을 성공한다.")
-    void modifyReservation(){
+    void modifyReservation() {
         //given
         Shop shop = ShopData.getShop();
         ReflectionTestUtils.setField(shop, "id", 1L); //shop 생성
@@ -178,8 +178,10 @@ class ReservationServiceTest {
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(
             2L);
 
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(2L, 1L)).thenReturn(Optional.of(modifyTime));
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.of(reservation));
+        when(reservationTimeRepository.findByIdAndShoId(2L, 1L)).thenReturn(
+            Optional.of(modifyTime));
 
         //when
         ModifyReservationResponse response = reservationService.modifyReservation(
@@ -195,37 +197,45 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 예약에 대한 수정을 요청할 경우 예외가 발생한다.")
-    void modifyReservationNotExist(){
+    void modifyReservationNotExist() {
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(1L);
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.empty());
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.empty());
 
-        assertThrows(BadRequestCustomException.class, () -> reservationService.modifyReservation(1L, request));
+        assertThrows(BadRequestCustomException.class,
+            () -> reservationService.modifyReservation(1L, request));
     }
 
     @Test
     @DisplayName("타인에게 선점된 상태인 예약시간으로 변경하려 하면 예외가 발생한다.")
-    void modifyReservationPreOccupied(){
+    void modifyReservationPreOccupied() {
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(1L);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
 
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(any(Long.class), any(Long.class))).thenReturn(Optional.of(reservationTime));
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.of(reservation));
+        when(reservationTimeRepository.findByIdAndShoId(any(Long.class),
+            any(Long.class))).thenReturn(Optional.of(reservationTime));
 
-        assertThrows(BadRequestCustomException.class, () -> reservationService.modifyReservation(1L ,request));
+        assertThrows(BadRequestCustomException.class,
+            () -> reservationService.modifyReservation(1L, request));
     }
 
     @Test
     @DisplayName("타인이 이미 예약한 시간으로 변경하려 하면 예외가 발생한다.")
-    void modifyReservationOccupied(){
+    void modifyReservationOccupied() {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeOccupied();
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(1L);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
 
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(any(Long.class), any(Long.class))).thenReturn(Optional.of(reservationTime));
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.of(reservation));
+        when(reservationTimeRepository.findByIdAndShoId(any(Long.class),
+            any(Long.class))).thenReturn(Optional.of(reservationTime));
 
-        assertThrows(BadRequestCustomException.class, () -> reservationService.modifyReservation(1L ,request));
+        assertThrows(BadRequestCustomException.class,
+            () -> reservationService.modifyReservation(1L, request));
     }
 
 }
