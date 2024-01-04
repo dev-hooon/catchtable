@@ -7,6 +7,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
 import com.prgrms.catchtable.shop.domain.Shop;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -58,6 +59,11 @@ public class Reservation extends BaseEntity {
         this.peopleCount = peopleCount;
         this.reservationTime = reservationTime;
         this.shop = reservationTime.getShop();
+    }
+
+    public void modifyReservation(ReservationTime reservationTime, int peopleCount){
+        this.reservationTime = reservationTime;
+        this.peopleCount = peopleCount;
     }
 
 }
