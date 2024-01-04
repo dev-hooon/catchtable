@@ -39,6 +39,8 @@ class WaitingRepositoryTest {
     private Waiting waiting1;
     private Waiting waiting2;
     private Waiting waiting3;
+    private Member member1, member2, member3;
+    private Waiting yesterdayWaiting, completedWaiting, normalWaiting;
 
     @BeforeEach
     void setUp() {
