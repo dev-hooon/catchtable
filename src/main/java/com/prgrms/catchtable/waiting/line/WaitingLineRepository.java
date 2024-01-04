@@ -70,7 +70,7 @@ public class WaitingLineRepository {
         return -1;
     }
 
-    public int findEndRank(Long shopId) { //postpone에서 사용
+    public int getWaitingLineSize(Long shopId) { //postpone에서 사용
         Queue<Long> waitingLine = waitingLines.get(shopId);
         return waitingLine != null ? waitingLine.size() : 0;
     }
@@ -82,7 +82,7 @@ public class WaitingLineRepository {
     }
 
     private void validateIfPostponeAvailable(Long shopId, Long waitingId) {
-        if (findRank(shopId, waitingId) == findEndRank(shopId)) {
+        if (findRank(shopId, waitingId) == getWaitingLineSize(shopId)) {
             {
                 throw new BadRequestCustomException(ALREADY_END_LINE);
             }

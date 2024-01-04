@@ -79,7 +79,7 @@ public class RedisWaitingLineRepository {
         validateIfWaitingExists(shopId, waitingId);
         validateIfPostponeAvailable(shopId, waitingId);
 
-        if (Objects.equals(findRank(shopId, waitingId), findEndRank(shopId))) {
+        if (Objects.equals(findRank(shopId, waitingId), getWaitingLineSize(shopId))) {
             throw new BadRequestCustomException(ALREADY_END_LINE);
         }
         redisTemplate.execute(new SessionCallback<>() {
@@ -104,10 +104,10 @@ public class RedisWaitingLineRepository {
         if (index == null) {
             throw new NotFoundCustomException(WAITING_DOES_NOT_EXIST);
         }
-        return findEndRank(shopId) - index;
+        return getWaitingLineSize(shopId) - index;
     }
 
-    public Long findEndRank(Long shopId) {
+    public Long getWaitingLineSize(Long shopId) {
         return redisTemplate.opsForList().size("s" + shopId);
     }
 
@@ -119,7 +119,7 @@ public class RedisWaitingLineRepository {
     }
 
     private void validateIfPostponeAvailable(Long shopId, Long waitingId) {
-        if (Objects.equals(findRank(shopId, waitingId), findEndRank(shopId))) {
+        if (Objects.equals(findRank(shopId, waitingId), getWaitingLineSize(shopId))) {
             {
                 throw new BadRequestCustomException(ALREADY_END_LINE);
             }
