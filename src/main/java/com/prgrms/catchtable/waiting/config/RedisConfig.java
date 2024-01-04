@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.waiting.line.config;
+package com.prgrms.catchtable.waiting.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

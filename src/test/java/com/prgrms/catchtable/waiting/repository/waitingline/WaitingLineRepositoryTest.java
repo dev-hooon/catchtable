@@ -1,9 +1,10 @@
-package com.prgrms.catchtable.waiting.line;
+package com.prgrms.catchtable.waiting.repository.waitingline;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

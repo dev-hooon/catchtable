@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.waiting.line;
+package com.prgrms.catchtable.waiting.repository.waitingline;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_END_LINE;
 import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_ENTRY;
