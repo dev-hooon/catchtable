@@ -66,4 +66,8 @@ public class Reservation extends BaseEntity {
         this.peopleCount = peopleCount;
     }
 
+    public void changeStatus(ReservationStatus status){
+        this.status = status;
+    }
+
 }
