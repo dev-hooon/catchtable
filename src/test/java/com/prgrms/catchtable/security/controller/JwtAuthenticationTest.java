@@ -51,7 +51,7 @@ class JwtAuthenticationTest{
     @BeforeEach
     public void init() {
         //Member 객체 저장
-        loginMember = MemberFixture.userDetailsMember(email);
+        loginMember = MemberFixture.member(email);
         memberRepository.save(loginMember);
 
         //토큰 발급

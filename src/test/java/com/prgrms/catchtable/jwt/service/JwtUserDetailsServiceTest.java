@@ -29,7 +29,7 @@ class JwtUserDetailsServiceTest {
     @DisplayName("email을 통해 Member entity를 갖고온다")
     void loadUserByUsernameTest() {
         //given
-        Member member = MemberFixture.userDetailsMember(email);
+        Member member = MemberFixture.member(email);
 
         //when
         when(memberRepository.findMemberByEmail(email)).thenReturn(Optional.of(member));

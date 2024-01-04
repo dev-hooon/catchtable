@@ -15,14 +15,4 @@ public class MemberFixture {
             .dateBirth(LocalDate.parse("2008-12-18"))
             .build();
     }
-
-    public static Member userDetailsMember(String email) {
-        return Member.builder()
-            .name("예시용")
-            .email(email)
-            .phoneNumber("010-1111-1111")
-            .gender(Gender.FEMALE)
-            .dateBirth(LocalDate.parse("2008-12-18"))
-            .build();
-    }
 }

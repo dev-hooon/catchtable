@@ -59,7 +59,7 @@ class JwtTokenProviderTest {
     @DisplayName("토큰을 통해서 Member Entity가 담긴 Authentication 반환")
     void getAuthenticationTest() {
         //given
-        Member member = MemberFixture.userDetailsMember(email);
+        Member member = MemberFixture.member(email);
 
         //when
         when(config.getClientSecret()).thenReturn(clientKey);
