@@ -2,12 +2,11 @@ package com.prgrms.catchtable.reservation.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPIED_RESERVATION_TIME;
-import static com.prgrms.catchtable.common.exception.ErrorCode.EXCEED_PEOPLE_COUNT;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_RESERVATION;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
-import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.*;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCreateReservationResponse;
+import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toModifyReservationResponse;
 import static java.lang.Boolean.FALSE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
@@ -114,14 +113,17 @@ public class ReservationService {
 
         return toModifyReservationResponse(reservation);
     }
-    private static void validateIsPreOccupied(ReservationTime reservationTime) {
+
+    private void validateIsPreOccupied(ReservationTime reservationTime) {
         if (reservationTime.isPreOccupied()) {
+            reservationLockRepository.unlock(reservationTime.getId());
             throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
         }
     }
 
-    private static void validateIsOccupied(ReservationTime reservationTime) {
+    private void validateIsOccupied(ReservationTime reservationTime) {
         if(reservationTime.isOccupied()){
+            reservationLockRepository.unlock(reservationTime.getId());
             throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
         }
     }
