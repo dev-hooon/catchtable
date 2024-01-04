@@ -77,6 +77,8 @@ public class RedisWaitingLineRepository {
 
     public void postpone(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
+        validateIfPostponeAvailable(shopId, waitingId);
+
         if (Objects.equals(findRank(shopId, waitingId), findEndRank(shopId))) {
             throw new BadRequestCustomException(ALREADY_END_LINE);
         }
@@ -105,6 +107,10 @@ public class RedisWaitingLineRepository {
         return findEndRank(shopId) - index;
     }
 
+    public Long findEndRank(Long shopId) {
+        return redisTemplate.opsForList().size("s" + shopId);
+    }
+
     public void validateIfWaitingExists(Long shopId, Long waitingId) {
         Long index = redisTemplate.opsForList().indexOf("s" + shopId, waitingId.toString());
         if (index == null) {
@@ -112,8 +118,12 @@ public class RedisWaitingLineRepository {
         }
     }
 
-    public Long findEndRank(Long shopId) {
-        return redisTemplate.opsForList().size("s" + shopId);
+    private void validateIfPostponeAvailable(Long shopId, Long waitingId) {
+        if (Objects.equals(findRank(shopId, waitingId), findEndRank(shopId))) {
+            {
+                throw new BadRequestCustomException(ALREADY_END_LINE);
+            }
+        }
     }
 
     public void printWaitingLine(Long shopId) {
