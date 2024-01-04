@@ -32,6 +32,7 @@ public class SecurityConfig {
                 SessionCreationPolicy.STATELESS))
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorization -> authorization
+                .requestMatchers(new AntPathRequestMatcher("/testMember/**")).hasRole("MEMBER")
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             )
             .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler));
