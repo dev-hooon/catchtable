@@ -18,7 +18,9 @@ public enum ErrorCode {
     CAN_NOT_COMPLETE_WAITING("입장 처리가 불가한 대기 상태입니다."),
     EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),
     SHOP_NOT_RUNNING("가게가 영업시간이 아닙니다."),
-    INTERNAL_SERVER_ERROR("내부 서버 오류입니다.");
+    INTERNAL_SERVER_ERROR("내부 서버 오류입니다."),
+
+    BAD_REQUEST_INPUT_GENDER_TYPE("성별 타입을 양식대로 입력해주세요");
 
     private final String message;
 }
