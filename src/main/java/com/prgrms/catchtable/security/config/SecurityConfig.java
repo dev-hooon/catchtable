@@ -35,7 +35,12 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/testMember/**")).hasRole("MEMBER")
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             )
-            .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler));
+            .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler))
+            .exceptionHandling(exhandle -> exhandle
+                .authenticationEntryPoint(((request, response, authException) ->
+                    response.sendError(401)))
+                .accessDeniedHandler((request, response, accessDeniedException) ->
+                    response.sendError(403)));
 
         http.addFilterBefore(exceptionHandlerFilter,
             OAuth2AuthorizationRequestRedirectFilter.class);
