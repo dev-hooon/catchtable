@@ -11,7 +11,7 @@ public class OwnerMapper {
         return Owner.builder()
             .name(joinOwnerRequest.name())
             .email(joinOwnerRequest.email())
-            .password(joinOwnerRequest.password())
+            .password(encodePassword)
             .phoneNumber(joinOwnerRequest.phoneNumber())
             .gender(gender)
             .dateBirth(joinOwnerRequest.dateBirth())
