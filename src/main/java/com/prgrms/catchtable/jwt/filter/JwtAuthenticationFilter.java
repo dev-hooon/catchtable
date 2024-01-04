@@ -40,19 +40,24 @@ public class JwtAuthenticationFilter extends GenericFilter {
             if (jwtTokenProvider.validateToken(accessToken)) {
                 setAuthentication(accessToken);
             }
-            //RefreshToken 유효
+            //AccessToken 유효 X
             else {
-                if (jwtTokenProvider.validateToken(refreshToken)) {
-                    RefreshToken refreshTokenEntity = refreshTokenService.getRefreshTokenByToken(
-                        refreshToken);
-                    String email = refreshTokenEntity.getEmail();
-                    Token newToken = jwtTokenProvider.createToken(email);
+                if (refreshToken != null) {
+                    //RefreshToken 유효
+                    if (jwtTokenProvider.validateToken(refreshToken)) {
+                        RefreshToken refreshTokenEntity = refreshTokenService.getRefreshTokenByToken(
+                            refreshToken);
+                        String email = refreshTokenEntity.getEmail();
+                        Token newToken = jwtTokenProvider.createToken(email);
 
-                    ((HttpServletResponse) response).setHeader("AccessToken",
-                        newToken.getAccessToken());
-                    setAuthentication(newToken.getAccessToken());
-                } else {
-                    throw new BadRequestCustomException(TOKEN_EXPIRES);
+                        ((HttpServletResponse) response).setHeader("AccessToken",
+                            newToken.getAccessToken());
+                        setAuthentication(newToken.getAccessToken());
+                    }
+                    //RefreshToken 유효 X
+                    else {
+                        throw new BadRequestCustomException(TOKEN_EXPIRES);
+                    }
                 }
             }
         }
