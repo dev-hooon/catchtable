@@ -7,7 +7,6 @@ import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
 import com.prgrms.catchtable.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,8 +36,9 @@ public class ReservationController {
     }
 
     @PatchMapping("/{reservationId}")
-    public ResponseEntity<ModifyReservationResponse> modifyReservation(@PathVariable("reservationId") Long reservationTimeId,
-        @RequestBody ModifyReservationRequest request){
+    public ResponseEntity<ModifyReservationResponse> modifyReservation(
+        @PathVariable("reservationId") Long reservationTimeId,
+        @RequestBody ModifyReservationRequest request) {
         return ResponseEntity.ok(reservationService.modifyReservation(reservationTimeId, request));
     }
 

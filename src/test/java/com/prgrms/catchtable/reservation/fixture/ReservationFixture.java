@@ -56,7 +56,7 @@ public class ReservationFixture {
             .build();
     }
 
-    public static ModifyReservationRequest getModifyReservationRequest(Long reservationTimeId){
+    public static ModifyReservationRequest getModifyReservationRequest(Long reservationTimeId) {
         return ModifyReservationRequest.builder()
             .reservationTimeId(reservationTimeId)
             .peopleCount(2)

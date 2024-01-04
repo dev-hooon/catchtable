@@ -23,7 +23,6 @@ import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -141,14 +140,15 @@ class ReservationControllerTest extends BaseIntegrationTest {
         ReservationTime modifyReservationTime = reservationTimeRepository.findByIdAndShoId(
             request.reservationTimeId(), reservation.getShop().getId()).orElseThrow(); // 수정하려는 예약시간
 
-        mockMvc.perform(patch("/reservations/{reservaionId}",savedReservation.getId())
-            .contentType(APPLICATION_JSON)
-            .content(asJsonString(request)))
+        mockMvc.perform(patch("/reservations/{reservaionId}", savedReservation.getId())
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.date").value(modifyReservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
 
-        assertThat(savedReservation.getReservationTime()).isEqualTo(modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
+        assertThat(savedReservation.getReservationTime()).isEqualTo(
+            modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
     }
 
     @Test
