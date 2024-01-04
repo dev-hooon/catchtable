@@ -10,19 +10,23 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.domain.WaitingStatus;
+import com.prgrms.catchtable.waiting.fixture.WaitingFixture;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
+@Transactional
 class WaitingRepositoryTest {
 
     private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
@@ -36,82 +40,62 @@ class WaitingRepositoryTest {
     @Autowired
     private ShopRepository shopRepository;
     private Shop shop;
-    private Waiting waiting1;
-    private Waiting waiting2;
-    private Waiting waiting3;
     private Member member1, member2, member3;
     private Waiting yesterdayWaiting, completedWaiting, normalWaiting;
 
     @BeforeEach
     void setUp() {
-        Member member1 = MemberFixture.member("test1");
-        Member member2 = MemberFixture.member("test2");
-        Member member3 = MemberFixture.member("test3");
-
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
+        member1 = MemberFixture.member("test1");
+        member2 = MemberFixture.member("test2");
+        member3 = MemberFixture.member("test3");
+        memberRepository.saveAll(List.of(member1, member2, member3));
 
         shop = ShopFixture.shop();
         shopRepository.save(shop);
-
-        waiting1 = Waiting.builder()
-            .member(member1)
-            .shop(shop)
-            .waitingNumber(1)
-            .waitingOrder(1)
-            .peopleCount(2)
-            .build();
-
-        waiting2 = Waiting.builder()
-            .member(member2)
-            .shop(shop)
-            .waitingNumber(2)
-            .waitingOrder(2)
-            .peopleCount(2)
-            .build();
-
-        waiting3 = Waiting.builder()
-            .member(member3)
-            .shop(shop)
-            .waitingNumber(3)
-            .waitingOrder(3)
-            .peopleCount(2)
-            .build();
-        waitingRepository.save(waiting1);
-        waitingRepository.save(waiting2);
-        waitingRepository.save(waiting3);
     }
 
-    @DisplayName("특정 가게의 당일 대기 인원을 조회할 수 있다.")
-    @Test
-    void countByShopAndStatusAndCreatedAtBetween() {
-        //given
-        ReflectionTestUtils.setField(waiting1, "createdAt", LocalDateTime.now().minusDays(1));
-        waitingRepository.save(waiting1); //어제자 대기 생성
-        ReflectionTestUtils.setField(waiting2, "status", WaitingStatus.COMPLETED);
-        waitingRepository.save(waiting2); //입장상태 대기 생성
-
-        //when
-        Long count = waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop, PROGRESS,
-            START_DATE_TIME, END_DATE_TIME);
-        //then
-        assertThat(count).isEqualTo(1L);
+    @AfterEach
+    void clear() {
+        memberRepository.deleteAll();
+        waitingRepository.deleteAll();
+        shopRepository.deleteAll();
     }
 
-    @DisplayName("특정 가게의 당일 대기 인원을 조회할 수 있다.")
+    @DisplayName("특정 가게의 당일 대기 번호를 조회할 수 있다.")
     @Test
     void countByShopAndCreatedAtBetween() {
-        //given
-        ReflectionTestUtils.setField(waiting1, "createdAt", LocalDateTime.now().minusDays(1));
-        waitingRepository.save(waiting1);
-        ReflectionTestUtils.setField(waiting2, "status", WaitingStatus.COMPLETED);
-        waitingRepository.save(waiting2);
+        yesterdayWaiting = WaitingFixture.waiting(member1, shop, 1);
+        completedWaiting = WaitingFixture.completedWaiting(member2, shop, 2);
+        normalWaiting = WaitingFixture.waiting(member3, shop, 3);
+        waitingRepository.saveAll(List.of(yesterdayWaiting, completedWaiting, normalWaiting));
+
+        ReflectionTestUtils.setField(yesterdayWaiting, "createdAt",
+            LocalDateTime.now().minusDays(1));
+        waitingRepository.save(yesterdayWaiting);
 
         //when
         Long count = waitingRepository.countByShopAndCreatedAtBetween(shop, START_DATE_TIME,
             END_DATE_TIME);
         //then
-        assertThat(count).isEqualTo(2L);
+        assertThat(count).isEqualTo(2L); //waiting2, waiting3
+    }
+
+    @DisplayName("특정 가게의 당일 대기 순서를 조회할 수 있다.")
+    @Test
+    void countByShopAndStatusAndCreatedAtBetween() {
+        yesterdayWaiting = WaitingFixture.waiting(member1, shop, 1);
+        completedWaiting = WaitingFixture.completedWaiting(member2, shop, 2);
+        normalWaiting = WaitingFixture.waiting(member3, shop, 3);
+        waitingRepository.saveAll(List.of(yesterdayWaiting, completedWaiting, normalWaiting));
+
+        ReflectionTestUtils.setField(yesterdayWaiting, "createdAt",
+            LocalDateTime.now().minusDays(1));
+        waitingRepository.save(yesterdayWaiting);
+
+        //when
+        Long count = waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop, PROGRESS,
+            START_DATE_TIME, END_DATE_TIME);
+        //then
+        assertThat(count).isEqualTo(1L); //waiting3
     }
 }

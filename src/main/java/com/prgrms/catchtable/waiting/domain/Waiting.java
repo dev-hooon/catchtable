@@ -1,5 +1,10 @@
 package com.prgrms.catchtable.waiting.domain;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_COMPLETE_WAITING;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.NO_SHOW;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static jakarta.persistence.ConstraintMode.NO_CONSTRAINT;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -7,6 +12,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import jakarta.persistence.Column;
@@ -35,9 +41,6 @@ public class Waiting extends BaseEntity {
     @Column(name = "waiting_number")
     private int waitingNumber;
 
-    @Column(name = "waiting_order")
-    private int waitingOrder;
-
     @Column(name = "people_count")
     private int peopleCount;
 
@@ -45,8 +48,8 @@ public class Waiting extends BaseEntity {
     @Enumerated(STRING)
     private WaitingStatus status;
 
-    @Column(name = "delay_remaining_count")
-    private int delayRemainingCount;
+    @Column(name = "postpone_remaining_count")
+    private int postponeRemainingCount;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(NO_CONSTRAINT))
@@ -57,13 +60,19 @@ public class Waiting extends BaseEntity {
     private Shop shop;
 
     @Builder
-    public Waiting(int waitingNumber, int waitingOrder, int peopleCount, Member member, Shop shop) {
+    public Waiting(int waitingNumber, int peopleCount, Member member, Shop shop) {
         this.waitingNumber = waitingNumber;
-        this.waitingOrder = waitingOrder;
         this.peopleCount = peopleCount;
         this.member = member;
         this.shop = shop;
-        status = WaitingStatus.PROGRESS;
-        delayRemainingCount = 2;
+        status = PROGRESS;
+        postponeRemainingCount = 2;
+    }
+
+    public void completeWaiting() {
+        if (status == NO_SHOW || status == CANCELED) {
+            throw new BadRequestCustomException(CAN_NOT_COMPLETE_WAITING);
+        }
+        status = COMPLETED;
     }
 }

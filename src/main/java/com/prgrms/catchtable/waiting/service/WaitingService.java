@@ -34,9 +34,10 @@ public class WaitingService {
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
 
-    public CreateWaitingResponse createWaiting(Long shopId, CreateWaitingRequest request) {
+    public CreateWaitingResponse createWaiting(Long shopId, Long memberId,
+        CreateWaitingRequest request) {
         // 연관 엔티티 조회
-        Member member = getMemberEntity(1L);
+        Member member = getMemberEntity(memberId);
         Shop shop = getShopEntity(shopId);
 
         // shop 영업 중인지 검증
@@ -46,19 +47,18 @@ public class WaitingService {
         validateIfMemberWaitingExists(member);
 
         // 대기 번호 생성
-        int waitingNumber = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
-            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
-
-        // 대기 순서 생성
-        int waitingOrder = (waitingRepository.countByShopAndCreatedAtBetween(shop,
+        int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
             START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
+        // 대기 순서 생성
+        int waitingOrder = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
+            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
+
         // waiting 저장
-        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, waitingOrder, member,
-            shop);
+        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, member, shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        return WaitingMapper.toCreateWaitingResponse(savedWaiting);
+        return WaitingMapper.toCreateWaitingResponse(savedWaiting, waitingOrder);
     }
 
     private void validateIfMemberWaitingExists(Member member) {

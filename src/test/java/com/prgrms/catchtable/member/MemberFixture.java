@@ -6,9 +6,10 @@ import java.time.LocalDate;
 
 public class MemberFixture {
 
-    public static Member member(String name) {
+    public static Member member(String email) {
         return Member.builder()
-            .name(name)
+            .name("member")
+            .email(email)
             .phoneNumber("010-1111-1111")
             .gender(Gender.FEMALE)
             .dateBirth(LocalDate.parse("2008-12-18"))

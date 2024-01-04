@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.common.data.reservation;
+package com.prgrms.catchtable.reservation.fixture;
 
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 
@@ -10,13 +10,14 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class ReservationData {
+public class ReservationFixture {
 
-    public static Reservation getReservation() {
+
+    public static Reservation getReservation(ReservationTime reservationTime) {
         return Reservation.builder()
             .status(COMPLETED)
             .peopleCount(4)
-            .reservationTime(getReservationTimeNotPreOccupied())
+            .reservationTime(reservationTime)
             .build();
     }
 
