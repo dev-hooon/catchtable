@@ -45,9 +45,7 @@ public class WaitingLineRepository {
     public void postpone(Long shopId, Long waitingId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         validateIfWaitingExists(waitingLine, waitingId);
-        if (findRank(shopId, waitingId)==findRankEnd(shopId)){{
-            throw new BadRequestCustomException(ALREADY_END_LINE);
-        }}
+        validateIfPostponeAvailable(shopId, waitingId);
         for (Long waitingIdInLine : waitingLine) {
             if (Objects.equals(waitingIdInLine, waitingId)) {
                 waitingLine.remove(waitingIdInLine);
@@ -70,22 +68,28 @@ public class WaitingLineRepository {
         return -1;
     }
 
+    public int findEndRank(Long shopId) { //postpone에서 사용
+        Queue<Long> waitingLine = waitingLines.get(shopId);
+        return waitingLine != null ? waitingLine.size() : 0;
+    }
+
     public void validateIfWaitingExists(Queue<Long> waitingLine, Long waitingId) {
         if (!waitingLine.contains(waitingId)) {
             throw new NotFoundCustomException(WAITING_DOES_NOT_EXIST);
         }
     }
 
-    public int findRankEnd(Long shopId) { //postpone에서 사용
-        Queue<Long> waitingLine = waitingLines.get(shopId);
-        return waitingLine != null ? waitingLine.size() : 0;
+    private void validateIfPostponeAvailable(Long shopId, Long waitingId) {
+        if (findRank(shopId, waitingId)== findEndRank(shopId)){{
+            throw new BadRequestCustomException(ALREADY_END_LINE);
+        }}
     }
 
     public void clear(){
         waitingLines.clear();
     }
 
-    public void printQueue(Long shopId) {
+    public void printWaitingLine(Long shopId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         if (waitingLine != null) {
             log.info("Queue: {}", waitingLine);
