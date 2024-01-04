@@ -30,23 +30,23 @@ import org.springframework.web.context.WebApplicationContext;
 class JwtAuthenticationTest{
 
     @Autowired
-    WebApplicationContext webApplicationContext;
+    private WebApplicationContext webApplicationContext;
     @Autowired
-    ExceptionHandlerFilter exceptionHandlerFilter;
+    private ExceptionHandlerFilter exceptionHandlerFilter;
     @Autowired
-    JwtAuthenticationFilter jwtAuthenticationFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    RefreshTokenService refreshTokenService;
+    private RefreshTokenService refreshTokenService;
     @Autowired
-    JwtTokenProvider jwtTokenProvider;
-    MockMvc mockMvc;
+    private JwtTokenProvider jwtTokenProvider;
+    private MockMvc mockMvc;
 
-    Member loginMember;
-    String email = "abc1234@gmail.com";
-    Token token;
+    private Member loginMember;
+    private String email = "abc1234@gmail.com";
+    private Token token;
 
     @BeforeEach
     public void init() {
