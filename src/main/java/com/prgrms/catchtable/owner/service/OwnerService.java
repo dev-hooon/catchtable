@@ -27,9 +27,7 @@ public class OwnerService {
     public JoinOwnerResponse joinOwner(JoinOwnerRequest joinOwnerRequest) {
 
         //이미 존재하는 이메일이라면
-        if (ownerRepository.existsOwnerByEmail(joinOwnerRequest.email())) {
-            throw new BadRequestCustomException(ALREADY_EXIST_OWNER);
-        }
+        validateExistsOwner(joinOwnerRequest);
 
         String encodePassword = passwordEncoder.encode(joinOwnerRequest.password());
 
@@ -41,6 +39,12 @@ public class OwnerService {
 
     }
 
+    private void validateExistsOwner(JoinOwnerRequest joinOwnerRequest) {
+        if (ownerRepository.existsOwnerByEmail(joinOwnerRequest.email())) {
+            throw new BadRequestCustomException(ALREADY_EXIST_OWNER);
+        }
+    }
+
     public Token loginOwner(LoginOwnerRequest loginRequest){
 
         //email 확인
@@ -48,11 +52,15 @@ public class OwnerService {
             .orElseThrow(() -> new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD));
 
         //password 확인
+        validatePassword(loginRequest, loginOwner);
+
+        return jwtTokenProvider.createToken(loginOwner.getEmail());
+    }
+
+    private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner){
         if(passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())){
             throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
         }
-
-        return jwtTokenProvider.createToken(loginOwner.getEmail());
     }
 
 }
