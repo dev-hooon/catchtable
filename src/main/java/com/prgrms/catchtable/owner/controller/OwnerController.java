@@ -1,6 +1,8 @@
 package com.prgrms.catchtable.owner.controller;
 
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.owner.dto.request.JoinOwnerRequest;
+import com.prgrms.catchtable.owner.dto.request.LoginOwnerRequest;
 import com.prgrms.catchtable.owner.dto.response.JoinOwnerResponse;
 import com.prgrms.catchtable.owner.service.OwnerService;
 import jakarta.validation.Valid;
@@ -24,6 +26,13 @@ public class OwnerController {
         JoinOwnerResponse joinOwnerResponse = ownerService.joinOwner(joinOwnerRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(joinOwnerResponse);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Token> login(@Valid @RequestBody LoginOwnerRequest loginOwnerRequest){
+        Token responseToken = ownerService.loginOwner(loginOwnerRequest);
+
+        return ResponseEntity.ok(responseToken);
     }
 
 }
