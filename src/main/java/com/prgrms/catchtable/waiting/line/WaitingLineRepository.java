@@ -13,6 +13,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
 @Slf4j
 @Component
 public class WaitingLineRepository {
@@ -24,13 +25,14 @@ public class WaitingLineRepository {
         waitingLine.add(waitingId);
     }
 
-    public void entry(Long shopId, Long waitingId){
+    public void entry(Long shopId, Long waitingId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
-        if (!Objects.equals(waitingLine.peek(), waitingId)){
+        if (!Objects.equals(waitingLine.peek(), waitingId)) {
             throw new BadRequestCustomException(CAN_NOT_ENTRY);
         }
         waitingLine.remove();
     }
+
     public void cancel(Long shopId, Long waitingId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         validateIfWaitingExists(waitingLine, waitingId);
@@ -80,12 +82,14 @@ public class WaitingLineRepository {
     }
 
     private void validateIfPostponeAvailable(Long shopId, Long waitingId) {
-        if (findRank(shopId, waitingId)== findEndRank(shopId)){{
-            throw new BadRequestCustomException(ALREADY_END_LINE);
-        }}
+        if (findRank(shopId, waitingId) == findEndRank(shopId)) {
+            {
+                throw new BadRequestCustomException(ALREADY_END_LINE);
+            }
+        }
     }
 
-    public void clear(){
+    public void clear() {
         waitingLines.clear();
     }
 

@@ -73,8 +73,8 @@ class RedisWaitingLineRepositoryTest {
         Long shopId = 1L;
 
         repository.save(shopId, 1L);
-        repository.save(shopId,2L);
-        repository.save(shopId,3L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
 
         //when
         repository.postpone(1L, 1L);
@@ -96,8 +96,8 @@ class RedisWaitingLineRepositoryTest {
         Long shopId = 1L;
 
         repository.save(shopId, 1L);
-        repository.save(shopId,2L);
-        repository.save(shopId,3L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
 
         //when, then
         assertThrows(BadRequestCustomException.class,
@@ -111,8 +111,8 @@ class RedisWaitingLineRepositoryTest {
         Long shopId = 1L;
 
         repository.save(shopId, 1L);
-        repository.save(shopId,2L);
-        repository.save(shopId,3L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
 
         //when
         repository.cancel(1L, 1L);

@@ -39,7 +39,7 @@ public class RedisWaitingLineRepository {
         });
     }
 
-    public void entry(Long shopId, Long waitingId){
+    public void entry(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
         redisTemplate.execute(new SessionCallback<>() {
             @Override
@@ -65,7 +65,7 @@ public class RedisWaitingLineRepository {
                 throws DataAccessException {
                 try {
                     operations.multi();
-                    redisTemplate.opsForList().remove("s"+shopId,1,waitingId.toString());
+                    redisTemplate.opsForList().remove("s" + shopId, 1, waitingId.toString());
                     return operations.exec();
                 } catch (Exception e) {
                     operations.discard();
@@ -102,7 +102,7 @@ public class RedisWaitingLineRepository {
         if (index == null) {
             throw new NotFoundCustomException(WAITING_DOES_NOT_EXIST);
         }
-        return findEndRank(shopId)-index;
+        return findEndRank(shopId) - index;
     }
 
     public void validateIfWaitingExists(Long shopId, Long waitingId) {

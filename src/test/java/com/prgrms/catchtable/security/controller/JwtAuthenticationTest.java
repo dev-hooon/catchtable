@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.security.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.jwt.filter.JwtAuthenticationFilter;
@@ -27,7 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 @AutoConfigureMockMvc
 @WebAppConfiguration
-class JwtAuthenticationTest{
+class JwtAuthenticationTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;

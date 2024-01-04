@@ -25,8 +25,8 @@ class WaitingLineRepositoryTest {
         Long shopId = 1L;
 
         waitingLineRepository.save(shopId, 1L);
-        waitingLineRepository.save(shopId,2L);
-        waitingLineRepository.save(shopId,3L);
+        waitingLineRepository.save(shopId, 2L);
+        waitingLineRepository.save(shopId, 3L);
 
         //when
         waitingLineRepository.entry(1L, 1L);
@@ -60,8 +60,8 @@ class WaitingLineRepositoryTest {
         Long shopId = 1L;
 
         waitingLineRepository.save(shopId, 1L);
-        waitingLineRepository.save(shopId,2L);
-        waitingLineRepository.save(shopId,3L);
+        waitingLineRepository.save(shopId, 2L);
+        waitingLineRepository.save(shopId, 3L);
 
         //when
         waitingLineRepository.postpone(1L, 1L);
@@ -83,8 +83,8 @@ class WaitingLineRepositoryTest {
         Long shopId = 1L;
 
         waitingLineRepository.save(shopId, 1L);
-        waitingLineRepository.save(shopId,2L);
-        waitingLineRepository.save(shopId,3L);
+        waitingLineRepository.save(shopId, 2L);
+        waitingLineRepository.save(shopId, 3L);
 
         //when, then
         assertThrows(BadRequestCustomException.class,
@@ -98,8 +98,8 @@ class WaitingLineRepositoryTest {
         Long shopId = 1L;
 
         waitingLineRepository.save(shopId, 1L);
-        waitingLineRepository.save(shopId,2L);
-        waitingLineRepository.save(shopId,3L);
+        waitingLineRepository.save(shopId, 2L);
+        waitingLineRepository.save(shopId, 3L);
 
         //when
         waitingLineRepository.cancel(1L, 1L);
