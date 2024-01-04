@@ -21,6 +21,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("내부 서버 오류입니다."),
 
     ALREADY_EXIST_OWNER("이미 존재하는 점주입니다"),
+    BAD_REQUEST_EMAIL_OR_PASSWORD("이메일 혹은 비밀번호를 확인해주세요"),
     BAD_REQUEST_INPUT_GENDER_TYPE("성별 타입을 양식대로 입력해주세요");
 
     private final String message;

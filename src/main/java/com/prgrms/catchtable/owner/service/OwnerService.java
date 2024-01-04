@@ -3,10 +3,13 @@ package com.prgrms.catchtable.owner.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.*;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.domain.Gender;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.dto.OwnerMapper;
 import com.prgrms.catchtable.owner.dto.request.JoinOwnerRequest;
+import com.prgrms.catchtable.owner.dto.request.LoginOwnerRequest;
 import com.prgrms.catchtable.owner.dto.response.JoinOwnerResponse;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ public class OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public JoinOwnerResponse joinOwner(JoinOwnerRequest joinOwnerRequest) {
 
@@ -35,6 +39,20 @@ public class OwnerService {
 
         return OwnerMapper.from(joinOwner);
 
+    }
+
+    public Token ownerLogin(LoginOwnerRequest loginRequest){
+
+        //email 확인
+        Owner loginOwner = ownerRepository.findOwnerByEmail(loginRequest.email())
+            .orElseThrow(() -> new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD));
+
+        //password 확인
+        if(passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())){
+            throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
+        }
+
+        return jwtTokenProvider.createToken(loginOwner.getEmail());
     }
 
 }
