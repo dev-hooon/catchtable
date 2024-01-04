@@ -20,6 +20,7 @@ public enum ErrorCode {
     SHOP_NOT_RUNNING("가게가 영업시간이 아닙니다."),
     INTERNAL_SERVER_ERROR("내부 서버 오류입니다."),
 
+    ALREADY_EXIST_OWNER("이미 존재하는 점주입니다"),
     BAD_REQUEST_INPUT_GENDER_TYPE("성별 타입을 양식대로 입력해주세요");
 
     private final String message;
