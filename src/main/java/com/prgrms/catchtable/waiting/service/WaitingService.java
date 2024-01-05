@@ -13,8 +13,8 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
 import com.prgrms.catchtable.waiting.dto.WaitingMapper;
+import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +34,7 @@ public class WaitingService {
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
 
-    public CreateWaitingResponse createWaiting(Long shopId, Long memberId,
+    public WaitingResponse createWaiting(Long shopId, Long memberId,
         CreateWaitingRequest request) {
         // 연관 엔티티 조회
         Member member = getMemberEntity(memberId);
@@ -60,6 +60,7 @@ public class WaitingService {
 
         return WaitingMapper.toCreateWaitingResponse(savedWaiting, waitingOrder);
     }
+
 
     private void validateIfMemberWaitingExists(Member member) {
         if (waitingRepository.existsByMember(member)) {
