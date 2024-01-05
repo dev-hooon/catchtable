@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class ReservationControllerTest extends BaseIntegrationTest {
+class MemberReservationControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
@@ -133,9 +133,16 @@ class ReservationControllerTest extends BaseIntegrationTest {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
+        /**
+         * 수정하려는 예약시간 예제 데이터 생성
+         */
+        Shop findShop = shopRepository.findAll().get(0);
+        ReservationTime reservationTime1 = ReservationFixture.getReservationTimeNotPreOccupied();
+        reservationTime1.insertShop(findShop);
+        ReservationTime savedReservationTime1 = reservationTimeRepository.save(reservationTime1);
 
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(
-            reservationTime.getId());
+            savedReservationTime1.getId());
 
         ReservationTime modifyReservationTime = reservationTimeRepository.findByIdAndShopId(
             request.reservationTimeId(), reservation.getShop().getId()).orElseThrow(); // 수정하려는 예약시간
@@ -149,6 +156,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
 
         assertThat(savedReservation.getReservationTime()).isEqualTo(
             modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
+        assertThat(savedReservation.getReservationTime().isOccupied()).isFalse();
     }
 
     @Test
