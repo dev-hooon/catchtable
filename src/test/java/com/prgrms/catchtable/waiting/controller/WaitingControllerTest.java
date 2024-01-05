@@ -50,7 +50,6 @@ class WaitingControllerTest extends BaseIntegrationTest {
     void setUp() {
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
-        redisTemplate.delete("s" + shop.getId());
         Member member1 = MemberFixture.member("test1@naver.com");
         Member member2 = MemberFixture.member("test2@naver.com");
         member3 = MemberFixture.member("test3@naver.com");
