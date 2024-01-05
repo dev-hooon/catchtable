@@ -9,6 +9,7 @@ import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,62 @@ class ReservationRepositoryTest {
         assertAll(
             () -> assertThat(findReservation.getReservationTime()).isEqualTo(savedReservationTime),
             () -> assertThat(findReservation.getShop()).isEqualTo(savedShop)
+        );
+    }
+    @Test
+    @DisplayName("예약 Id를 통해 예약(예약시간, 매장까지)을 조회할 수 있다.")
+    void findByIdWithReservationTimeAndShop() {
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Shop shop = ShopData.getShop();
+        Shop savedShop = shopRepository.save(shop);
+        reservationTime.insertShop(savedShop);
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+
+        Reservation reservation = ReservationFixture.getReservation(savedReservationTime);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        Reservation findReservation = reservationRepository.findByIdWithReservationTimeAndShop(
+            savedReservation.getId()).orElseThrow();
+
+        assertAll(
+            () -> assertThat(findReservation.getReservationTime()).isEqualTo(savedReservationTime),
+            () -> assertThat(findReservation.getShop()).isEqualTo(savedShop),
+            () -> assertThat(findReservation.getPeopleCount()).isEqualTo(savedReservation.getPeopleCount())
+        );
+    }
+
+    @Test
+    @DisplayName("가게 아이디와 일치하는 예약을 전체 조회할 수 있다")
+    void getAllReservationByShopId(){
+        /**
+         * 첫번째 예제 예약 데이터 저장
+         */
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Shop shop = ShopData.getShop();
+        Shop savedShop = shopRepository.save(shop);
+        reservationTime.insertShop(savedShop);
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+        Reservation reservation = ReservationFixture.getReservation(savedReservationTime);
+
+        reservationRepository.save(reservation);
+        /**
+         * 두번째 예제 예약 데이터 저장 (점주의 가게 예약이 아닌 데이터)
+         */
+        ReservationTime otherReservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Shop otherShop = ShopFixture.shop();
+        Shop otherSavedShop = shopRepository.save(otherShop);
+        otherReservationTime.insertShop(otherSavedShop);
+        ReservationTime otherSavedReservationTime = reservationTimeRepository.save(otherReservationTime);
+        Reservation otherReservation = ReservationFixture.getReservation(otherSavedReservationTime);
+
+        reservationRepository.save(otherReservation);
+
+        List<Reservation> all = reservationRepository.findAllWithReservationTimeAndShopByShopId(
+            savedShop.getId());
+
+        assertAll(
+            () -> assertThat(all).contains(reservation),
+            () -> assertThat(all).doesNotContain(otherReservation)
         );
     }
 
