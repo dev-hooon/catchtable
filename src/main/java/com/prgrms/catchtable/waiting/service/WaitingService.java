@@ -16,6 +16,7 @@ import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.WaitingMapper;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
+import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +34,7 @@ public class WaitingService {
     private final WaitingRepository waitingRepository;
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
+    private final WaitingLineRepository waitingLineRepository;
 
     public WaitingResponse createWaiting(Long shopId, Long memberId,
         CreateWaitingRequest request) {
@@ -50,15 +52,14 @@ public class WaitingService {
         int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
             START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
-        // 대기 순서 생성
-        int waitingOrder = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
-            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
-
         // waiting 저장
         Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, member, shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        return WaitingMapper.toCreateWaitingResponse(savedWaiting, waitingOrder);
+        waitingLineRepository.save(shopId, waiting.getId());
+        Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
+
+        return WaitingMapper.toCreateWaitingResponse(savedWaiting, rank);
     }
 
 
