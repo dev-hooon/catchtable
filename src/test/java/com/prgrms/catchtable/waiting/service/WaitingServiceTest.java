@@ -13,7 +13,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
+import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -56,7 +56,7 @@ class WaitingServiceTest {
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
 
         //when
-        CreateWaitingResponse response = waitingService.createWaiting(1L, member.getId(), request);
+        WaitingResponse response = waitingService.createWaiting(1L, member.getId(), request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
