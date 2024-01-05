@@ -3,6 +3,7 @@ package com.prgrms.catchtable.reservation.dto.mapper;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
@@ -36,6 +37,12 @@ public class ReservationMapper {
             .memberName("memberA")
             .date(reservation.getReservationTime().getTime())
             .peopleCount(reservation.getPeopleCount())
+            .build();
+    }
+
+    public static CancelReservationResponse toCancelReservationResponse (Reservation reservation){
+        return CancelReservationResponse.builder()
+            .status(reservation.getStatus())
             .build();
     }
 

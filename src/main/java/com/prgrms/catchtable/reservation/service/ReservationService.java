@@ -4,7 +4,9 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_RESERVATION;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
+import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCancelReservationResponse;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCreateReservationResponse;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toModifyReservationResponse;
 import static java.lang.Boolean.FALSE;
@@ -16,6 +18,7 @@ import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
+import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
@@ -103,7 +106,7 @@ public class ReservationService {
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_RESERVATION)); //예약 Id로 예약 조회
         Shop shop = reservation.getShop();
 
-        ReservationTime reservationTime = reservationTimeRepository.findByIdAndShoId(
+        ReservationTime reservationTime = reservationTimeRepository.findByIdAndShopId(
                 request.reservationTimeId(), shop.getId())
             .orElseThrow(
                 () -> new BadRequestCustomException(NOT_EXIST_TIME)); // 예약한 매장의 수정하려는 시간을 조회
@@ -116,6 +119,20 @@ public class ReservationService {
             request.peopleCount()); // 예약 필드 값 수정하는 엔티티의 메소드
 
         return toModifyReservationResponse(reservation);
+    }
+
+    @Transactional
+    public CancelReservationResponse cancelReservation(Long reservationId){
+        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(reservationId)
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_RESERVATION));
+
+        reservation.changeStatus(CANCELLED); // 해당 예약 상태 취소로 변경
+
+        ReservationTime reservationTime = reservation.getReservationTime(); // 해당 예약의 예약시간 차지 여부 true로 변경
+
+        reservationTime.reverseOccupied();
+
+        return toCancelReservationResponse(reservation);
     }
 
     private void validateIsPreOccupied(ReservationTime reservationTime) {
