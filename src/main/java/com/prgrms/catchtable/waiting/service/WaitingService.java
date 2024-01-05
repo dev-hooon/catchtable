@@ -3,6 +3,8 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toCreateWaitingResponse;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -12,7 +14,6 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingMapper;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
@@ -52,13 +53,13 @@ public class WaitingService {
             START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
         // waiting 저장
-        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, member, shop);
+        Waiting waiting = toWaiting(request, waitingNumber, member, shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
         waitingLineRepository.save(shopId, waiting.getId());
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
 
-        return WaitingMapper.toCreateWaitingResponse(savedWaiting, rank);
+        return toCreateWaitingResponse(savedWaiting, rank);
     }
 
 

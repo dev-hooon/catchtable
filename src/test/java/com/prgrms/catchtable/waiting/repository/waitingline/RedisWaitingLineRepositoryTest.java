@@ -106,7 +106,6 @@ class RedisWaitingLineRepositoryTest {
     void cancel() {
         //given
         Long shopId = 1L;
-        repository.printWaitingLine(1L);
         repository.save(shopId, 1L);
         repository.save(shopId, 2L);
         repository.save(shopId, 3L);
