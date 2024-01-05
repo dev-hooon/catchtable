@@ -5,7 +5,7 @@ import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
-import com.prgrms.catchtable.reservation.service.ReservationService;
+import com.prgrms.catchtable.reservation.service.MemberReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,29 +21,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final MemberReservationService memberReservationService;
 
     @PostMapping
     public ResponseEntity<CreateReservationResponse> preOccupyReservation(
         @RequestBody CreateReservationRequest request) {
-        return ResponseEntity.ok(reservationService.preOccupyReservation(request));
+        return ResponseEntity.ok(memberReservationService.preOccupyReservation(request));
     }
 
     @PostMapping("/success")
     public ResponseEntity<CreateReservationResponse> registerReservation(
         @RequestBody CreateReservationRequest request) {
-        return ResponseEntity.ok(reservationService.registerReservation(request));
+        return ResponseEntity.ok(memberReservationService.registerReservation(request));
     }
 
     @PatchMapping("/{reservationId}")
     public ResponseEntity<ModifyReservationResponse> modifyReservation(
         @PathVariable("reservationId") Long reservationTimeId,
         @RequestBody ModifyReservationRequest request) {
-        return ResponseEntity.ok(reservationService.modifyReservation(reservationTimeId, request));
+        return ResponseEntity.ok(
+            memberReservationService.modifyReservation(reservationTimeId, request));
     }
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<CancelReservationResponse> cancelReservation(@PathVariable("reservationId") Long reservationId){
-        return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
+        return ResponseEntity.ok(memberReservationService.cancelReservation(reservationId));
     }
 }
