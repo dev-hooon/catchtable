@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class BasicWaitingLineRepository implements WaitingLineRepository{
+public class BasicWaitingLineRepository implements WaitingLineRepository {
 
     public final Map<Long, Queue<Long>> waitingLines = new ConcurrentHashMap<>();
 
@@ -63,7 +63,7 @@ public class BasicWaitingLineRepository implements WaitingLineRepository{
         int index = 0;
         for (Long waitingIdInLine : waitingLine) {
             if (Objects.equals(waitingIdInLine, waitingId)) {
-                return (long)index + 1;
+                return (long) index + 1;
             }
             index++;
         }

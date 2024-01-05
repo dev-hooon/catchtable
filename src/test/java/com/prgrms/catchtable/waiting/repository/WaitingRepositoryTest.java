@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.waiting.repository;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.catchtable.member.MemberFixture;
@@ -21,8 +20,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 

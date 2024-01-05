@@ -3,7 +3,6 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;

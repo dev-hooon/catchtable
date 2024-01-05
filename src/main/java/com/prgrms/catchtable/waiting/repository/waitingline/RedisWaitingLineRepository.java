@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
@@ -17,8 +18,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
+@Primary
 @Component
-public class RedisWaitingLineRepository implements WaitingLineRepository{
+public class RedisWaitingLineRepository implements WaitingLineRepository {
 
     private final StringRedisTemplate redisTemplate;
 
