@@ -33,7 +33,10 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
 jwt:
   client-secret: S0gKf9bwPzT7eAJN3RyWvQlKcY4uGh1jIxDp5VrC8EoH2dL6sMkXaF7ZtL9W6dR1
   expiry-minute: 5           #5분

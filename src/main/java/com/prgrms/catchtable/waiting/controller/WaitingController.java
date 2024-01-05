@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
+import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.service.WaitingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,10 @@ public class WaitingController {
     private final WaitingService waitingService;
 
     @PostMapping("/{shopId}/{memberId}")
-    public ResponseEntity<CreateWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
+    public ResponseEntity<WaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
         @PathVariable("memberId") Long memberId,
         @Valid @RequestBody CreateWaitingRequest request) {
-        CreateWaitingResponse response = waitingService.createWaiting(shopId, memberId, request);
+        WaitingResponse response = waitingService.createWaiting(shopId, memberId, request);
         return ResponseEntity.ok(response);
     }
 }
