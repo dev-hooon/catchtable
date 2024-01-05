@@ -17,8 +17,8 @@ import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@Disabled
 class WaitingControllerTest extends BaseIntegrationTest {
 
     @Autowired
@@ -49,10 +48,9 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        redisTemplate.delete("s1");
-
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
+        redisTemplate.delete("s" + shop.getId());
         Member member1 = MemberFixture.member("test1@naver.com");
         Member member2 = MemberFixture.member("test2@naver.com");
         member3 = MemberFixture.member("test3@naver.com");
@@ -76,6 +74,10 @@ class WaitingControllerTest extends BaseIntegrationTest {
         waitingLineRepository.save(shop.getId(), waiting2.getId());
     }
 
+    @AfterEach
+    void clear() {
+        redisTemplate.delete("s" + shop.getId());
+    }
 
     @DisplayName("웨이팅 생성 API를 호출할 수 있다.")
     @Test
