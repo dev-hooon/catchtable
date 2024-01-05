@@ -13,7 +13,7 @@ public record JoinOwnerRequest(
     @Email
     String email,
     String password,
-    @Pattern(regexp = "^(01[016789]){1}([0-9]{3,4}){1}([0-9]{4}){1}$")
+    @Pattern(regexp = "^(01[016789]){1}-([0-9]{3,4}){1}-([0-9]{4}){1}$")
     String phoneNumber,
     String gender,
     @JsonFormat(pattern = "yyyy-MM-dd")
