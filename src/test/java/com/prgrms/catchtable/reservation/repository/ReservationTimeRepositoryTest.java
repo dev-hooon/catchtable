@@ -69,7 +69,7 @@ class ReservationTimeRepositoryTest {
         Shop shop = reservationTime.getShop();
 
         //when
-        ReservationTime findReservationTime = reservationTimeRepository.findByIdAndShoId(
+        ReservationTime findReservationTime = reservationTimeRepository.findByIdAndShopId(
             reservationTime.getId(), shop.getId()).orElseThrow();
 
         //then
@@ -88,7 +88,7 @@ class ReservationTimeRepositoryTest {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
 
         //when
-        Optional<ReservationTime> findReservationTime = reservationTimeRepository.findByIdAndShoId(
+        Optional<ReservationTime> findReservationTime = reservationTimeRepository.findByIdAndShopId(
             reservationTime.getId(),
             savedShop.getId()); // 해당 예약시간은 존재하지만 찾으려는 매장의 예약시간이 아니므로 null 리턴 예상
 

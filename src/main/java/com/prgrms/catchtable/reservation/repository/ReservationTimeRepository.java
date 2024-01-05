@@ -13,6 +13,6 @@ public interface ReservationTimeRepository extends JpaRepository<ReservationTime
 
     //매장에 해당 예약시간이 있는지 읽어오는 작업
     @Query("select rt from ReservationTime rt where rt.id = :reservationTimeId and rt.shop.id = :shopId")
-    Optional<ReservationTime> findByIdAndShoId(@Param("reservationTimeId") Long reservationTimeId,
+    Optional<ReservationTime> findByIdAndShopId(@Param("reservationTimeId") Long reservationTimeId,
         @Param("shopId") Long shopId);
 }

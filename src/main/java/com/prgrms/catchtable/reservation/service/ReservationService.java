@@ -106,7 +106,7 @@ public class ReservationService {
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_RESERVATION)); //예약 Id로 예약 조회
         Shop shop = reservation.getShop();
 
-        ReservationTime reservationTime = reservationTimeRepository.findByIdAndShoId(
+        ReservationTime reservationTime = reservationTimeRepository.findByIdAndShopId(
                 request.reservationTimeId(), shop.getId())
             .orElseThrow(
                 () -> new BadRequestCustomException(NOT_EXIST_TIME)); // 예약한 매장의 수정하려는 시간을 조회

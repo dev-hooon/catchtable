@@ -183,7 +183,7 @@ class ReservationServiceTest {
 
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(2L, 1L)).thenReturn(
+        when(reservationTimeRepository.findByIdAndShopId(2L, 1L)).thenReturn(
             Optional.of(modifyTime));
 
         //when
@@ -218,7 +218,7 @@ class ReservationServiceTest {
 
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(any(Long.class),
+        when(reservationTimeRepository.findByIdAndShopId(any(Long.class),
             any(Long.class))).thenReturn(Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
@@ -234,7 +234,7 @@ class ReservationServiceTest {
 
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.of(reservation));
-        when(reservationTimeRepository.findByIdAndShoId(any(Long.class),
+        when(reservationTimeRepository.findByIdAndShopId(any(Long.class),
             any(Long.class))).thenReturn(Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
