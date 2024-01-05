@@ -12,7 +12,6 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -67,7 +66,8 @@ public class Owner extends BaseEntity implements UserDetails {
     private Shop shop;
 
     @Builder
-    public Owner(String name, String email, String password, String phoneNumber, Gender gender, LocalDate dateBirth) {
+    public Owner(String name, String email, String password, String phoneNumber, Gender gender,
+        LocalDate dateBirth) {
         this.name = name;
         this.email = email;
         this.password = password;

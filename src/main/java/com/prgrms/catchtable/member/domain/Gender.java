@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.member.domain;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_INPUT_GENDER_TYPE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import java.util.Arrays;
@@ -15,14 +15,14 @@ public enum Gender {
 
     private final String type;
 
-    public static Gender of(String input){
+    public static Gender of(String input) {
         return Arrays.stream(values())
             .filter(gender -> gender.isEqual(input))
             .findAny()
             .orElseThrow(() -> new BadRequestCustomException(BAD_REQUEST_INPUT_GENDER_TYPE));
     }
 
-    private boolean isEqual(String input){
+    private boolean isEqual(String input) {
         return input.equals(this.type);
     }
 }

@@ -7,7 +7,8 @@ import com.prgrms.catchtable.owner.dto.response.JoinOwnerResponse;
 
 public class OwnerMapper {
 
-    public static Owner toEntity(JoinOwnerRequest joinOwnerRequest, String encodePassword, Gender gender){
+    public static Owner toEntity(JoinOwnerRequest joinOwnerRequest, String encodePassword,
+        Gender gender) {
         return Owner.builder()
             .name(joinOwnerRequest.name())
             .email(joinOwnerRequest.email())
@@ -18,7 +19,7 @@ public class OwnerMapper {
             .build();
     }
 
-    public static JoinOwnerResponse from(Owner owner){
+    public static JoinOwnerResponse from(Owner owner) {
         return JoinOwnerResponse.builder()
             .name(owner.getName())
             .email(owner.getEmail())

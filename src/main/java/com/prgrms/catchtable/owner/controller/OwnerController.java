@@ -22,14 +22,15 @@ public class OwnerController {
     private final OwnerService ownerService;
 
     @PostMapping("/join")
-    public ResponseEntity<JoinOwnerResponse> join(@Valid @RequestBody JoinOwnerRequest joinOwnerRequest){
+    public ResponseEntity<JoinOwnerResponse> join(
+        @Valid @RequestBody JoinOwnerRequest joinOwnerRequest) {
         JoinOwnerResponse joinOwnerResponse = ownerService.joinOwner(joinOwnerRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(joinOwnerResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Token> login(@Valid @RequestBody LoginOwnerRequest loginOwnerRequest){
+    public ResponseEntity<Token> login(@Valid @RequestBody LoginOwnerRequest loginOwnerRequest) {
         Token responseToken = ownerService.loginOwner(loginOwnerRequest);
 
         return ResponseEntity.ok(responseToken);

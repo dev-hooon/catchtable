@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.owner.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_EXIST_OWNER;
+import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_EMAIL_OR_PASSWORD;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
@@ -33,7 +34,8 @@ public class OwnerService {
 
         Gender gender = Gender.of(joinOwnerRequest.gender());
 
-        Owner joinOwner = ownerRepository.save(OwnerMapper.toEntity(joinOwnerRequest, encodePassword, gender));
+        Owner joinOwner = ownerRepository.save(
+            OwnerMapper.toEntity(joinOwnerRequest, encodePassword, gender));
 
         return OwnerMapper.from(joinOwner);
 
@@ -45,7 +47,7 @@ public class OwnerService {
         }
     }
 
-    public Token loginOwner(LoginOwnerRequest loginRequest){
+    public Token loginOwner(LoginOwnerRequest loginRequest) {
 
         //email 확인
         Owner loginOwner = ownerRepository.findOwnerByEmail(loginRequest.email())
@@ -57,8 +59,8 @@ public class OwnerService {
         return jwtTokenProvider.createToken(loginOwner.getEmail());
     }
 
-    private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner){
-        if(!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())){
+    private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner) {
+        if (!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())) {
             throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
         }
     }
