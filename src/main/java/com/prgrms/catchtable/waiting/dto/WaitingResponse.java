@@ -3,7 +3,7 @@ package com.prgrms.catchtable.waiting.dto;
 import lombok.Builder;
 
 @Builder
-public record CreateWaitingResponse(
+public record WaitingResponse(
     Long createdWaitingId,
     Long shopId,
     String shopName,

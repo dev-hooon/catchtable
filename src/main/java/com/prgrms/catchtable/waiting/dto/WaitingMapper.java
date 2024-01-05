@@ -21,8 +21,8 @@ public class WaitingMapper {
     }
 
     // entity -> dto
-    public static CreateWaitingResponse toCreateWaitingResponse(Waiting waiting, int waitingOrder) {
-        return CreateWaitingResponse.builder()
+    public static WaitingResponse toCreateWaitingResponse(Waiting waiting, int waitingOrder) {
+        return WaitingResponse.builder()
             .createdWaitingId(waiting.getId())
             .shopId(waiting.getShop().getId())
             .shopName(waiting.getShop().getName())
