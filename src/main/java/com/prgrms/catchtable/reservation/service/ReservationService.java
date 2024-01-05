@@ -71,7 +71,6 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse registerReservation(CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
-                //예약시간과 매장 한번에 가져옴
                 request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
