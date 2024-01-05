@@ -2,6 +2,7 @@ package com.prgrms.catchtable.reservation.repository;
 
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,4 +12,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         + "join fetch r.reservationTime rt "
         + "join fetch rt.shop")
     List<Reservation> findAllWithReservationTimeAndShop();
+
+    @Query("select r from Reservation r "
+        + "join fetch r.reservationTime rt "
+        + "join fetch rt.shop")
+    Optional<Reservation> findByIdWithReservationTimeAndShop(Long reservationId);
 }

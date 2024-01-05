@@ -2,9 +2,11 @@ package com.prgrms.catchtable.reservation.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPIED_RESERVATION_TIME;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_RESERVATION;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCreateReservationResponse;
+import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toModifyReservationResponse;
 import static java.lang.Boolean.FALSE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
@@ -13,8 +15,10 @@ import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
+import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
+import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationLockRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
 import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
@@ -36,7 +40,7 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
-        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) { // 락 획득 시도
+        while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
                 Thread.sleep(1_500);
             } catch (InterruptedException e) {
@@ -48,15 +52,11 @@ public class ReservationService {
                     reservationLockRepository.unlock(reservationTimeId);
                     return new NotFoundCustomException(NOT_EXIST_TIME);
                 }
-            ); //예약시간 조회 후 없으면 락 해제 + 예외 발생
+            );
 
-        if (reservationTime.isPreOccupied()) { //이미 선점 된 예약시간이면 락 해제 후 예외 발생
-            reservationLockRepository.unlock(reservationTimeId);
-            throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
-        }
+        validateIsPreOccupied(reservationTime);
 
-        reservationAsync.setPreOcuppied(reservationTime); //예약 선점 여부 7분동안 true로 바꾸는 스케줄러 실행
-
+        reservationAsync.setPreOcuppied(reservationTime);
         Shop shop = reservationTime.getShop();
         reservationLockRepository.unlock(reservationTimeId);
 
@@ -71,15 +71,12 @@ public class ReservationService {
     @Transactional
     public CreateReservationResponse registerReservation(CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
-                //예약시간과 매장 한번에 가져옴
                 request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
 
-        if (reservationTime.isOccupied()) { //이미 차지된 예약이면 예외 발생
-            throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
-        }
+        validateIsOccupied(reservationTime);
 
-        reservationTime.reverseOccupied(); //예약 차지된 상태로 변경
+        reservationTime.reverseOccupied();
 
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
@@ -96,5 +93,42 @@ public class ReservationService {
         return reservations.stream()
             .map(ReservationMapper::toGetAllReservationRepsonse)
             .toList();
+    }
+
+    @Transactional
+    public ModifyReservationResponse modifyReservation(Long reservavtionId,
+        ModifyReservationRequest request) {
+        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(
+                reservavtionId)
+            .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_RESERVATION)); //예약 Id로 예약 조회
+        Shop shop = reservation.getShop();
+
+        ReservationTime reservationTime = reservationTimeRepository.findByIdAndShoId(
+                request.reservationTimeId(), shop.getId())
+            .orElseThrow(
+                () -> new BadRequestCustomException(NOT_EXIST_TIME)); // 예약한 매장의 수정하려는 시간을 조회
+
+        validateIsPreOccupied(reservationTime); // 예약시간이 선점되었는 지 확인
+
+        validateIsOccupied(reservationTime); // 예약시간이 이미 차지되었는 지 확인
+
+        reservation.modifyReservation(reservationTime,
+            request.peopleCount()); // 예약 필드 값 수정하는 엔티티의 메소드
+
+        return toModifyReservationResponse(reservation);
+    }
+
+    private void validateIsPreOccupied(ReservationTime reservationTime) {
+        if (reservationTime.isPreOccupied()) {
+            reservationLockRepository.unlock(reservationTime.getId());
+            throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
+        }
+    }
+
+    private void validateIsOccupied(ReservationTime reservationTime) {
+        if (reservationTime.isOccupied()) {
+            reservationLockRepository.unlock(reservationTime.getId());
+            throw new BadRequestCustomException(ALREADY_OCCUPIED_RESERVATION_TIME);
+        }
     }
 }
