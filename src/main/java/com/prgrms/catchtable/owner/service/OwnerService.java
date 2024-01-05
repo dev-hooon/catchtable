@@ -58,7 +58,7 @@ public class OwnerService {
     }
 
     private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner){
-        if(passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())){
+        if(!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())){
             throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
         }
     }
