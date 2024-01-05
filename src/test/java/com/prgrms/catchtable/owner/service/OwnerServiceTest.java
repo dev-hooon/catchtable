@@ -22,11 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 class OwnerServiceTest {
 
-    private OwnerRepository ownerRepository = mock(OwnerRepository.class);
-    private JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final OwnerRepository ownerRepository = mock(OwnerRepository.class);
+    private final JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private OwnerService ownerService = new OwnerService(ownerRepository, passwordEncoder,
+    private final OwnerService ownerService = new OwnerService(ownerRepository, passwordEncoder,
         jwtTokenProvider);
 
     String email = "abc1234@gmail.com";
@@ -75,14 +75,15 @@ class OwnerServiceTest {
         //given
         LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email, password);
         String encodePassword = passwordEncoder.encode(password);
+        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email());
 
         //when
         when(ownerRepository.findOwnerByEmail(loginOwnerRequest.email())).thenReturn(
             Optional.of(OwnerFixture.getOwner(email, encodePassword)));
-        when(jwtTokenProvider.createToken(loginOwnerRequest.email())).thenReturn(any(Token.class));
+        when(jwtTokenProvider.createToken(loginOwnerRequest.email())).thenReturn(token);
 
         //then
-        assertThat(ownerService.loginOwner(loginOwnerRequest)).isEqualTo(any(Token.class));
+        assertThat(ownerService.loginOwner(loginOwnerRequest)).isEqualTo(token);
     }
 
     @Test
