@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
-import com.prgrms.catchtable.waiting.repository.waitingline.RedisWaitingLineRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,9 @@ class RedisWaitingLineRepositoryTest {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-
     @AfterEach
     void clear() {
         redisTemplate.delete("s1");
-        redisTemplate.delete("s2");
-        redisTemplate.delete("s3");
     }
 
     @DisplayName("큐에 웨이팅을 추가한 후 순서를 반환받을 수 있다.")
@@ -110,11 +107,10 @@ class RedisWaitingLineRepositoryTest {
     void cancel() {
         //given
         Long shopId = 1L;
-
+        repository.printWaitingLine(1L);
         repository.save(shopId, 1L);
         repository.save(shopId, 2L);
         repository.save(shopId, 3L);
-
         //when
         repository.cancel(1L, 1L);
         //then
