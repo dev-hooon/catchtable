@@ -97,7 +97,7 @@ class WaitingServiceTest {
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
-            () -> assertThat(response.rank()).isNotNull(),
+            assertThat(response.rank())::isNotNull,
             assertThat(response.waitingNumber())::isNotNull
         );
     }
@@ -122,7 +122,7 @@ class WaitingServiceTest {
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
-            () -> assertThat(response.rank()).isNull(),
+            assertThat(response.rank())::isNotNull,
             assertThat(response.waitingNumber())::isNotNull
         );
     }
