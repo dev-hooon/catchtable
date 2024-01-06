@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.service;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +14,7 @@ import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
+import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
@@ -85,6 +87,7 @@ class WaitingServiceTest {
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(PROGRESS);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
         doNothing().when(waiting).validatePostponeRemainingCount();
         doNothing().when(waiting).decreasePostponeRemainingCount();
@@ -95,6 +98,31 @@ class WaitingServiceTest {
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
             () -> assertThat(response.rank()).isNotNull(),
+            assertThat(response.waitingNumber())::isNotNull
+        );
+    }
+
+    @DisplayName("대기 취소를 할 수 있다.")
+    @Test
+    void cancelWaiting() {
+        //given
+        Shop shop = mock(Shop.class);
+        Member member = mock(Member.class);
+        Waiting waiting = mock(Waiting.class);
+
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
+        given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(CANCELED);
+        doNothing().when(waiting).changeStatusCanceled();
+
+        //when
+        WaitingResponse response = waitingService.cancelWaiting(1L);
+
+        //then
+        assertAll(
+            assertThat(response.peopleCount())::isNotNull,
+            () -> assertThat(response.rank()).isNull(),
             assertThat(response.waitingNumber())::isNotNull
         );
     }
