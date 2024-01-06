@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.domain;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_COMPLETE_WAITING;
+import static com.prgrms.catchtable.common.exception.ErrorCode.POSTPONE_REMAINING_CNT_0;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.NO_SHOW;
@@ -48,8 +49,8 @@ public class Waiting extends BaseEntity {
     @Enumerated(STRING)
     private WaitingStatus status;
 
-    @Column(name = "postpone_remaining_count")
-    private int postponeRemainingCount;
+    @Column(name = "remaining_postpone_count")
+    private int remainingPostponeCount;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(NO_CONSTRAINT))
@@ -66,7 +67,17 @@ public class Waiting extends BaseEntity {
         this.member = member;
         this.shop = shop;
         status = PROGRESS;
-        postponeRemainingCount = 2;
+        remainingPostponeCount = 2;
+    }
+
+    public void validatePostponeRemainingCount() {
+        if (remainingPostponeCount == 0) {
+            throw new BadRequestCustomException(POSTPONE_REMAINING_CNT_0);
+        }
+    }
+
+    public void decreasePostponeRemainingCount() {
+        remainingPostponeCount--;
     }
 
     public void completeWaiting() {

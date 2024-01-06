@@ -3,8 +3,9 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
-import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toCreateWaitingResponse;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_WAITING;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -42,9 +44,6 @@ public class WaitingService {
         Member member = getMemberEntity(memberId);
         Shop shop = getShopEntity(shopId);
 
-        // shop 영업 중인지 검증
-        shop.validateIfShopOpened(LocalTime.now());
-
         // 기존 waiting이 있는지 검증
         validateIfMemberWaitingExists(member);
 
@@ -59,9 +58,22 @@ public class WaitingService {
         waitingLineRepository.save(shopId, waiting.getId());
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
 
-        return toCreateWaitingResponse(savedWaiting, rank);
+        return toWaitingResponse(savedWaiting, rank);
     }
 
+    @Transactional
+    public WaitingResponse postponeWaiting(Long memberId) {
+        Member member = getMemberEntity(memberId);
+        Waiting waiting = getWaitingEntity(member);
+
+        Shop shop = waiting.getShop();
+
+        waiting.validatePostponeRemainingCount();
+        waitingLineRepository.postpone(shop.getId(), waiting.getId());
+        Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
+        waiting.decreasePostponeRemainingCount();
+        return toWaitingResponse(waiting, rank);
+    }
 
     private void validateIfMemberWaitingExists(Member member) {
         if (waitingRepository.existsByMember(member)) {
@@ -76,8 +88,16 @@ public class WaitingService {
     }
 
     public Shop getShopEntity(Long shopId) {
-        return shopRepository.findById(shopId).orElseThrow(
+        Shop shop = shopRepository.findById(shopId).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_SHOP)
+        );
+        shop.validateIfShopOpened(LocalTime.now());
+        return shop;
+    }
+
+    public Waiting getWaitingEntity(Member member) {
+        return waitingRepository.findByMemberWithShop(member).orElseThrow(
+            () -> new NotFoundCustomException(NOT_EXIST_WAITING)
         );
     }
 }

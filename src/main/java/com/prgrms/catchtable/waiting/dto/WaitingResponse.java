@@ -4,12 +4,13 @@ import lombok.Builder;
 
 @Builder
 public record WaitingResponse(
-    Long createdWaitingId,
+    Long waitingId,
     Long shopId,
     String shopName,
     int peopleCount,
     int waitingNumber,
-    Long rank
+    Long rank,
+    int remainingPostponeCount
 ) {
 
 }

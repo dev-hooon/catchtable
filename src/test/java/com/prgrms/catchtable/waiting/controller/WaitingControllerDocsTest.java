@@ -37,12 +37,13 @@ class WaitingControllerDocsTest extends RestDocsSupport {
             .builder()
             .peopleCount(2).build();
         WaitingResponse response = WaitingResponse.builder()
-            .createdWaitingId(201L)
+            .waitingId(201L)
             .shopId(1L)
             .shopName("shop1")
             .waitingNumber(324)
             .rank(20L)
             .peopleCount(2)
+            .remainingPostponeCount(2)
             .build();
 
         given(waitingService.createWaiting(1L, 1L, request)).willReturn(response);
@@ -59,7 +60,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                         .description("인원수")
                 ),
                 responseFields(
-                    fieldWithPath("createdWaitingId").type(JsonFieldType.NUMBER)
+                    fieldWithPath("waitingId").type(JsonFieldType.NUMBER)
                         .description("생성된 웨이팅 아이디"),
                     fieldWithPath("shopId").type(JsonFieldType.NUMBER)
                         .description("상점 아이디"),
@@ -70,7 +71,9 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("waitingNumber").type(JsonFieldType.NUMBER)
                         .description("웨이팅 고유 번호"),
                     fieldWithPath("rank").type(JsonFieldType.NUMBER)
-                        .description("웨이팅 순서")
+                        .description("웨이팅 순서"),
+                    fieldWithPath("remainingPostponeCount").type(JsonFieldType.NUMBER)
+                        .description("대기 지연 잔여 횟수")
                 )
             ));
 
