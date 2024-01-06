@@ -139,7 +139,7 @@ public class MemberReservationService {
     }
 
     private void validateIsPreOccupied(ReservationTime reservationTime) {
-        if (reservationTime.isPreOccupied()) {
+        if (reservationTime.isOccupied()) {
             reservationLockRepository.unlock(reservationTime.getId());
             throw new BadRequestCustomException(ALREADY_PREOCCUPIED_RESERVATION_TIME);
         }
