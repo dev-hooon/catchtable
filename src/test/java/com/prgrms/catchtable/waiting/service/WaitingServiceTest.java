@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.service;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,7 +15,6 @@ import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;

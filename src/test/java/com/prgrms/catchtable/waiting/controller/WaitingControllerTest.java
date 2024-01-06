@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -19,7 +19,6 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
