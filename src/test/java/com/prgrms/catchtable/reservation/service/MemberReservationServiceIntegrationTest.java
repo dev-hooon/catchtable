@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class ReservationServiceIntegrationTest {
+public class MemberReservationServiceIntegrationTest {
 
     @Autowired
-    private ReservationService reservationService;
+    private MemberReservationService memberReservationService;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
@@ -59,7 +59,7 @@ public class ReservationServiceIntegrationTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    reservationService.preOccupyReservation(request);
+                    memberReservationService.preOccupyReservation(request);
                 } catch (BadRequestCustomException e) {
                     errorCount.incrementAndGet();
                 } finally {

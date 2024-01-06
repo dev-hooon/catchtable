@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_EXIST_TIME("존재하지 않는 예약 시간입니다."),
     NOT_EXIST_RESERVATION("존재하지 않는 예약입니다"),
     EXCEED_PEOPLE_COUNT("예약인원이 해당 시간의 남은 수용가능 인원 수를 초과했습니다."),
+    ALREADY_COMPLETED_RESERVATION("이미 예약 상태인 예약입니다."),
 
     CAN_NOT_COMPLETE_WAITING("입장 처리가 불가한 대기 상태입니다."),
     EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),

@@ -37,7 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
-class ReservationServiceTest {
+class MemberReservationServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;
@@ -48,7 +48,7 @@ class ReservationServiceTest {
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
     @InjectMocks
-    private ReservationService reservationService;
+    private MemberReservationService memberReservationService;
 
     @Test
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
@@ -64,7 +64,7 @@ class ReservationServiceTest {
         when(reservationLockRepository.unlock(1L)).thenReturn(TRUE);
         doNothing().when(reservationAsync).setPreOcuppied(reservationTime);
         //when
-        CreateReservationResponse response = reservationService.preOccupyReservation(
+        CreateReservationResponse response = memberReservationService.preOccupyReservation(
             request);
 
         //then
@@ -91,7 +91,7 @@ class ReservationServiceTest {
 
         //when
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.preOccupyReservation(request));
+            () -> memberReservationService.preOccupyReservation(request));
 
 
     }
@@ -111,7 +111,7 @@ class ReservationServiceTest {
             Optional.of(reservationTime));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
 
-        CreateReservationResponse response = reservationService.registerReservation(request);
+        CreateReservationResponse response = memberReservationService.registerReservation(request);
 
         assertAll(
             () -> assertThat(response.date()).isEqualTo(reservationTime.getTime()),
@@ -131,7 +131,7 @@ class ReservationServiceTest {
             Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.registerReservation(request));
+            () -> memberReservationService.registerReservation(request));
     }
 
     @Test
@@ -142,7 +142,7 @@ class ReservationServiceTest {
 
         when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(
             List.of(reservation));
-        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        List<GetAllReservationResponse> all = memberReservationService.getAllReservation();
         GetAllReservationResponse findReservation = all.get(0);
 
         assertAll(
@@ -159,7 +159,7 @@ class ReservationServiceTest {
     void getAllReservationWithNoResult() {
         when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
 
-        List<GetAllReservationResponse> all = reservationService.getAllReservation();
+        List<GetAllReservationResponse> all = memberReservationService.getAllReservation();
         assertThat(all).isEmpty();
     }
 
@@ -187,7 +187,7 @@ class ReservationServiceTest {
             Optional.of(modifyTime));
 
         //when
-        ModifyReservationResponse response = reservationService.modifyReservation(
+        ModifyReservationResponse response = memberReservationService.modifyReservation(
             1L, request); // 예약 id가 1인 예약 정보 변경
 
         //then
@@ -206,7 +206,7 @@ class ReservationServiceTest {
             Optional.empty());
 
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.modifyReservation(1L, request));
+            () -> memberReservationService.modifyReservation(1L, request));
     }
 
     @Test
@@ -222,7 +222,7 @@ class ReservationServiceTest {
             any(Long.class))).thenReturn(Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.modifyReservation(1L, request));
+            () -> memberReservationService.modifyReservation(1L, request));
     }
 
     @Test
@@ -238,7 +238,7 @@ class ReservationServiceTest {
             any(Long.class))).thenReturn(Optional.of(reservationTime));
 
         assertThrows(BadRequestCustomException.class,
-            () -> reservationService.modifyReservation(1L, request));
+            () -> memberReservationService.modifyReservation(1L, request));
     }
 
     @Test
@@ -250,10 +250,11 @@ class ReservationServiceTest {
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         ReflectionTestUtils.setField(reservation, "id", 1L);
 
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.of(reservation));
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.of(reservation));
 
         //when
-        CancelReservationResponse response = reservationService.cancelReservation(
+        CancelReservationResponse response = memberReservationService.cancelReservation(
             reservation.getId());
 
         //then
@@ -267,10 +268,12 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시 예외가 발생한다")
-    void cancelReservationNotExist(){
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.empty());
+    void cancelReservationNotExist() {
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.empty());
 
-        assertThrows(NotFoundCustomException.class, () -> reservationService.cancelReservation(1L));
+        assertThrows(NotFoundCustomException.class,
+            () -> memberReservationService.cancelReservation(1L));
     }
 
 }

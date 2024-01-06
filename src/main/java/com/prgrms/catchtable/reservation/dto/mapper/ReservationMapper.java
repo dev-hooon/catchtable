@@ -7,6 +7,7 @@ import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
+import com.prgrms.catchtable.reservation.dto.response.OwnerGetAllReservationResponse;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -40,8 +41,18 @@ public class ReservationMapper {
             .build();
     }
 
-    public static CancelReservationResponse toCancelReservationResponse (Reservation reservation){
+    public static CancelReservationResponse toCancelReservationResponse(Reservation reservation) {
         return CancelReservationResponse.builder()
+            .status(reservation.getStatus())
+            .build();
+    }
+
+    public static OwnerGetAllReservationResponse toOwnerGetAllReservationResponse(
+        Reservation reservation) {
+        return OwnerGetAllReservationResponse.builder()
+            .reservationId(reservation.getId())
+            .date(reservation.getReservationTime().getTime())
+            .peopleCount(reservation.getPeopleCount())
             .status(reservation.getStatus())
             .build();
     }

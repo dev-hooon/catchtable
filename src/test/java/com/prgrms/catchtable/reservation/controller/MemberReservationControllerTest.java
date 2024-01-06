@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.reservation.controller;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
-import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
-import com.prgrms.catchtable.reservation.domain.ReservationStatus;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
@@ -30,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class ReservationControllerTest extends BaseIntegrationTest {
+class MemberReservationControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
@@ -133,9 +132,16 @@ class ReservationControllerTest extends BaseIntegrationTest {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
+        /**
+         * 수정하려는 예약시간 예제 데이터 생성
+         */
+        Shop findShop = shopRepository.findAll().get(0);
+        ReservationTime reservationTime1 = ReservationFixture.getReservationTimeNotPreOccupied();
+        reservationTime1.insertShop(findShop);
+        ReservationTime savedReservationTime1 = reservationTimeRepository.save(reservationTime1);
 
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(
-            reservationTime.getId());
+            savedReservationTime1.getId());
 
         ReservationTime modifyReservationTime = reservationTimeRepository.findByIdAndShopId(
             request.reservationTimeId(), reservation.getShop().getId()).orElseThrow(); // 수정하려는 예약시간
@@ -149,6 +155,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
 
         assertThat(savedReservation.getReservationTime()).isEqualTo(
             modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
+        assertThat(savedReservation.getReservationTime().isOccupied()).isFalse();
     }
 
     @Test
@@ -159,7 +166,7 @@ class ReservationControllerTest extends BaseIntegrationTest {
         Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())
-            .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(CANCELLED.toString()));
     }

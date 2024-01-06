@@ -4,9 +4,11 @@ import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLET
 
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.reservation.domain.Reservation;
+import com.prgrms.catchtable.reservation.domain.ReservationStatus;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
+import com.prgrms.catchtable.reservation.dto.request.ModifyReservationStatusRequest;
 import com.prgrms.catchtable.shop.domain.Shop;
 import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -15,6 +17,9 @@ public class ReservationFixture {
 
 
     public static Reservation getReservation(ReservationTime reservationTime) {
+        if (!reservationTime.isOccupied()) {
+            reservationTime.reverseOccupied();
+        }
         return Reservation.builder()
             .status(COMPLETED)
             .peopleCount(4)
@@ -81,6 +86,13 @@ public class ReservationFixture {
         reservationTime.insertShop(shop);
         reservationTime.reverseOccupied();
         return reservationTime;
+    }
+
+    public static ModifyReservationStatusRequest getModifyReservationStatusRequest(
+        ReservationStatus status) {
+        return ModifyReservationStatusRequest.builder()
+            .status(status)
+            .build();
     }
 
 }

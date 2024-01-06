@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ReservationService {
+public class MemberReservationService {
 
     private final ReservationTimeRepository reservationTimeRepository;
     private final ReservationRepository reservationRepository;
@@ -122,8 +122,9 @@ public class ReservationService {
     }
 
     @Transactional
-    public CancelReservationResponse cancelReservation(Long reservationId){
-        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(reservationId)
+    public CancelReservationResponse cancelReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(
+                reservationId)
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_RESERVATION));
 
         reservation.changeStatus(CANCELLED); // 해당 예약 상태 취소로 변경

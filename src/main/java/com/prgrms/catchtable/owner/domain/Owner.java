@@ -56,4 +56,8 @@ public class Owner extends BaseEntity {
         this.gender = gender;
         this.dateBirth = dateBirth;
     }
+
+    public void insertShop(Shop shop) {
+        this.shop = shop;
+    }
 }
