@@ -83,7 +83,7 @@ class WaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMember(member)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
         doNothing().when(waiting).validatePostponeRemainingCount();

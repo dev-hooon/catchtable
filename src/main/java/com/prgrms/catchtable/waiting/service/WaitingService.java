@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -60,6 +61,7 @@ public class WaitingService {
         return toWaitingResponse(savedWaiting, rank);
     }
 
+    @Transactional
     public WaitingResponse postponeWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
         Waiting waiting = getWaitingEntity(member);
@@ -70,7 +72,6 @@ public class WaitingService {
         waitingLineRepository.postpone(shop.getId(), waiting.getId());
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
         waiting.decreasePostponeRemainingCount();
-
         return toWaitingResponse(waiting, rank);
     }
 
@@ -95,7 +96,7 @@ public class WaitingService {
     }
 
     public Waiting getWaitingEntity(Member member) {
-        return waitingRepository.findByMember(member).orElseThrow(
+        return waitingRepository.findByMemberWithShop(member).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_WAITING)
         );
     }
