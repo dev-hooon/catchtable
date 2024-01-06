@@ -14,7 +14,7 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
     boolean existsByMember(Member member);
 
     @Query("select w from Waiting w join fetch w.shop where w.member = :member")
-    Optional<Waiting> findByMemberWithShop(@Param("member")Member member);
+    Optional<Waiting> findByMemberWithShop(@Param("member") Member member);
 
     Long countByShopAndCreatedAtBetween(Shop shop, LocalDateTime start, LocalDateTime end);
 }

@@ -18,9 +18,7 @@ import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +28,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
+
 @Slf4j
 @Transactional
 class WaitingControllerTest extends BaseIntegrationTest {
@@ -147,7 +146,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
     @DisplayName("대기 지연 잔여 횟수를 소진 시, 더이상 지연이 불가하므로 예외를 반환한다.")
     @Test
     void postponeWaiting_fails2() throws Exception {
-        ReflectionTestUtils.setField(waiting1,"remainingPostponeCount",0);
+        ReflectionTestUtils.setField(waiting1, "remainingPostponeCount", 0);
         mockMvc.perform(patch("/waitings/{memberId}", member1.getId())
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
