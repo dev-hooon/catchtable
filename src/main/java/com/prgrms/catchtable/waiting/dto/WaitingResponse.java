@@ -9,7 +9,7 @@ public record WaitingResponse(
     String shopName,
     int peopleCount,
     int waitingNumber,
-    int waitingOrder
+    Long rank
 ) {
 
 }

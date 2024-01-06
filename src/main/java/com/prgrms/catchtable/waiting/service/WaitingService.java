@@ -3,7 +3,8 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toCreateWaitingResponse;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -13,9 +14,9 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingMapper;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
+import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +34,7 @@ public class WaitingService {
     private final WaitingRepository waitingRepository;
     private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
+    private final WaitingLineRepository waitingLineRepository;
 
     public WaitingResponse createWaiting(Long shopId, Long memberId,
         CreateWaitingRequest request) {
@@ -50,15 +52,14 @@ public class WaitingService {
         int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
             START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
 
-        // 대기 순서 생성
-        int waitingOrder = (waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop,
-            PROGRESS, START_DATE_TIME, END_DATE_TIME)).intValue() + 1;
-
         // waiting 저장
-        Waiting waiting = WaitingMapper.toWaiting(request, waitingNumber, member, shop);
+        Waiting waiting = toWaiting(request, waitingNumber, member, shop);
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        return WaitingMapper.toCreateWaitingResponse(savedWaiting, waitingOrder);
+        waitingLineRepository.save(shopId, waiting.getId());
+        Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
+
+        return toCreateWaitingResponse(savedWaiting, rank);
     }
 
 

@@ -41,7 +41,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
             .shopId(1L)
             .shopName("shop1")
             .waitingNumber(324)
-            .waitingOrder(20)
+            .rank(20L)
             .peopleCount(2)
             .build();
 
@@ -69,7 +69,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                         .description("인원 수"),
                     fieldWithPath("waitingNumber").type(JsonFieldType.NUMBER)
                         .description("웨이팅 고유 번호"),
-                    fieldWithPath("waitingOrder").type(JsonFieldType.NUMBER)
+                    fieldWithPath("rank").type(JsonFieldType.NUMBER)
                         .description("웨이팅 순서")
                 )
             ));

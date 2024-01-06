@@ -15,6 +15,7 @@ import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
+import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ class WaitingServiceTest {
     private ShopRepository shopRepository;
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private WaitingLineRepository waitingLineRepository;
     @InjectMocks
     private WaitingService waitingService;
 
@@ -51,16 +55,19 @@ class WaitingServiceTest {
             .build();
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
         given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
-        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
+        given(shop.getId()).willReturn(1L);
+
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.existsByMember(member)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
+        given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
-        WaitingResponse response = waitingService.createWaiting(1L, member.getId(), request);
+        WaitingResponse response = waitingService.createWaiting(1L, 1L, request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
-            () -> assertThat(response.waitingOrder()).isEqualTo(1),
+            () -> assertThat(response.rank()).isEqualTo(1L),
             () -> assertThat(response.waitingNumber()).isEqualTo(1)
         );
     }
