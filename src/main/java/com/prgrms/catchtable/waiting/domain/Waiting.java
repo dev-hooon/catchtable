@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.domain;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_COMPLETE_WAITING;
+import static com.prgrms.catchtable.common.exception.ErrorCode.POSTPONE_REMAINING_CNT_0;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.NO_SHOW;
@@ -67,6 +68,16 @@ public class Waiting extends BaseEntity {
         this.shop = shop;
         status = PROGRESS;
         postponeRemainingCount = 2;
+    }
+
+    public void validatePostponeRemainingCount() {
+        if (postponeRemainingCount==0){
+            throw new BadRequestCustomException(POSTPONE_REMAINING_CNT_0);
+        }
+    }
+
+    public void decreasePostponeRemainingCount(){
+        postponeRemainingCount--;
     }
 
     public void completeWaiting() {
