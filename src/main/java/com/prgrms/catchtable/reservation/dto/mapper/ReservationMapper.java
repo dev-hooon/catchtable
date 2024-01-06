@@ -41,13 +41,14 @@ public class ReservationMapper {
             .build();
     }
 
-    public static CancelReservationResponse toCancelReservationResponse (Reservation reservation){
+    public static CancelReservationResponse toCancelReservationResponse(Reservation reservation) {
         return CancelReservationResponse.builder()
             .status(reservation.getStatus())
             .build();
     }
 
-    public static OwnerGetAllReservationResponse toOwnerGetAllReservationResponse(Reservation reservation){
+    public static OwnerGetAllReservationResponse toOwnerGetAllReservationResponse(
+        Reservation reservation) {
         return OwnerGetAllReservationResponse.builder()
             .reservationId(reservation.getId())
             .date(reservation.getReservationTime().getTime())

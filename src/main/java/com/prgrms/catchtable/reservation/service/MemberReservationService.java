@@ -122,8 +122,9 @@ public class MemberReservationService {
     }
 
     @Transactional
-    public CancelReservationResponse cancelReservation(Long reservationId){
-        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(reservationId)
+    public CancelReservationResponse cancelReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findByIdWithReservationTimeAndShop(
+                reservationId)
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_RESERVATION));
 
         reservation.changeStatus(CANCELLED); // 해당 예약 상태 취소로 변경

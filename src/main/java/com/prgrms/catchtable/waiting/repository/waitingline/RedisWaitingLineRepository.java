@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class RedisWaitingLineRepository implements WaitingLineRepository{
+public class RedisWaitingLineRepository implements WaitingLineRepository {
 
     private final StringRedisTemplate redisTemplate;
 

@@ -1,8 +1,8 @@
 package com.prgrms.catchtable.reservation.controller;
 
-import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,7 +14,6 @@ import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
-import com.prgrms.catchtable.reservation.domain.ReservationStatus;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationStatusRequest;
 import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
@@ -24,17 +23,16 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Transactional
 class OwnerReservationControllerTest extends BaseIntegrationTest {
+
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
     @Autowired
@@ -44,8 +42,9 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
     private ShopRepository shopRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Shop shop = shopRepository.save(ShopData.getShop());
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(shop);
@@ -81,8 +80,8 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         //then
         assertThat(reservation.getReservationTime().isOccupied()).isTrue(); // 취소처리 전엔 예약시간 차있음
         mockMvc.perform(post("/owners/shop/{reservationId}", reservation.getId())
-            .contentType(APPLICATION_JSON)
-            .content(asJsonString(request)))
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request)))
             .andExpect(status().isOk());
 
         assertThat(reservation.getStatus()).isEqualTo(request.status());
@@ -102,9 +101,11 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(owner.getId())))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].date").value(reservation1.getReservationTime().getTime().toString()))
+            .andExpect(
+                jsonPath("$[0].date").value(reservation1.getReservationTime().getTime().toString()))
             .andExpect(jsonPath("$[0].peopleCount").value(reservation1.getPeopleCount()))
-            .andExpect(jsonPath("$[1].date").value(reservation2.getReservationTime().getTime().toString()))
+            .andExpect(
+                jsonPath("$[1].date").value(reservation2.getReservationTime().getTime().toString()))
             .andExpect(jsonPath("$[1].peopleCount").value(reservation2.getPeopleCount()));
     }
 }

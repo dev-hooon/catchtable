@@ -17,7 +17,7 @@ public class ReservationFixture {
 
 
     public static Reservation getReservation(ReservationTime reservationTime) {
-        if(!reservationTime.isOccupied()){
+        if (!reservationTime.isOccupied()) {
             reservationTime.reverseOccupied();
         }
         return Reservation.builder()
@@ -89,7 +89,7 @@ public class ReservationFixture {
     }
 
     public static ModifyReservationStatusRequest getModifyReservationStatusRequest(
-        ReservationStatus status){
+        ReservationStatus status) {
         return ModifyReservationStatusRequest.builder()
             .status(status)
             .build();

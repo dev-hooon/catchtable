@@ -250,7 +250,8 @@ class MemberReservationServiceTest {
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         ReflectionTestUtils.setField(reservation, "id", 1L);
 
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.of(reservation));
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.of(reservation));
 
         //when
         CancelReservationResponse response = memberReservationService.cancelReservation(
@@ -267,10 +268,12 @@ class MemberReservationServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시 예외가 발생한다")
-    void cancelReservationNotExist(){
-        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(Optional.empty());
+    void cancelReservationNotExist() {
+        when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
+            Optional.empty());
 
-        assertThrows(NotFoundCustomException.class, () -> memberReservationService.cancelReservation(1L));
+        assertThrows(NotFoundCustomException.class,
+            () -> memberReservationService.cancelReservation(1L));
     }
 
 }

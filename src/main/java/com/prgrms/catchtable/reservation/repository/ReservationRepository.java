@@ -18,7 +18,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         + "join fetch r.reservationTime rt "
         + "join fetch rt.shop "
         + "where r.id = :reservationId")
-    Optional<Reservation> findByIdWithReservationTimeAndShop(@Param("reservationId") Long reservationId);
+    Optional<Reservation> findByIdWithReservationTimeAndShop(
+        @Param("reservationId") Long reservationId);
+
     @Query("select r from Reservation r "
         + "join fetch r.reservationTime rt "
         + "join fetch rt.shop s "

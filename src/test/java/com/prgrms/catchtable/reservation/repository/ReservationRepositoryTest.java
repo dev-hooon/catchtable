@@ -49,6 +49,7 @@ class ReservationRepositoryTest {
             () -> assertThat(findReservation.getShop()).isEqualTo(savedShop)
         );
     }
+
     @Test
     @DisplayName("예약 Id를 통해 예약(예약시간, 매장까지)을 조회할 수 있다.")
     void findByIdWithReservationTimeAndShop() {
@@ -67,13 +68,14 @@ class ReservationRepositoryTest {
         assertAll(
             () -> assertThat(findReservation.getReservationTime()).isEqualTo(savedReservationTime),
             () -> assertThat(findReservation.getShop()).isEqualTo(savedShop),
-            () -> assertThat(findReservation.getPeopleCount()).isEqualTo(savedReservation.getPeopleCount())
+            () -> assertThat(findReservation.getPeopleCount()).isEqualTo(
+                savedReservation.getPeopleCount())
         );
     }
 
     @Test
     @DisplayName("가게 아이디와 일치하는 예약을 전체 조회할 수 있다")
-    void getAllReservationByShopId(){
+    void getAllReservationByShopId() {
         /**
          * 첫번째 예제 예약 데이터 저장
          */
@@ -92,7 +94,8 @@ class ReservationRepositoryTest {
         Shop otherShop = ShopFixture.shop();
         Shop otherSavedShop = shopRepository.save(otherShop);
         otherReservationTime.insertShop(otherSavedShop);
-        ReservationTime otherSavedReservationTime = reservationTimeRepository.save(otherReservationTime);
+        ReservationTime otherSavedReservationTime = reservationTimeRepository.save(
+            otherReservationTime);
         Reservation otherReservation = ReservationFixture.getReservation(otherSavedReservationTime);
 
         reservationRepository.save(otherReservation);
