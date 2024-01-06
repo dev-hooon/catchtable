@@ -4,8 +4,8 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_W
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_WAITING;
-import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -60,7 +60,7 @@ public class WaitingService {
         return toWaitingResponse(savedWaiting, rank);
     }
 
-    public WaitingResponse postponeWaiting(Long memberId){
+    public WaitingResponse postponeWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
         Waiting waiting = getWaitingEntity(member);
 
@@ -73,6 +73,7 @@ public class WaitingService {
 
         return toWaitingResponse(waiting, rank);
     }
+
     private void validateIfMemberWaitingExists(Member member) {
         if (waitingRepository.existsByMember(member)) {
             throw new BadRequestCustomException(EXISTING_MEMBER_WAITING);
@@ -93,7 +94,7 @@ public class WaitingService {
         return shop;
     }
 
-    public Waiting getWaitingEntity(Member member){
+    public Waiting getWaitingEntity(Member member) {
         return waitingRepository.findByMember(member).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_WAITING)
         );
