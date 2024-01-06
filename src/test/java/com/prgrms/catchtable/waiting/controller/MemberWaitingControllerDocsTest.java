@@ -16,19 +16,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.WaitingResponse;
-import com.prgrms.catchtable.waiting.service.WaitingService;
+import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-class WaitingControllerDocsTest extends RestDocsSupport {
+class MemberWaitingControllerDocsTest extends RestDocsSupport {
 
-    private final WaitingService waitingService = mock(WaitingService.class);
+    private final MemberWaitingService memberWaitingService = mock(MemberWaitingService.class);
 
     @Override
     protected Object initController() {
-        return new WaitingController(waitingService);
+        return new MemberWaitingController(memberWaitingService);
     }
 
     @DisplayName("웨이팅 생성 API")
@@ -48,7 +48,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
             .status("진행 중")
             .build();
 
-        given(waitingService.createWaiting(1L, 1L, request)).willReturn(response);
+        given(memberWaitingService.createWaiting(1L, 1L, request)).willReturn(response);
 
         mockMvc.perform(post("/waitings/{shopId}/{memberId}", 1, 1)
                 .contentType(APPLICATION_JSON)

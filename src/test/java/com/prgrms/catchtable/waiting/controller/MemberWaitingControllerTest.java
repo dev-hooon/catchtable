@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Transactional
-class WaitingControllerTest extends BaseIntegrationTest {
+class MemberWaitingControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;

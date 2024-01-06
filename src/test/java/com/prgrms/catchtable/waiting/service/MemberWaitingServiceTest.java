@@ -29,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class WaitingServiceTest {
+class MemberWaitingServiceTest {
 
     @Mock
     private WaitingRepository waitingRepository;
@@ -41,7 +41,7 @@ class WaitingServiceTest {
     @Mock
     private WaitingLineRepository waitingLineRepository;
     @InjectMocks
-    private WaitingService waitingService;
+    private MemberWaitingService memberWaitingService;
 
     @Test
     void createWaiting() {
@@ -67,7 +67,7 @@ class WaitingServiceTest {
         given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
-        WaitingResponse response = waitingService.createWaiting(1L, 1L, request);
+        WaitingResponse response = memberWaitingService.createWaiting(1L, 1L, request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
@@ -93,7 +93,7 @@ class WaitingServiceTest {
         doNothing().when(waiting).decreasePostponeRemainingCount();
 
         //when
-        WaitingResponse response = waitingService.postponeWaiting(1L);
+        WaitingResponse response = memberWaitingService.postponeWaiting(1L);
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
@@ -117,7 +117,7 @@ class WaitingServiceTest {
         doNothing().when(waiting).changeStatusCanceled();
 
         //when
-        WaitingResponse response = waitingService.cancelWaiting(1L);
+        WaitingResponse response = memberWaitingService.cancelWaiting(1L);
 
         //then
         assertAll(

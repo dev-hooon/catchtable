@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class WaitingService {
+public class MemberWaitingService {
 
     private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
         LocalTime.of(0, 0, 0));
