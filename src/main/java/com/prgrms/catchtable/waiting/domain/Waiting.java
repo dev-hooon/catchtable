@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.domain;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_CANCEL_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_COMPLETE_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.POSTPONE_REMAINING_CNT_0;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
@@ -85,5 +86,13 @@ public class Waiting extends BaseEntity {
             throw new BadRequestCustomException(CAN_NOT_COMPLETE_WAITING);
         }
         status = COMPLETED;
+    }
+
+
+    public void cancelWaiting(){
+        if (status != PROGRESS){
+            throw new BadRequestCustomException(CAN_NOT_CANCEL_WAITING);
+        }
+        status = CANCELED;
     }
 }
