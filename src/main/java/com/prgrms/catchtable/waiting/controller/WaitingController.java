@@ -6,6 +6,7 @@ import com.prgrms.catchtable.waiting.service.WaitingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,13 @@ public class WaitingController {
         @PathVariable("memberId") Long memberId,
         @Valid @RequestBody CreateWaitingRequest request) {
         WaitingResponse response = waitingService.createWaiting(shopId, memberId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{memberId}")
+    public ResponseEntity<WaitingResponse> postponeWaiting(
+        @PathVariable("memberId") Long memberId) {
+        WaitingResponse response = waitingService.postponeWaiting(memberId);
         return ResponseEntity.ok(response);
     }
 }
