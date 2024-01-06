@@ -66,7 +66,6 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
-
         waiting1 = Waiting.builder()
             .member(member1)
             .shop(shop)
@@ -176,11 +175,11 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(waiting1.getPeopleCount()))
             .andExpect(jsonPath("$.status").value(CANCELED.getDescription()))
             .andDo(MockMvcResultHandlers.print());
-
-        assertThat(waitingLineRepository.findRank(1L, 2L)).isEqualTo(1L);
-        assertThat(waitingLineRepository.findRank(1L, 3L)).isEqualTo(2L);
+        waitingLineRepository.printWaitingLine(shop.getId());
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting2.getId())).isEqualTo(1L);
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting3.getId())).isEqualTo(2L);
         assertThrows(NotFoundCustomException.class,
-            () -> waitingLineRepository.findRank(1L, 1L));
+            () -> waitingLineRepository.findRank(shop.getId(), waiting1.getId()));
     }
 
     @DisplayName("웨이팅 진행 상태가 아니면 취소가 불가하다.")
