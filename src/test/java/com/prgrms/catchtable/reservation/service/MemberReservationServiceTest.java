@@ -193,7 +193,8 @@ class MemberReservationServiceTest {
 
         //then
         assertAll(
-            () -> assertThat(reservationTime.isOccupied()).isFalse(), // 수정 후 기존 예약시간이 예약가능으로 바뀌었는 지 검증
+            () -> assertThat(reservationTime.isOccupied()).isFalse(),
+            // 수정 후 기존 예약시간이 예약가능으로 바뀌었는 지 검증
             () -> assertThat(response.date()).isEqualTo(modifyTime.getTime()),
             () -> assertThat(response.peopleCount()).isEqualTo(reservation.getPeopleCount()),
             () -> assertThat(reservation.getReservationTime()).isEqualTo(modifyTime)
