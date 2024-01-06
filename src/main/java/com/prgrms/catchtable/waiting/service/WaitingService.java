@@ -3,7 +3,7 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
-import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toCreateWaitingResponse;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
@@ -59,7 +59,7 @@ public class WaitingService {
         waitingLineRepository.save(shopId, waiting.getId());
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
 
-        return toCreateWaitingResponse(savedWaiting, rank);
+        return toWaitingResponse(savedWaiting, rank);
     }
 
 

@@ -21,7 +21,7 @@ public class WaitingMapper {
     }
 
     // entity -> dto
-    public static WaitingResponse toCreateWaitingResponse(Waiting waiting, Long rank) {
+    public static WaitingResponse toWaitingResponse(Waiting waiting, Long rank) {
         return WaitingResponse.builder()
             .createdWaitingId(waiting.getId())
             .shopId(waiting.getShop().getId())
