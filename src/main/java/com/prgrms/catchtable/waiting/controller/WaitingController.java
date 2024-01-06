@@ -37,7 +37,7 @@ public class WaitingController {
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<WaitingResponse> cancelWaiting(@PathVariable Long memberId) {
+    public ResponseEntity<WaitingResponse> cancelWaiting(@PathVariable("memberId") Long memberId) {
         WaitingResponse response = waitingService.cancelWaiting(memberId);
         return ResponseEntity.ok(response);
     }

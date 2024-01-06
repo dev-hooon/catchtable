@@ -84,7 +84,7 @@ public class WaitingService {
         waiting.changeStatusCanceled();
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
 
-        return toWaitingResponse(waiting, null);
+        return toWaitingResponse(waiting, -1L);
     }
 
     private void validateIfMemberWaitingExists(Member member) {
