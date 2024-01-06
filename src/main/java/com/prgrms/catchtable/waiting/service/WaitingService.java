@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,11 +81,10 @@ public class WaitingService {
         Waiting waiting = getWaitingEntity(member);
 
         Shop shop = waiting.getShop();
-        waiting.cancelWaiting();
+        waiting.changeStatusCanceled();
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
-        Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
 
-        return toWaitingResponse(waiting, rank);
+        return toWaitingResponse(waiting, null);
     }
 
     private void validateIfMemberWaitingExists(Member member) {

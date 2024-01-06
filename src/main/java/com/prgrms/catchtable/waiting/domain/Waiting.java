@@ -89,7 +89,7 @@ public class Waiting extends BaseEntity {
     }
 
 
-    public void cancelWaiting(){
+    public void changeStatusCanceled(){
         if (status != PROGRESS){
             throw new BadRequestCustomException(CAN_NOT_CANCEL_WAITING);
         }
