@@ -29,7 +29,7 @@ public class WaitingMapper {
             .peopleCount(waiting.getPeopleCount())
             .waitingNumber(waiting.getWaitingNumber())
             .rank(rank)
-            .remainingPostponeCount(waiting.getPostponeRemainingCount())
+            .remainingPostponeCount(waiting.getRemainingPostponeCount())
             .build();
     }
 }

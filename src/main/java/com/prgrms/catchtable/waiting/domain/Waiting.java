@@ -49,8 +49,8 @@ public class Waiting extends BaseEntity {
     @Enumerated(STRING)
     private WaitingStatus status;
 
-    @Column(name = "postpone_remaining_count")
-    private int postponeRemainingCount;
+    @Column(name = "remaining_postpone_count")
+    private int remainingPostponeCount;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(NO_CONSTRAINT))
@@ -67,17 +67,17 @@ public class Waiting extends BaseEntity {
         this.member = member;
         this.shop = shop;
         status = PROGRESS;
-        postponeRemainingCount = 2;
+        remainingPostponeCount = 2;
     }
 
     public void validatePostponeRemainingCount() {
-        if (postponeRemainingCount == 0) {
+        if (remainingPostponeCount == 0) {
             throw new BadRequestCustomException(POSTPONE_REMAINING_CNT_0);
         }
     }
 
     public void decreasePostponeRemainingCount() {
-        postponeRemainingCount--;
+        remainingPostponeCount--;
     }
 
     public void completeWaiting() {
