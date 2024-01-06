@@ -18,6 +18,9 @@ import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Transactional
 class WaitingControllerTest extends BaseIntegrationTest {
 
@@ -135,5 +138,8 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 맨뒤라 웨이팅을 미룰 수 없습니다."))
             .andDo(MockMvcResultHandlers.print());
+//        Waiting waiting = waitingRepository.findById(waiting3.getId()).orElse(null);
+//        Assertions.assertThat(waiting.getPostponeRemainingCount()).isEqualTo(2);
     }
+
 }
