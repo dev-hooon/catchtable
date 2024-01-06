@@ -1,6 +1,11 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,6 +19,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
+import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
@@ -111,6 +117,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.rank").value(4))
             .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
+            .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());
 
     }
@@ -151,6 +158,36 @@ class WaitingControllerTest extends BaseIntegrationTest {
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 두 차례 대기를 미뤘습니다."))
+            .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("웨이팅을 취소할 수 있다. 취소 시 뒤에 있는 사람들은 rank가 1씩 증가한다.")
+    @Test
+    void cancelWaiting() throws Exception {
+        //when, then
+        mockMvc.perform(delete("/waitings/{memberId}", member1.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(-1L))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting1.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting1.getPeopleCount()))
+            .andExpect(jsonPath("$.status").value(CANCELED.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+        assertThat(waitingLineRepository.findRank(1L, 2L)).isEqualTo(1L);
+        assertThat(waitingLineRepository.findRank(1L, 3L)).isEqualTo(2L);
+    }
+
+    @DisplayName("웨이팅 진행 상태가 아니면 취소가 불가하다.")
+    @Test
+    void cancelWaiting_fails_if_not_progress() throws Exception {
+        //when, then
+        ReflectionTestUtils.setField(waiting1, "status", COMPLETED);
+        mockMvc.perform(delete("/waitings/{memberId}", member1.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("웨이팅 취소 처리가 불가한 상태입니다."))
             .andDo(MockMvcResultHandlers.print());
     }
 }
