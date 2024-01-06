@@ -10,7 +10,8 @@ public record WaitingResponse(
     int peopleCount,
     int waitingNumber,
     Long rank,
-    int remainingPostponeCount
+    int remainingPostponeCount,
+    String status
 ) {
 
 }

@@ -20,6 +20,7 @@ import com.prgrms.catchtable.waiting.service.WaitingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 class WaitingControllerDocsTest extends RestDocsSupport {
 
@@ -44,6 +45,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
             .rank(20L)
             .peopleCount(2)
             .remainingPostponeCount(2)
+            .status("진행 중")
             .build();
 
         given(waitingService.createWaiting(1L, 1L, request)).willReturn(response);
@@ -52,6 +54,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print())
             .andDo(document("waiting-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -73,7 +76,9 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("rank").type(JsonFieldType.NUMBER)
                         .description("웨이팅 순서"),
                     fieldWithPath("remainingPostponeCount").type(JsonFieldType.NUMBER)
-                        .description("대기 지연 잔여 횟수")
+                        .description("대기 지연 잔여 횟수"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("대기 상태")
                 )
             ));
 
