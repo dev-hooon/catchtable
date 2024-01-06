@@ -38,9 +38,9 @@ class WaitingControllerTest extends BaseIntegrationTest {
     private WaitingLineRepository waitingLineRepository;
     @Autowired
     private ShopRepository shopRepository;
+    private Member member1, member2, member3;
     private Shop shop;
-    private Member member3;
-    private Waiting waiting1, waiting2;
+    private Waiting waiting1, waiting2, waiting3;
     private List<Waiting> waitings;
 
     @Autowired
@@ -48,12 +48,13 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        shop = ShopFixture.shopWith24();
-        shopRepository.save(shop);
-        Member member1 = MemberFixture.member("test1@naver.com");
-        Member member2 = MemberFixture.member("test2@naver.com");
+        member1 = MemberFixture.member("test1@naver.com");
+        member2 = MemberFixture.member("test2@naver.com");
         member3 = MemberFixture.member("test3@naver.com");
         memberRepository.saveAll(List.of(member1, member2, member3));
+
+        shop = ShopFixture.shopWith24();
+        shopRepository.save(shop);
 
         waiting1 = Waiting.builder()
             .member(member1)
@@ -68,9 +69,17 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .peopleCount(2)
             .build();
 
-        waitings = waitingRepository.saveAll(List.of(waiting1, waiting2));
+        waiting3 = Waiting.builder()
+            .member(member3)
+            .shop(shop)
+            .waitingNumber(3)
+            .peopleCount(2)
+            .build();
+
+        waitings = waitingRepository.saveAll(List.of(waiting1, waiting2, waiting3));
         waitingLineRepository.save(shop.getId(), waiting1.getId());
         waitingLineRepository.save(shop.getId(), waiting2.getId());
+        waitingLineRepository.save(shop.getId(), waiting3.getId());
     }
 
     @AfterEach
@@ -82,22 +91,24 @@ class WaitingControllerTest extends BaseIntegrationTest {
     @Test
     void createWaiting() throws Exception {
         //given
-        waitings = waitingRepository.saveAll(List.of(waiting1, waiting2));
-        waitingLineRepository.printWaitingLine(shop.getId());
+        Member member4 = MemberFixture.member("test4@naver.com");
+        memberRepository.save(member4);
         CreateWaitingRequest request = CreateWaitingRequest
             .builder()
             .peopleCount(2).build();
+
         // when, then
-        mockMvc.perform(post("/waitings/{shopId}/{memberId}", shop.getId(), member3.getId())
+        mockMvc.perform(post("/waitings/{shopId}/{memberId}", shop.getId(), member4.getId())
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
-            .andExpect(jsonPath("$.rank").value(3))
+            .andExpect(jsonPath("$.rank").value(4))
             .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
             .andDo(MockMvcResultHandlers.print());
 
     }
+
 }
