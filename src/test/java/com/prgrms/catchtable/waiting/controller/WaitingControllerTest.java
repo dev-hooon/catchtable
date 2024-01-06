@@ -4,6 +4,7 @@ import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
@@ -160,7 +162,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andDo(MockMvcResultHandlers.print());
     }
 
-    @DisplayName("웨이팅을 취소할 수 있다. 취소 시 뒤에 있는 사람들은 rank가 1씩 증가한다.")
+    @DisplayName("웨이팅 취소 API를 추가할 수 있다.")
     @Test
     void cancelWaiting() throws Exception {
         //when, then
@@ -174,8 +176,11 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(waiting1.getPeopleCount()))
             .andExpect(jsonPath("$.status").value(CANCELED.getDescription()))
             .andDo(MockMvcResultHandlers.print());
+
         assertThat(waitingLineRepository.findRank(1L, 2L)).isEqualTo(1L);
         assertThat(waitingLineRepository.findRank(1L, 3L)).isEqualTo(2L);
+        assertThrows(NotFoundCustomException.class,
+            () -> waitingLineRepository.findRank(1L, 1L));
     }
 
     @DisplayName("웨이팅 진행 상태가 아니면 취소가 불가하다.")
