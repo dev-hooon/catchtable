@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,4 +111,28 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
     }
 
+    @DisplayName("웨이팅 지연 API를 호출할 수 있다.")
+    @Test
+    void postponeWaiting() throws Exception{
+        //when, then
+        mockMvc.perform(patch("/waitings/{memberId}",member2.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(3))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting2.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting2.getPeopleCount()))
+            .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("맨 뒤의 멤버가 웨이팅 지연 API 호출 시 예외 반환")
+    @Test
+    void postponeWaiting_fails() throws Exception {
+        mockMvc.perform(patch("/waitings/{memberId}",member3.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("이미 맨뒤라 웨이팅을 미룰 수 없습니다."))
+            .andDo(MockMvcResultHandlers.print());
+    }
 }
