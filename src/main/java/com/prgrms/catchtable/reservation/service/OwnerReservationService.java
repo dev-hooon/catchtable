@@ -1,8 +1,9 @@
 package com.prgrms.catchtable.reservation.service;
 
+
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_COMPLETED;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_RESERVATION;
-import static com.prgrms.catchtable.reservation.domain.ReservationStatus.*;
+import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -14,7 +15,6 @@ import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationStatusRequest;
 import com.prgrms.catchtable.reservation.dto.response.OwnerGetAllReservationResponse;
 import com.prgrms.catchtable.reservation.repository.ReservationRepository;
-import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
