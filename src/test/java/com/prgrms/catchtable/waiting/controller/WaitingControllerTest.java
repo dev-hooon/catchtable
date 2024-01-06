@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 @Slf4j
@@ -130,7 +131,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andDo(MockMvcResultHandlers.print());
     }
 
-    @DisplayName("맨 뒤의 멤버가 웨이팅 지연 API 호출 시 예외 반환")
+    @DisplayName("맨 뒤의 멤버가 웨이팅 지연 API 호출 시 예외를 반환한다.")
     @Test
     void postponeWaiting_fails() throws Exception {
         mockMvc.perform(patch("/waitings/{memberId}", member3.getId())
@@ -142,4 +143,15 @@ class WaitingControllerTest extends BaseIntegrationTest {
 //        Assertions.assertThat(waiting.getPostponeRemainingCount()).isEqualTo(2);
     }
 
+
+    @DisplayName("대기 지연 잔여 횟수를 소진 시, 더이상 지연이 불가하므로 예외를 반환한다.")
+    @Test
+    void postponeWaiting_fails2() throws Exception {
+        ReflectionTestUtils.setField(waiting1,"remainingPostponeCount",0);
+        mockMvc.perform(patch("/waitings/{memberId}", member1.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("이미 두 차례 대기를 미뤘습니다."))
+            .andDo(MockMvcResultHandlers.print());
+    }
 }
