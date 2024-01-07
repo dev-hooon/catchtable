@@ -29,9 +29,9 @@ class OwnerServiceTest {
     private final OwnerService ownerService = new OwnerService(ownerRepository, passwordEncoder,
         jwtTokenProvider);
 
-    String email = "abc1234@gmail.com";
-    String password = "qwer1234";
-    String wrongPassword = "qwer12345";
+    private final String email = "abc1234@gmail.com";
+    private final String password = "qwer1234";
+    private final String wrongPassword = "qwer12345";
 
 
     @Test
