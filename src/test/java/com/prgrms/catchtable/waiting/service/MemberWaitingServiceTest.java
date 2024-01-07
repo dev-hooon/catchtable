@@ -43,6 +43,7 @@ class MemberWaitingServiceTest {
     @InjectMocks
     private MemberWaitingService memberWaitingService;
 
+    @DisplayName("웨이팅을 생성할 수 있다.")
     @Test
     void createWaiting() {
         //given
@@ -76,7 +77,7 @@ class MemberWaitingServiceTest {
         );
     }
 
-    @DisplayName("대기 지연을 할 수 있다.")
+    @DisplayName("웨이팅을 연기할 수 있다.")
     @Test
     void postponeWaiting() {
         //given
@@ -85,7 +86,7 @@ class MemberWaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member,PROGRESS)).willReturn(Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
@@ -102,7 +103,7 @@ class MemberWaitingServiceTest {
         );
     }
 
-    @DisplayName("대기 취소를 할 수 있다.")
+    @DisplayName("웨이팅을 취소할 수 있다.")
     @Test
     void cancelWaiting() {
         //given
@@ -111,7 +112,7 @@ class MemberWaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member,PROGRESS)).willReturn(Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
         doNothing().when(waiting).changeStatusCanceled();
@@ -126,4 +127,5 @@ class MemberWaitingServiceTest {
             assertThat(response.waitingNumber())::isNotNull
         );
     }
+
 }

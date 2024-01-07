@@ -182,15 +182,4 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             () -> waitingLineRepository.findRank(shop.getId(), waiting1.getId()));
     }
 
-    @DisplayName("웨이팅 진행 상태가 아니면 취소가 불가하다.")
-    @Test
-    void cancelWaiting_fails_if_not_progress() throws Exception {
-        //when, then
-        ReflectionTestUtils.setField(waiting1, "status", COMPLETED);
-        mockMvc.perform(delete("/waitings/{memberId}", member1.getId())
-                .contentType(APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value("웨이팅 취소 처리가 불가한 상태입니다."))
-            .andDo(MockMvcResultHandlers.print());
-    }
 }

@@ -2,8 +2,9 @@ package com.prgrms.catchtable.waiting.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRESS_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
-import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_WAITING;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
 
@@ -64,7 +65,7 @@ public class MemberWaitingService {
     @Transactional
     public WaitingResponse postponeWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
-        Waiting waiting = getWaitingEntity(member);
+        Waiting waiting = getWaitingEntityInProgress(member);
 
         Shop shop = waiting.getShop();
 
@@ -78,24 +79,13 @@ public class MemberWaitingService {
     @Transactional
     public WaitingResponse cancelWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
-        Waiting waiting = getWaitingEntity(member);
+        Waiting waiting = getWaitingEntityInProgress(member);
 
         Shop shop = waiting.getShop();
-        waiting.changeStatusCanceled();
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
+        waiting.changeStatusCanceled();
 
         return toWaitingResponse(waiting, -1L);
-    }
-
-    @Transactional(readOnly = true)
-    public WaitingResponse getWaiting(Long memberId){
-        Member member = getMemberEntity(memberId);
-        Waiting waiting = getWaitingEntity(member);
-
-        Shop shop = waiting.getShop();
-        Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
-
-        return toWaitingResponse(waiting, rank);
     }
 
     private void validateIfMemberWaitingExists(Member member) {
@@ -118,9 +108,8 @@ public class MemberWaitingService {
         return shop;
     }
 
-    public Waiting getWaitingEntity(Member member) {
-        return waitingRepository.findByMemberWithShop(member).orElseThrow(
-            () -> new NotFoundCustomException(NOT_EXIST_WAITING)
-        );
+    public Waiting getWaitingEntityInProgress(Member member) {
+        return waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_PROGRESS_WAITING));
     }
 }
