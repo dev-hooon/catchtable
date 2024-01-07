@@ -106,4 +106,8 @@ public class Owner extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void insertShop(Shop shop) {
+        this.shop = shop;
+    }
 }

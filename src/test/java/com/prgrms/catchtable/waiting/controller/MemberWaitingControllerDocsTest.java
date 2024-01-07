@@ -15,19 +15,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
 import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingResponse;
-import com.prgrms.catchtable.waiting.service.WaitingService;
+import com.prgrms.catchtable.waiting.dto.WaitingResponse;
+import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-class WaitingControllerDocsTest extends RestDocsSupport {
+class MemberWaitingControllerDocsTest extends RestDocsSupport {
 
-    private final WaitingService waitingService = mock(WaitingService.class);
+    private final MemberWaitingService memberWaitingService = mock(MemberWaitingService.class);
 
     @Override
     protected Object initController() {
-        return new WaitingController(waitingService);
+        return new MemberWaitingController(memberWaitingService);
     }
 
     @DisplayName("웨이팅 생성 API")
@@ -36,21 +37,24 @@ class WaitingControllerDocsTest extends RestDocsSupport {
         CreateWaitingRequest request = CreateWaitingRequest
             .builder()
             .peopleCount(2).build();
-        CreateWaitingResponse response = CreateWaitingResponse.builder()
-            .createdWaitingId(201L)
+        WaitingResponse response = WaitingResponse.builder()
+            .waitingId(201L)
             .shopId(1L)
             .shopName("shop1")
             .waitingNumber(324)
-            .waitingOrder(20)
+            .rank(20L)
             .peopleCount(2)
+            .remainingPostponeCount(2)
+            .status("진행 중")
             .build();
 
-        given(waitingService.createWaiting(1L, 1L, request)).willReturn(response);
+        given(memberWaitingService.createWaiting(1L, 1L, request)).willReturn(response);
 
         mockMvc.perform(post("/waitings/{shopId}/{memberId}", 1, 1)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print())
             .andDo(document("waiting-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -59,7 +63,7 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                         .description("인원수")
                 ),
                 responseFields(
-                    fieldWithPath("createdWaitingId").type(JsonFieldType.NUMBER)
+                    fieldWithPath("waitingId").type(JsonFieldType.NUMBER)
                         .description("생성된 웨이팅 아이디"),
                     fieldWithPath("shopId").type(JsonFieldType.NUMBER)
                         .description("상점 아이디"),
@@ -69,8 +73,12 @@ class WaitingControllerDocsTest extends RestDocsSupport {
                         .description("인원 수"),
                     fieldWithPath("waitingNumber").type(JsonFieldType.NUMBER)
                         .description("웨이팅 고유 번호"),
-                    fieldWithPath("waitingOrder").type(JsonFieldType.NUMBER)
-                        .description("웨이팅 순서")
+                    fieldWithPath("rank").type(JsonFieldType.NUMBER)
+                        .description("웨이팅 순서"),
+                    fieldWithPath("remainingPostponeCount").type(JsonFieldType.NUMBER)
+                        .description("대기 지연 잔여 횟수"),
+                    fieldWithPath("status").type(JsonFieldType.STRING)
+                        .description("대기 상태")
                 )
             ));
 

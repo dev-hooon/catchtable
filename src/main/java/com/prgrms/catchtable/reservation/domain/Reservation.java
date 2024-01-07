@@ -60,4 +60,13 @@ public class Reservation extends BaseEntity {
         this.shop = reservationTime.getShop();
     }
 
+    public void modifyReservation(ReservationTime reservationTime, int peopleCount) {
+        this.reservationTime = reservationTime;
+        this.peopleCount = peopleCount;
+    }
+
+    public void changeStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
 }

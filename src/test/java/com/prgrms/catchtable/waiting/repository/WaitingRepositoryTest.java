@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.waiting.repository;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.catchtable.member.MemberFixture;
@@ -78,24 +77,5 @@ class WaitingRepositoryTest {
             END_DATE_TIME);
         //then
         assertThat(count).isEqualTo(2L); //waiting2, waiting3
-    }
-
-    @DisplayName("특정 가게의 당일 대기 순서를 조회할 수 있다.")
-    @Test
-    void countByShopAndStatusAndCreatedAtBetween() {
-        yesterdayWaiting = WaitingFixture.waiting(member1, shop, 1);
-        completedWaiting = WaitingFixture.completedWaiting(member2, shop, 2);
-        normalWaiting = WaitingFixture.waiting(member3, shop, 3);
-        waitingRepository.saveAll(List.of(yesterdayWaiting, completedWaiting, normalWaiting));
-
-        ReflectionTestUtils.setField(yesterdayWaiting, "createdAt",
-            LocalDateTime.now().minusDays(1));
-        waitingRepository.save(yesterdayWaiting);
-
-        //when
-        Long count = waitingRepository.countByShopAndStatusAndCreatedAtBetween(shop, PROGRESS,
-            START_DATE_TIME, END_DATE_TIME);
-        //then
-        assertThat(count).isEqualTo(1L); //waiting3
     }
 }

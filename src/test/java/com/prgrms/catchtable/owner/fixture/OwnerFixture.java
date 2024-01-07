@@ -1,22 +1,30 @@
 package com.prgrms.catchtable.owner.fixture;
 
+import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.member.domain.Gender;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.dto.request.JoinOwnerRequest;
 import com.prgrms.catchtable.owner.dto.request.LoginOwnerRequest;
+import com.prgrms.catchtable.shop.domain.Shop;
 import java.time.LocalDate;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import static com.prgrms.catchtable.member.domain.Gender.MALE;
+
 
 public class OwnerFixture {
 
-    public static Owner getOwner(String email, String encodePassword){
-        return Owner.builder()
-            .name("test")
-            .email(email)
-            .password(encodePassword)
-            .phoneNumber("010-8830-4795")
-            .gender(Gender.MALE)
-            .dateBirth(LocalDate.of(1998,3,25))
+    public static Owner getOwner() {
+        Owner owner = Owner.builder()
+            .name("ownerA")
+            .phoneNumber("010-3462-2480")
+            .gender(MALE)
+            .dateBirth(LocalDate.of(2000, 9, 13))
             .build();
+        Shop shop = ShopData.getShop();
+        ReflectionTestUtils.setField(shop, "id", 1L);
+        owner.insertShop(shop);
+        return owner;
     }
 
     public static JoinOwnerRequest getJoinOwnerRequest(String email, String password){
