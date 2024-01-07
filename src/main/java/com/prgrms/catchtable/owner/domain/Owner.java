@@ -35,6 +35,9 @@ public class Owner extends BaseEntity {
     @Column(name = "owner_name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -50,8 +53,9 @@ public class Owner extends BaseEntity {
     private Shop shop;
 
     @Builder
-    public Owner(String name, String phoneNumber, Gender gender, LocalDate dateBirth) {
+    public Owner(String name, String email, String phoneNumber, Gender gender, LocalDate dateBirth) {
         this.name = name;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.dateBirth = dateBirth;
