@@ -36,7 +36,8 @@ public class NotificationOwner extends BaseEntity {
     private Owner owner;
 
     @Builder
-    public NotificationOwner(String message) {
+    public NotificationOwner(Owner owner, String message) {
+        this.owner = owner;
         this.message = message;
     }
 }
