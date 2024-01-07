@@ -16,6 +16,7 @@ import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class OwnerService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     public JoinOwnerResponse joinOwner(JoinOwnerRequest joinOwnerRequest) {
 
         //이미 존재하는 이메일이라면
@@ -47,6 +49,7 @@ public class OwnerService {
         }
     }
 
+    @Transactional
     public Token loginOwner(LoginOwnerRequest loginRequest) {
 
         //email 확인
