@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.waiting.dto;
+package com.prgrms.catchtable.waiting.dto.response;
 
 import lombok.Builder;
 

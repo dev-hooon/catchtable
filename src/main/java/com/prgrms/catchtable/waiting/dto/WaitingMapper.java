@@ -5,6 +5,8 @@ import static lombok.AccessLevel.PRIVATE;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.WaitingResponse;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
