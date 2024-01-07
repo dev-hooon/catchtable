@@ -30,6 +30,7 @@ public class WaitingMapper {
             .waitingNumber(waiting.getWaitingNumber())
             .rank(rank)
             .remainingPostponeCount(waiting.getRemainingPostponeCount())
+            .status(waiting.getStatus().getDescription())
             .build();
     }
 }

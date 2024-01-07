@@ -1,12 +1,19 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
@@ -27,11 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Transactional
-class WaitingControllerTest extends BaseIntegrationTest {
+class MemberWaitingControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -59,7 +64,6 @@ class WaitingControllerTest extends BaseIntegrationTest {
 
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
-
         waiting1 = Waiting.builder()
             .member(member1)
             .shop(shop)
@@ -89,6 +93,9 @@ class WaitingControllerTest extends BaseIntegrationTest {
     @AfterEach
     void clear() {
         redisTemplate.delete("s" + shop.getId());
+        memberRepository.deleteAll();
+        shopRepository.deleteAll();
+        waitingRepository.deleteAll();
     }
 
     @DisplayName("웨이팅 생성 API를 호출할 수 있다.")
@@ -111,6 +118,7 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.rank").value(4))
             .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
+            .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());
 
     }
@@ -138,19 +146,56 @@ class WaitingControllerTest extends BaseIntegrationTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 맨뒤라 웨이팅을 미룰 수 없습니다."))
             .andDo(MockMvcResultHandlers.print());
-//        Waiting waiting = waitingRepository.findById(waiting3.getId()).orElse(null);
-//        Assertions.assertThat(waiting.getPostponeRemainingCount()).isEqualTo(2);
+        assertThat(waiting3.getRemainingPostponeCount()).isEqualTo(2);
     }
 
 
     @DisplayName("대기 지연 잔여 횟수를 소진 시, 더이상 지연이 불가하므로 예외를 반환한다.")
     @Test
     void postponeWaiting_fails2() throws Exception {
-        ReflectionTestUtils.setField(waiting1, "remainingPostponeCount", 0);
-        mockMvc.perform(patch("/waitings/{memberId}", member1.getId())
+        ReflectionTestUtils.setField(waiting2, "remainingPostponeCount", 0);
+        waitingRepository.save(waiting2);
+        mockMvc.perform(patch("/waitings/{memberId}", member2.getId())
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 두 차례 대기를 미뤘습니다."))
+            .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("웨이팅 취소 API를 호출할 수 있다.")
+    @Test
+    void cancelWaiting() throws Exception {
+        //when, then
+        mockMvc.perform(delete("/waitings/{memberId}", member1.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(-1L))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting1.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting1.getPeopleCount()))
+            .andExpect(jsonPath("$.status").value(CANCELED.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+        waitingLineRepository.printWaitingLine(shop.getId());
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting2.getId())).isEqualTo(1L);
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting3.getId())).isEqualTo(2L);
+        assertThrows(NotFoundCustomException.class,
+            () -> waitingLineRepository.findRank(shop.getId(), waiting1.getId()));
+    }
+
+    @DisplayName("웨이팅 조회 API를 호출할 수 있다.")
+    @Test
+    void getWaiting() throws Exception {
+        //when, then
+        mockMvc.perform(get("/waitings/{memberId}", member3.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(3L))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting3.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting3.getPeopleCount()))
+            .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());
     }
 }
