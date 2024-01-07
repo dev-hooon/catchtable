@@ -109,7 +109,7 @@ class OwnerReservationServiceTest {
 
         reservations.add(reservation1);
         reservations.add(reservation2);
-        Owner owner = OwnerFixture.getOwner();
+        Owner owner = OwnerFixture.getOwner("email", "password");
         when(reservationRepository.findAllWithReservationTimeAndShopByShopId(
             any(Long.class))).thenReturn(reservations);
         when(ownerRepository.findById(any(Long.class))).thenReturn(Optional.of(owner));
@@ -127,7 +127,7 @@ class OwnerReservationServiceTest {
     @Test
     @DisplayName("매장에 예약이 없을 시 빈 리스트가 조회된다.")
     void getAllReservationEmpty() {
-        Owner owner = OwnerFixture.getOwner();
+        Owner owner = OwnerFixture.getOwner("email", "password");
 
         when(reservationRepository.findAllWithReservationTimeAndShopByShopId(
             any(Long.class))).thenReturn(List.of());

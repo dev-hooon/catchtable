@@ -14,9 +14,11 @@ import static com.prgrms.catchtable.member.domain.Gender.MALE;
 
 public class OwnerFixture {
 
-    public static Owner getOwner() {
+    public static Owner getOwner(String email, String password) {
         Owner owner = Owner.builder()
             .name("ownerA")
+            .email(email)
+            .password(password)
             .phoneNumber("010-3462-2480")
             .gender(MALE)
             .dateBirth(LocalDate.of(2000, 9, 13))

@@ -62,7 +62,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         Reservation reservation2 = reservationRepository.save(
             ReservationFixture.getReservation(savedReservationTime2));
 
-        Owner owner = OwnerFixture.getOwner();
+        Owner owner = OwnerFixture.getOwner("email", "password");
         owner.insertShop(shop);
         ownerRepository.save(owner);
     }
