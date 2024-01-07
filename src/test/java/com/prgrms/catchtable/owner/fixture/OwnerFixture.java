@@ -31,12 +31,12 @@ public class OwnerFixture {
 
     public static JoinOwnerRequest getJoinOwnerRequest(String email, String password){
         return JoinOwnerRequest.builder()
-            .name("test")
+            .name("ownerA")
             .email(email)
             .password(password)
-            .phoneNumber("010-8830-4795")
+            .phoneNumber("010-3462-2480")
             .gender("male")
-            .dateBirth(LocalDate.of(1998,3,25))
+            .dateBirth(LocalDate.of(2000, 9, 13))
             .build();
     }
 
