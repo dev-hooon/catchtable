@@ -17,7 +17,4 @@ public enum NotificationContent {
     private final String message;
 
 
-
-
-
 }

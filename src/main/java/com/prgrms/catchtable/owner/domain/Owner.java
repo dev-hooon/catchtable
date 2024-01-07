@@ -53,7 +53,8 @@ public class Owner extends BaseEntity {
     private Shop shop;
 
     @Builder
-    public Owner(String name, String email, String phoneNumber, Gender gender, LocalDate dateBirth) {
+    public Owner(String name, String email, String phoneNumber, Gender gender,
+        LocalDate dateBirth) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

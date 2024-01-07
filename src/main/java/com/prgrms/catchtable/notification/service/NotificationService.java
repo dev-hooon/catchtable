@@ -1,7 +1,8 @@
 package com.prgrms.catchtable.notification.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
-import static org.springframework.http.HttpMethod.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.SLACK_ID_IS_WRONG;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.member.domain.Member;
@@ -14,7 +15,6 @@ import com.prgrms.catchtable.notification.repository.NotificationOwnerRepository
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +51,6 @@ public class NotificationService {
 
         requestToSendMessage(slackId, message); // 알림 요청 보내는 함수 호출
 
-
         NotificationMember notification = NotificationMember.builder()
             .member(member)
             .message(message)
@@ -82,15 +81,13 @@ public class NotificationService {
         notificationOwnerRepository.save(notification);
     }
 
-    private void requestToSendMessage(String slackId, String message){
+    private void requestToSendMessage(String slackId, String message) {
         String url = "https://slack.com/api/chat.postMessage";
 
         // 헤더에 캐치테이블 클론 슬랙 토큰 삽입
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + slackToken);
         headers.add("Content-type", "application/json; charset=utf-8");
-
-
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("channel", slackId); // 채널 필드에 사용자의 슬랙 고유 ID
@@ -110,7 +107,7 @@ public class NotificationService {
         jsonObject = new JSONObject(response.getBody());
         String result = jsonObject.get("ok").toString();
 
-        if(result.equals("false")){ // 알림 요청 보낸 후 응답의 ok필드 값이 false면 슬랙아이디가 잘못되었다는 것
+        if (result.equals("false")) { // 알림 요청 보낸 후 응답의 ok필드 값이 false면 슬랙아이디가 잘못되었다는 것
             throw new BadRequestCustomException(SLACK_ID_IS_WRONG);
         }
 
@@ -119,7 +116,6 @@ public class NotificationService {
 
     public String getSlackIdByEmail(String email) {
         String url = "https://slack.com/api/users.lookupByEmail?email=".concat(email);
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + slackToken);
