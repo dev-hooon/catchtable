@@ -18,5 +18,6 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
     @Query("select w from Waiting w join fetch w.shop "
         + "where w.member = :member and w.status = :status")
-    Optional<Waiting> findByMemberAndStatusWithShop(@Param("member")Member member, @Param("status")WaitingStatus status);
+    Optional<Waiting> findByMemberAndStatusWithShop(@Param("member") Member member,
+        @Param("status") WaitingStatus status);
 }

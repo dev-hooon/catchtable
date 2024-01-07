@@ -86,11 +86,11 @@ class MemberWaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberAndStatusWithShop(member,PROGRESS)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
-        doNothing().when(waiting).validatePostponeRemainingCount();
         doNothing().when(waiting).decreasePostponeRemainingCount();
 
         //when
@@ -112,7 +112,8 @@ class MemberWaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberAndStatusWithShop(member,PROGRESS)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
         doNothing().when(waiting).changeStatusCanceled();
@@ -130,14 +131,15 @@ class MemberWaitingServiceTest {
 
     @DisplayName("웨이팅를 조회할 수 있다.")
     @Test
-    void getWaiting(){
+    void getWaiting() {
         //given
         Shop shop = mock(Shop.class);
         Member member = mock(Member.class);
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberAndStatusWithShop(member,PROGRESS)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         //when

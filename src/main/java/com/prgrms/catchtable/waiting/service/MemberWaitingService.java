@@ -69,10 +69,10 @@ public class MemberWaitingService {
 
         Shop shop = waiting.getShop();
 
-        waiting.validatePostponeRemainingCount();
+        waiting.decreasePostponeRemainingCount();
         waitingLineRepository.postpone(shop.getId(), waiting.getId());
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
-        waiting.decreasePostponeRemainingCount();
+
         return toWaitingResponse(waiting, rank);
     }
 
