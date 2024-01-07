@@ -28,7 +28,9 @@ public enum ErrorCode {
     CAN_NOT_ENTRY("웨이팅을 입장 처리할 수 없습니다"),
     WAITING_DOES_NOT_EXIST("웨이팅이 존재하지 않습니다"),
     SHOP_NOT_RUNNING("가게가 영업시간이 아닙니다."),
-    INTERNAL_SERVER_ERROR("내부 서버 오류입니다.");
+    INTERNAL_SERVER_ERROR("내부 서버 오류입니다."),
+
+    SLACK_ID_IS_WRONG("요청한 슬랙 Id를 찾을 수 없거나 잘못 되었습니다");
 
     private final String message;
 }
