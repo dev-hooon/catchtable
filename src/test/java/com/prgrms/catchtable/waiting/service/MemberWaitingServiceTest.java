@@ -15,8 +15,8 @@ import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingResponse;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalTime;
@@ -68,7 +68,7 @@ class MemberWaitingServiceTest {
         given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
-        WaitingResponse response = memberWaitingService.createWaiting(1L, 1L, request);
+        MemberWaitingResponse response = memberWaitingService.createWaiting(1L, 1L, request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
@@ -94,7 +94,7 @@ class MemberWaitingServiceTest {
         doNothing().when(waiting).decreasePostponeRemainingCount();
 
         //when
-        WaitingResponse response = memberWaitingService.postponeWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.postponeWaiting(1L);
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
@@ -119,7 +119,7 @@ class MemberWaitingServiceTest {
         doNothing().when(waiting).changeStatusCanceled();
 
         //when
-        WaitingResponse response = memberWaitingService.cancelWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.cancelWaiting(1L);
 
         //then
         assertAll(
@@ -143,7 +143,7 @@ class MemberWaitingServiceTest {
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         //when
-        WaitingResponse response = memberWaitingService.getWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.getWaiting(1L);
 
         //then
 

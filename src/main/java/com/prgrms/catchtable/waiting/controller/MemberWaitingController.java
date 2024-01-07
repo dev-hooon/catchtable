@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
-import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingResponse;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,29 +23,29 @@ public class MemberWaitingController {
     private final MemberWaitingService memberWaitingService;
 
     @PostMapping("/{shopId}/{memberId}")
-    public ResponseEntity<WaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
+    public ResponseEntity<MemberWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
         @PathVariable("memberId") Long memberId,
         @Valid @RequestBody CreateWaitingRequest request) {
-        WaitingResponse response = memberWaitingService.createWaiting(shopId, memberId, request);
+        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, memberId, request);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{memberId}")
-    public ResponseEntity<WaitingResponse> postponeWaiting(
+    public ResponseEntity<MemberWaitingResponse> postponeWaiting(
         @PathVariable("memberId") Long memberId) {
-        WaitingResponse response = memberWaitingService.postponeWaiting(memberId);
+        MemberWaitingResponse response = memberWaitingService.postponeWaiting(memberId);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<WaitingResponse> cancelWaiting(@PathVariable("memberId") Long memberId) {
-        WaitingResponse response = memberWaitingService.cancelWaiting(memberId);
+    public ResponseEntity<MemberWaitingResponse> cancelWaiting(@PathVariable("memberId") Long memberId) {
+        MemberWaitingResponse response = memberWaitingService.cancelWaiting(memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<WaitingResponse> getWaiting(@PathVariable("memberId") Long memberId) {
-        WaitingResponse response = memberWaitingService.getWaiting(memberId);
+    public ResponseEntity<MemberWaitingResponse> getWaiting(@PathVariable("memberId") Long memberId) {
+        MemberWaitingResponse response = memberWaitingService.getWaiting(memberId);
         return ResponseEntity.ok(response);
     }
 }
