@@ -21,7 +21,7 @@ public enum ErrorCode {
     CAN_NOT_COMPLETE_WAITING("입장 처리가 불가한 대기 상태입니다."),
     EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),
     ALREADY_END_LINE("이미 맨뒤라 웨이팅을 미룰 수 없습니다."),
-    NOT_EXIST_WAITING("웨이팅이 존재하지 않습니다."),
+    NOT_EXIST_PROGRESS_WAITING("진행 중인 웨이팅이 존재하지 않습니다."),
 
     POSTPONE_REMAINING_CNT_0("이미 두 차례 대기를 미뤘습니다."),
     CAN_NOT_CANCEL_WAITING("웨이팅 취소 처리가 불가한 상태입니다."),
