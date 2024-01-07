@@ -87,6 +87,17 @@ public class MemberWaitingService {
         return toWaitingResponse(waiting, -1L);
     }
 
+    @Transactional(readOnly = true)
+    public WaitingResponse getWaiting(Long memberId){
+        Member member = getMemberEntity(memberId);
+        Waiting waiting = getWaitingEntity(member);
+
+        Shop shop = waiting.getShop();
+        Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
+
+        return toWaitingResponse(waiting, rank);
+    }
+
     private void validateIfMemberWaitingExists(Member member) {
         if (waitingRepository.existsByMember(member)) {
             throw new BadRequestCustomException(EXISTING_MEMBER_WAITING);
