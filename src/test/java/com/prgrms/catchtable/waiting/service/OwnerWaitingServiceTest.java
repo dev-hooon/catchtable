@@ -48,8 +48,8 @@ class OwnerWaitingServiceTest {
         Member member2 = mock(Member.class);
         Owner owner = mock(Owner.class);
         Shop shop = mock(Shop.class);
-        Waiting waiting1 = WaitingFixture.waiting(member1, shop, 1);
-        Waiting waiting2 = WaitingFixture.waiting(member2, shop, 2);
+        Waiting waiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
+        Waiting waiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
 
         given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
@@ -80,7 +80,7 @@ class OwnerWaitingServiceTest {
         Member member = mock(Member.class);
         Owner owner = mock(Owner.class);
         Shop shop = mock(Shop.class);
-        Waiting waiting = WaitingFixture.waiting(member, shop, 1);
+        Waiting waiting = WaitingFixture.progressWaiting(member, shop, 1);
 
         given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
