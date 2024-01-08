@@ -59,11 +59,11 @@ public class ReservationTime {
         this.isOccupied = false;
     }
 
-    public void setPreOccupiedTrue(){
+    public void setPreOccupiedTrue() {
         this.isPreOccupied = true;
     }
 
-    public void setPreOccupiedFalse(){
+    public void setPreOccupiedFalse() {
         this.isPreOccupied = false;
     }
 }

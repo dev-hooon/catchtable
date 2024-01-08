@@ -67,6 +67,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
     }
+
     @Disabled
     @Test
     @DisplayName("선점 api 호출 시 선점권이 획득 되었다가 지정 시간 이후에 획득이 풀린다.")
