@@ -124,8 +124,9 @@ class BasicWaitingLineRepositoryTest {
         //when
         List<Long> waitingIds = repository.getShopWaitingIdsInOrder(shopId);
         //then
-        System.out.println("waitingIds = " + waitingIds);
         assertThat(waitingIds.get(0)).isEqualTo(1L);
+        assertThat(waitingIds.get(1)).isEqualTo(2L);
+        assertThat(waitingIds.get(2)).isEqualTo(3L);
     }
 
 }
