@@ -6,7 +6,7 @@ import com.prgrms.catchtable.waiting.domain.Waiting;
 
 public class WaitingFixture {
 
-    public static Waiting waiting(Member member, Shop shop, int waitingNumber) {
+    public static Waiting progressWaiting(Member member, Shop shop, int waitingNumber) {
         return Waiting.builder()
             .member(member)
             .shop(shop)
@@ -16,8 +16,14 @@ public class WaitingFixture {
     }
 
     public static Waiting completedWaiting(Member member, Shop shop, int waitingNumber) {
-        Waiting waiting = waiting(member, shop, waitingNumber);
+        Waiting waiting = progressWaiting(member, shop, waitingNumber);
         waiting.changeStatusCompleted();
+        return waiting;
+    }
+
+    public static Waiting canceledWaiting(Member member, Shop shop, int waitingNumber) {
+        Waiting waiting = progressWaiting(member, shop, waitingNumber);
+        waiting.changeStatusCanceled();
         return waiting;
     }
 }
