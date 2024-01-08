@@ -18,6 +18,7 @@ public enum ErrorCode {
     NOT_EXIST_RESERVATION("존재하지 않는 예약입니다"),
     EXCEED_PEOPLE_COUNT("예약인원이 해당 시간의 남은 수용가능 인원 수를 초과했습니다."),
     ALREADY_COMPLETED_RESERVATION("이미 예약 상태인 예약입니다."),
+    SLACK_ID_IS_WRONG("요청한 슬랙 Id를 찾을 수 없거나 잘못 되었습니다"),
 
     CAN_NOT_COMPLETE_WAITING("입장 처리가 불가한 대기 상태입니다."),
     EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),
@@ -33,7 +34,7 @@ public enum ErrorCode {
 
     ALREADY_EXIST_OWNER("이미 존재하는 점주입니다"),
     INVALID_EMAIL_OR_PASSWORD("이메일 혹은 비밀번호를 확인해주세요"),
-    INVALID_INPUT_TYPE("잘못된 타입입니다.");
+    INVALID_INPUT_TYPE("성별 타입을 양식대로 입력해주세요");
 
     private final String message;
 }
