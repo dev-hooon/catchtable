@@ -6,6 +6,8 @@ import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
@@ -27,7 +29,7 @@ public class WaitingMapper {
     }
 
     // entity -> dto
-    public static MemberWaitingResponse toWaitingResponse(Waiting waiting, Long rank) {
+    public static MemberWaitingResponse toMemberWaitingResponse(Waiting waiting, Long rank) {
         return MemberWaitingResponse.builder()
             .waitingId(waiting.getId())
             .shopId(waiting.getShop().getId())
@@ -38,6 +40,25 @@ public class WaitingMapper {
             .remainingPostponeCount(waiting.getRemainingPostponeCount())
             .status(waiting.getStatus().getDescription())
             .build();
+    }
+
+    public static MemberWaitingHistoryResponse toMemberWaitingHistoryResponse(Waiting waiting) {
+        return MemberWaitingHistoryResponse.builder()
+            .waitingId(waiting.getId())
+            .shopId(waiting.getShop().getId())
+            .shopName(waiting.getShop().getName())
+            .peopleCount(waiting.getPeopleCount())
+            .waitingNumber(waiting.getWaitingNumber())
+            .status(waiting.getStatus().getDescription())
+            .build();
+    }
+
+    public static MemberWaitingHistoryListResponse toMemberWaitingListResponse(List<Waiting> waitings){
+        List<MemberWaitingHistoryResponse> list = new ArrayList<>();
+        for (Waiting waiting : waitings) {
+            list.add(toMemberWaitingHistoryResponse(waiting));
+        }
+        return new MemberWaitingHistoryListResponse(list);
     }
 
     public static OwnerWaitingResponse toOwnerWaitingResponse(Waiting waiting, Long rank) {
