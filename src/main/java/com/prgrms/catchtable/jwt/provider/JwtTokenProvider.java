@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
     private final JwtConfig jwtConfig;
     private final JwtUserDetailsService jwtUserDetailsService;
-    private final String JWT_ROLE= "ROLE";
+    private final String JWT_ROLE = "ROLE";
 
     public Token createToken(String email, Role role) {
 
@@ -92,7 +92,7 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    private Role getRole(String token){
+    private Role getRole(String token) {
         Claims claims = Jwts.parserBuilder()
             .setSigningKey(jwtConfig.getClientSecret())
             .build()

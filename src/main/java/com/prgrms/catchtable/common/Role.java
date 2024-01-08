@@ -16,7 +16,7 @@ public enum Role {
 
     private final String role;
 
-    public static Role of(String type){
+    public static Role of(String type) {
         return Arrays.stream(values())
             .filter(role -> role.isEqual(type))
             .findAny()

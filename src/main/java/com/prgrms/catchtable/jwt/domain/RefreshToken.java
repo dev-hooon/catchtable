@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.jwt.domain;
 
-import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.Role;

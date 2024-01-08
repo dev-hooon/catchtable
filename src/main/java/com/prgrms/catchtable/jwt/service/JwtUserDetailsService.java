@@ -14,19 +14,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JwtUserDetailsService{
+public class JwtUserDetailsService {
 
     private final MemberRepository memberRepository;
     private final OwnerRepository ownerRepository;
 
-    public UserDetails loadUserByUsername(String email, Role role) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email, Role role)
+        throws UsernameNotFoundException {
 
-        if(role.equals(Role.MEMBER)){
+        if (role.equals(Role.MEMBER)) {
             return memberRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_MEMBER));
-        }
-
-        else{
+        } else {
             return ownerRepository.findOwnerByEmail(email)
                 .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_OWNER));
         }
