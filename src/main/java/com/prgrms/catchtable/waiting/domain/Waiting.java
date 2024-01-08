@@ -50,7 +50,7 @@ public class Waiting extends BaseEntity {
     @Column(name = "remaining_postpone_count")
     private int remainingPostponeCount;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(NO_CONSTRAINT))
     private Member member;
 
