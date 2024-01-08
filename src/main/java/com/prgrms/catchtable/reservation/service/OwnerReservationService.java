@@ -40,7 +40,7 @@ public class OwnerReservationService {
     ) {
         ReservationStatus modifyStatus = request.status(); // 요청으로 들어온 변경하려는 예약상태 추출
 
-        if(modifyStatus == COMPLETED){ // 취소, 노쇼 처리가 아닌 경우 예외
+        if (modifyStatus == COMPLETED) { // 취소, 노쇼 처리가 아닌 경우 예외
             throw new BadRequestCustomException(ALREADY_COMPLETED_RESERVATION);
         }
 

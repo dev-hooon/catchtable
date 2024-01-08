@@ -172,6 +172,7 @@ class MemberReservationServiceTest {
 
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(shop);
+        reservationTime.setOccupiedTrue(); // 수정 전 예약시간은 예약이 차있는 걸로 되어있어야함
         ReflectionTestUtils.setField(reservationTime, "id", 1L); // 수정 전 예약시간 객체 -> Id : 1
 
         ReservationTime modifyTime = ReservationFixture.getAnotherReservationTimeNotPreOccupied();
@@ -192,6 +193,8 @@ class MemberReservationServiceTest {
 
         //then
         assertAll(
+            () -> assertThat(reservationTime.isOccupied()).isFalse(),
+            // 수정 후 기존 예약시간이 예약가능으로 바뀌었는 지 검증
             () -> assertThat(response.date()).isEqualTo(modifyTime.getTime()),
             () -> assertThat(response.peopleCount()).isEqualTo(reservation.getPeopleCount()),
             () -> assertThat(reservation.getReservationTime()).isEqualTo(modifyTime)
