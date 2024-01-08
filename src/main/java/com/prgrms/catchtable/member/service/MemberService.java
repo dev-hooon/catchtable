@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.member.service;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -34,7 +35,7 @@ public class MemberService {
     }
 
     private Token createTotalToken(String email) {
-        Token totalToken = jwtTokenProvider.createToken(email);
+        Token totalToken = jwtTokenProvider.createToken(email, Role.MEMBER);
         refreshTokenService.saveRefreshToken(totalToken);
         return totalToken;
     }

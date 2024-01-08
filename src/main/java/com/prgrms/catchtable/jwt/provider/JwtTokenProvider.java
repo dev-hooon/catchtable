@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.jwt.provider;
 
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.jwt.config.JwtConfig;
 import com.prgrms.catchtable.jwt.service.JwtUserDetailsService;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -20,18 +21,19 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
 
     private final JwtConfig jwtConfig;
-
     private final JwtUserDetailsService jwtUserDetailsService;
+    private final String JWT_ROLE= "ROLE";
 
-    public Token createToken(String email) {
+    public Token createToken(String email, Role role) {
 
         Claims claims = Jwts.claims().setSubject(email);
+        claims.put(JWT_ROLE, role);
         Date now = new Date();
 
         String accessToken = createAccessToken(claims, now);
         String refreshToken = createRefreshToken(claims, now);
 
-        return new Token(accessToken, refreshToken, email);
+        return new Token(accessToken, refreshToken, email, role);
     }
 
     private String createAccessToken(Claims claims, Date now) {

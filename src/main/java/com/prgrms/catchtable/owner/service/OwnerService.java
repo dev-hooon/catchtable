@@ -3,6 +3,7 @@ package com.prgrms.catchtable.owner.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_EXIST_OWNER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_EMAIL_OR_PASSWORD;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
@@ -71,7 +72,7 @@ public class OwnerService {
     }
 
     private Token createTotalToken(String email){
-        Token totalToken = jwtTokenProvider.createToken(email);
+        Token totalToken = jwtTokenProvider.createToken(email, Role.OWNER);
         refreshTokenService.saveRefreshToken(totalToken);
         return totalToken;
     }
