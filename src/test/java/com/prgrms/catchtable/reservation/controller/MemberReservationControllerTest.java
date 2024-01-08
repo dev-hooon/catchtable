@@ -5,6 +5,7 @@ import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELL
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -170,6 +171,22 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(CANCELLED.toString()));
+    }
+
+    @Test
+    @DisplayName("회원은 자신의 예약내역을 조회할 수 있다.")
+    void getAllReservation() throws Exception {
+        Reservation reservation = ReservationFixture.getReservation(
+            reservationTimeRepository.findAll().get(0));
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        mockMvc.perform(get("/reservations"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].reservationId").value(savedReservation.getId()))
+            .andExpect(jsonPath("$[0].date").value(savedReservation.getReservationTime().getTime().toString()))
+            .andExpect(jsonPath("$[0].peopleCount").value(savedReservation.getPeopleCount()))
+            .andExpect(jsonPath("$[0].shopName").value(savedReservation.getShop().getName()));
     }
 
 }
