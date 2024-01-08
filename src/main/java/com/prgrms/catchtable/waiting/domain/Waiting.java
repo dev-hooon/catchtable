@@ -70,13 +70,10 @@ public class Waiting extends BaseEntity {
         remainingPostponeCount = 2;
     }
 
-    public void validatePostponeRemainingCount() {
-        if (remainingPostponeCount == 0) {
+    public void decreasePostponeRemainingCount() {
+        if (remainingPostponeCount <= 0) {
             throw new BadRequestCustomException(POSTPONE_REMAINING_CNT_0);
         }
-    }
-
-    public void decreasePostponeRemainingCount() {
         remainingPostponeCount--;
     }
 
@@ -85,5 +82,10 @@ public class Waiting extends BaseEntity {
             throw new BadRequestCustomException(CAN_NOT_COMPLETE_WAITING);
         }
         status = COMPLETED;
+    }
+
+
+    public void changeStatusCanceled() {
+        status = CANCELED;
     }
 }

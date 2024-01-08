@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.waiting.service;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class WaitingServiceTest {
+class MemberWaitingServiceTest {
 
     @Mock
     private WaitingRepository waitingRepository;
@@ -39,8 +41,9 @@ class WaitingServiceTest {
     @Mock
     private WaitingLineRepository waitingLineRepository;
     @InjectMocks
-    private WaitingService waitingService;
+    private MemberWaitingService memberWaitingService;
 
+    @DisplayName("웨이팅을 생성할 수 있다.")
     @Test
     void createWaiting() {
         //given
@@ -65,7 +68,7 @@ class WaitingServiceTest {
         given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
-        WaitingResponse response = waitingService.createWaiting(1L, 1L, request);
+        WaitingResponse response = memberWaitingService.createWaiting(1L, 1L, request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),
@@ -74,7 +77,7 @@ class WaitingServiceTest {
         );
     }
 
-    @DisplayName("대기 지연을 할 수 있다.")
+    @DisplayName("웨이팅을 연기할 수 있다.")
     @Test
     void postponeWaiting() {
         //given
@@ -83,19 +86,68 @@ class WaitingServiceTest {
         Waiting waiting = mock(Waiting.class);
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(waitingRepository.findByMemberWithShop(member)).willReturn(Optional.of(waiting));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(PROGRESS);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
-        doNothing().when(waiting).validatePostponeRemainingCount();
         doNothing().when(waiting).decreasePostponeRemainingCount();
 
         //when
-        WaitingResponse response = waitingService.postponeWaiting(1L);
+        WaitingResponse response = memberWaitingService.postponeWaiting(1L);
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
-            () -> assertThat(response.rank()).isNotNull(),
+            assertThat(response.rank())::isNotNull,
             assertThat(response.waitingNumber())::isNotNull
         );
     }
+
+    @DisplayName("웨이팅을 취소할 수 있다.")
+    @Test
+    void cancelWaiting() {
+        //given
+        Shop shop = mock(Shop.class);
+        Member member = mock(Member.class);
+        Waiting waiting = mock(Waiting.class);
+
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
+        given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(CANCELED);
+        doNothing().when(waiting).changeStatusCanceled();
+
+        //when
+        WaitingResponse response = memberWaitingService.cancelWaiting(1L);
+
+        //then
+        assertAll(
+            assertThat(response.peopleCount())::isNotNull,
+            assertThat(response.rank())::isNotNull,
+            assertThat(response.waitingNumber())::isNotNull
+        );
+    }
+
+    @DisplayName("웨이팅를 조회할 수 있다.")
+    @Test
+    void getWaiting() {
+        //given
+        Shop shop = mock(Shop.class);
+        Member member = mock(Member.class);
+        Waiting waiting = mock(Waiting.class);
+
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
+            Optional.of(waiting));
+        given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(PROGRESS);
+        //when
+        WaitingResponse response = memberWaitingService.getWaiting(1L);
+
+        //then
+
+    }
+
+
 }
