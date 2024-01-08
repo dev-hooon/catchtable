@@ -107,14 +107,16 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopWaitings", hasSize(3)))
-            .andExpect(jsonPath("$.shopWaitings[0].waitingId").value(1))
-            .andExpect(jsonPath("$.shopWaitings[0].waitingNumber").value(1))
-            .andExpect(jsonPath("$.shopWaitings[0].rank").value(1))
-            .andExpect(jsonPath("$.shopWaitings[0].peopleCount").value(2))
-            .andExpect(jsonPath("$.shopWaitings[1].waitingId").value(2))
-            .andExpect(jsonPath("$.shopWaitings[1].waitingNumber").value(2))
-            .andExpect(jsonPath("$.shopWaitings[1].rank").value(2))
-            .andExpect(jsonPath("$.shopWaitings[1].peopleCount").value(2))
+            .andExpect(jsonPath("$.shopWaitings[0].waitingId").value(waiting1.getId()))
+            .andExpect(
+                jsonPath("$.shopWaitings[0].waitingNumber").value(waiting1.getWaitingNumber()))
+            .andExpect(jsonPath("$.shopWaitings[0].rank").value(1L))
+            .andExpect(jsonPath("$.shopWaitings[0].peopleCount").value(waiting1.getPeopleCount()))
+            .andExpect(jsonPath("$.shopWaitings[1].waitingId").value(waiting2.getId()))
+            .andExpect(
+                jsonPath("$.shopWaitings[1].waitingNumber").value(waiting2.getWaitingNumber()))
+            .andExpect(jsonPath("$.shopWaitings[1].rank").value(2L))
+            .andExpect(jsonPath("$.shopWaitings[1].peopleCount").value(waiting2.getPeopleCount()))
         ;
     }
 
