@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 class OwnerWaitingControllerTest extends BaseIntegrationTest {
+
     @Autowired
     private MemberRepository memberRepository;
     @Autowired

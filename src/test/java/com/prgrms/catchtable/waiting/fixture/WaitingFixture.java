@@ -1,12 +1,10 @@
 package com.prgrms.catchtable.waiting.fixture;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.domain.WaitingStatus;
-import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class WaitingFixture {
@@ -22,7 +20,7 @@ public class WaitingFixture {
 
     public static Waiting completedWaiting(Member member, Shop shop, int waitingNumber) {
         Waiting waiting = waiting(member, shop, waitingNumber);
-        ReflectionTestUtils.setField(waiting, "status", COMPLETED) ;
+        ReflectionTestUtils.setField(waiting, "status", COMPLETED);
         return waiting;
     }
 }

@@ -26,7 +26,8 @@ public class MemberWaitingController {
     public ResponseEntity<MemberWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
         @PathVariable("memberId") Long memberId,
         @Valid @RequestBody CreateWaitingRequest request) {
-        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, memberId, request);
+        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, memberId,
+            request);
         return ResponseEntity.ok(response);
     }
 
@@ -38,13 +39,15 @@ public class MemberWaitingController {
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<MemberWaitingResponse> cancelWaiting(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<MemberWaitingResponse> cancelWaiting(
+        @PathVariable("memberId") Long memberId) {
         MemberWaitingResponse response = memberWaitingService.cancelWaiting(memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<MemberWaitingResponse> getWaiting(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<MemberWaitingResponse> getWaiting(
+        @PathVariable("memberId") Long memberId) {
         MemberWaitingResponse response = memberWaitingService.getWaiting(memberId);
         return ResponseEntity.ok(response);
     }

@@ -9,7 +9,6 @@ import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
-import com.prgrms.catchtable.waiting.repository.waitingline.RedisWaitingLineRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

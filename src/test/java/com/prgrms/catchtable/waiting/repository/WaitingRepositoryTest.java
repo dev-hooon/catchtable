@@ -81,7 +81,7 @@ class WaitingRepositoryTest {
 
     @DisplayName("멤버의 아이디 리스트로 Waiting을 조회 가능하다.")
     @Test
-    void findByIdsWithMember(){
+    void findByIdsWithMember() {
         Waiting waiting1 = WaitingFixture.waiting(member1, shop, 1);
         Waiting waiting2 = WaitingFixture.waiting(member2, shop, 2);
         Waiting waiting3 = WaitingFixture.waiting(member3, shop, 3);

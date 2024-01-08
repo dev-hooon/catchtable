@@ -48,7 +48,8 @@ class OwnerWaitingServiceTest {
         given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
         given(shop.getId()).willReturn(1L);
-        given(waitingLineRepository.getShopWaitingIdsInOrder(any(Long.class))).willReturn(waitingIds);
+        given(waitingLineRepository.getShopWaitingIdsInOrder(any(Long.class))).willReturn(
+            waitingIds);
         given(waitingRepository.findByIds(waitingIds)).willReturn(List.of(waiting));
 
         //when
