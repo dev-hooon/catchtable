@@ -27,7 +27,7 @@ public class JwtTokenProvider {
     public Token createToken(String email, Role role) {
 
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put(JWT_ROLE, role);
+        claims.put(JWT_ROLE, role.getRole());
         Date now = new Date();
 
         String accessToken = createAccessToken(claims, now);
@@ -99,6 +99,8 @@ public class JwtTokenProvider {
             .parseClaimsJws(token)
             .getBody();
 
-        return (Role) claims.get(JWT_ROLE);
+        String role = (String) claims.get(JWT_ROLE);
+
+        return Role.of(role);
     }
 }
