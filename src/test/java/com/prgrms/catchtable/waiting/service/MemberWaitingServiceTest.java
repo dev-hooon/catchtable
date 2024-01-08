@@ -146,7 +146,11 @@ class MemberWaitingServiceTest {
         MemberWaitingResponse response = memberWaitingService.getWaiting(1L);
 
         //then
-
+        assertAll(
+            assertThat(response.peopleCount())::isNotNull,
+            assertThat(response.rank())::isNotNull,
+            assertThat(response.waitingNumber())::isNotNull
+        );
     }
 
 
