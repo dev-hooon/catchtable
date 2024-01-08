@@ -129,7 +129,7 @@ class MemberWaitingServiceTest {
         );
     }
 
-    @DisplayName("웨이팅를 조회할 수 있다.")
+    @DisplayName("점주의 웨이팅를 조회할 수 있다.")
     @Test
     void getWaiting() {
         //given
