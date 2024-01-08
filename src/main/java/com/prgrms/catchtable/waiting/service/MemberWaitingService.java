@@ -5,8 +5,9 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRESS_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingListResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
-import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaitingResponse;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingResponse;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -16,12 +17,14 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +62,7 @@ public class MemberWaitingService {
         waitingLineRepository.save(shopId, waiting.getId());
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
 
-        return toWaitingResponse(savedWaiting, rank);
+        return toMemberWaitingResponse(savedWaiting, rank);
     }
 
     @Transactional
@@ -73,7 +76,7 @@ public class MemberWaitingService {
         waitingLineRepository.postpone(shop.getId(), waiting.getId());
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
 
-        return toWaitingResponse(waiting, rank);
+        return toMemberWaitingResponse(waiting, rank);
     }
 
     @Transactional
@@ -85,7 +88,7 @@ public class MemberWaitingService {
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
         waiting.changeStatusCanceled();
 
-        return toWaitingResponse(waiting, -1L);
+        return toMemberWaitingResponse(waiting, -1L);
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +99,14 @@ public class MemberWaitingService {
         Shop shop = waiting.getShop();
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
 
-        return toWaitingResponse(waiting, rank);
+        return toMemberWaitingResponse(waiting, rank);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberWaitingHistoryListResponse getMemberAllWaiting(Long memberId) {
+        Member member = getMemberEntity(memberId);
+        List<Waiting> waitings = waitingRepository.findWaitingWithMember(member);
+        return toMemberWaitingListResponse(waitings);
     }
 
 
