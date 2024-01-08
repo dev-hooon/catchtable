@@ -18,7 +18,7 @@ public class ReservationFixture {
 
     public static Reservation getReservation(ReservationTime reservationTime) {
         if (!reservationTime.isOccupied()) {
-            reservationTime.reverseOccupied();
+            reservationTime.setOccupiedTrue();
         }
         return Reservation.builder()
             .status(COMPLETED)
@@ -42,7 +42,7 @@ public class ReservationFixture {
         Shop shop = ShopData.getShop();
         ReflectionTestUtils.setField(shop, "id", 1L);
         reservationTime.insertShop(shop);
-        reservationTime.reversePreOccupied();
+        reservationTime.setPreOccupiedTrue();
         return reservationTime;
     }
 
@@ -84,7 +84,7 @@ public class ReservationFixture {
         Shop shop = ShopData.getShop();
         ReflectionTestUtils.setField(shop, "id", 1L);
         reservationTime.insertShop(shop);
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
         return reservationTime;
     }
 

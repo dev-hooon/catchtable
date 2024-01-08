@@ -12,7 +12,7 @@ class ReservationTimeTest {
     @DisplayName("예약 선점 여부 변경에 성공한다")
     void reversePreOccupied() {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        reservationTime.reversePreOccupied();
+        reservationTime.setPreOccupiedTrue();
 
         assertThat(reservationTime.isPreOccupied()).isTrue();
     }
@@ -21,7 +21,7 @@ class ReservationTimeTest {
     @DisplayName("예약 여부 변경에 성공한다.")
     void reverseOccupied() {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
 
         assertThat(reservationTime.isOccupied()).isTrue();
     }

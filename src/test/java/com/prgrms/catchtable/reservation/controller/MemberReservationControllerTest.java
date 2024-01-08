@@ -109,7 +109,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @DisplayName("이미 예약이 된 시간에 대해 예약 등록 api 호출 시 에러 메세지가 반환된다.")
     void registerReservationWithException() throws Exception {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
         List<Shop> shops = shopRepository.findAll();
         Shop shop = shops.get(0);
         reservationTime.insertShop(shop);

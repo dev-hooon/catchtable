@@ -14,10 +14,10 @@ public class ReservationAsync {
 
     @Transactional
     public void setPreOcuppied(ReservationTime reservationTime) {
-        reservationTime.reversePreOccupied();
+        reservationTime.setPreOccupiedTrue();
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(reservationTime::reversePreOccupied, 2, TimeUnit.SECONDS);
+        scheduler.schedule(reservationTime::setPreOccupiedFalse, 2, TimeUnit.SECONDS);
 
         scheduler.shutdown();
     }
