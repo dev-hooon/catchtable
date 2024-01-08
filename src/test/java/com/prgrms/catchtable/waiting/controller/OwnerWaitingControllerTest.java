@@ -1,8 +1,10 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,12 +22,14 @@ import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 class OwnerWaitingControllerTest extends BaseIntegrationTest {
 
@@ -44,18 +48,16 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    private Member member1, member2, member3;
     private Shop shop;
     private Owner owner;
     private Waiting waiting1, waiting2, waiting3;
-    private List<Waiting> waitings;
 
 
     @BeforeEach
     void setUp() {
-        member1 = MemberFixture.member("test1@naver.com");
-        member2 = MemberFixture.member("test2@naver.com");
-        member3 = MemberFixture.member("test3@naver.com");
+        Member member1 = MemberFixture.member("test1@naver.com");
+        Member member2 = MemberFixture.member("test2@naver.com");
+        Member member3 = MemberFixture.member("test3@naver.com");
         memberRepository.saveAll(List.of(member1, member2, member3));
 
         shop = ShopFixture.shopWith24();
@@ -84,7 +86,7 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
             .peopleCount(2)
             .build();
 
-        waitings = waitingRepository.saveAll(List.of(waiting1, waiting2, waiting3));
+        waitingRepository.saveAll(List.of(waiting1, waiting2, waiting3));
         waitingLineRepository.save(shop.getId(), waiting1.getId());
         waitingLineRepository.save(shop.getId(), waiting2.getId());
         waitingLineRepository.save(shop.getId(), waiting3.getId());
@@ -118,6 +120,23 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.shopWaitings[1].rank").value(2L))
             .andExpect(jsonPath("$.shopWaitings[1].peopleCount").value(waiting2.getPeopleCount()))
         ;
+    }
+
+    @DisplayName("웨이팅 입장 API를 호출할 수 있다.")
+    @Test
+    void entryWaiting() throws Exception {
+        //when, then
+        mockMvc.perform(patch("/owner/waitings/{ownerId}", owner.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.waitingId").value(waiting1.getId()))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting1.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting1.getPeopleCount()))
+            .andExpect(jsonPath("$.rank").value(0))
+            .andDo(MockMvcResultHandlers.print());
+        assertThat(waitingLineRepository.getWaitingLineSize(shop.getId())).isEqualTo(2);
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting2.getId())).isEqualTo(1L);
+        assertThat(waitingLineRepository.findRank(shop.getId(), waiting3.getId())).isEqualTo(2L);
     }
 
 }
