@@ -42,7 +42,7 @@ class OwnerWaitingServiceTest {
     @Test
     void getOwnerAllWaiting() {
         //given
-        List<Long> waitingIds = List.of(1L,2L);
+        List<Long> waitingIds = List.of(1L, 2L);
         Member member1 = mock(Member.class);
         Member member2 = mock(Member.class);
         Owner owner = mock(Owner.class);
@@ -64,9 +64,11 @@ class OwnerWaitingServiceTest {
         assertThat(response.shopWaitings()).hasSize(2);
 
         assertThat(response.shopWaitings().get(0).waitingId()).isEqualTo(waiting1.getId());
-        assertThat(response.shopWaitings().get(0).waitingNumber()).isEqualTo(waiting1.getWaitingNumber());
+        assertThat(response.shopWaitings().get(0).waitingNumber()).isEqualTo(
+            waiting1.getWaitingNumber());
 
         assertThat(response.shopWaitings().get(1).waitingId()).isEqualTo(waiting2.getId());
-        assertThat(response.shopWaitings().get(1).waitingNumber()).isEqualTo(waiting2.getWaitingNumber());
+        assertThat(response.shopWaitings().get(1).waitingNumber()).isEqualTo(
+            waiting2.getWaitingNumber());
     }
 }
