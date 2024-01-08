@@ -7,6 +7,10 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
+import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
+import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -34,5 +38,23 @@ public class WaitingMapper {
             .remainingPostponeCount(waiting.getRemainingPostponeCount())
             .status(waiting.getStatus().getDescription())
             .build();
+    }
+
+    public static OwnerWaitingResponse toOwnerWaitingResponse(Waiting waiting, Long rank){
+        return OwnerWaitingResponse.builder()
+            .waitingId(waiting.getId())
+            .waitingNumber(waiting.getWaitingNumber())
+            .rank(rank)
+            .peopleCount(waiting.getPeopleCount())
+            .build();
+    }
+
+    public static OwnerWaitingListResponse toOwnerWaitingListResponse(List<Waiting> waitings){
+        long rank=1L;
+        List<OwnerWaitingResponse> list = new ArrayList<>();
+        for (Waiting waiting : waitings){
+            list.add(toOwnerWaitingResponse(waiting,rank++));
+        }
+        return new OwnerWaitingListResponse(list);
     }
 }
