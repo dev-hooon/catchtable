@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.owner.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_EXIST_OWNER;
-import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_EMAIL_OR_PASSWORD;
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
 
 import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
@@ -57,7 +56,7 @@ public class OwnerService {
 
         //email 확인
         Owner loginOwner = ownerRepository.findOwnerByEmail(loginRequest.email())
-            .orElseThrow(() -> new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD));
+            .orElseThrow(() -> new BadRequestCustomException(INVALID_EMAIL_OR_PASSWORD));
 
         //password 확인
         validatePassword(loginRequest, loginOwner);
@@ -67,7 +66,7 @@ public class OwnerService {
 
     private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner) {
         if (!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())) {
-            throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
+            throw new BadRequestCustomException(INVALID_EMAIL_OR_PASSWORD);
         }
     }
 
