@@ -115,6 +115,8 @@ public class MemberReservationService {
 
         validateIsOccupied(reservationTime); // 예약시간이 이미 차지되었는 지 확인
 
+        reservation.getReservationTime().setOccupiedFalse(); // 기존 예약의 예약시간 예약가능으로 변경
+
         reservation.modifyReservation(reservationTime,
             request.peopleCount()); // 예약 필드 값 수정하는 엔티티의 메소드
 

@@ -130,6 +130,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @DisplayName("예약 수정 api 호출에 성공한다.")
     void modifyReservation() throws Exception {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
+        reservationTime.setOccupiedTrue();
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
         /**
@@ -152,7 +153,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.date").value(modifyReservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
-
+        assertThat(reservationTime.isOccupied()).isFalse(); // 기존 예약 시간 예약가능으로 변경되었는 지 검증
         assertThat(savedReservation.getReservationTime()).isEqualTo(
             modifyReservationTime); // 수정하려는 예약시간으로 예약이 변경되었는 지 검증
         assertThat(savedReservation.getReservationTime().isOccupied()).isFalse();

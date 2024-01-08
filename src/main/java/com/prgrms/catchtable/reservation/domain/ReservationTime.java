@@ -58,4 +58,12 @@ public class ReservationTime {
     public void insertShop(Shop shop) {
         this.shop = shop;
     }
+
+    public void setOccupiedTrue() {
+        this.isOccupied = true;
+    }
+
+    public void setOccupiedFalse() {
+        this.isOccupied = false;
+    }
 }
