@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.waiting.controller;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,7 +22,6 @@ import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

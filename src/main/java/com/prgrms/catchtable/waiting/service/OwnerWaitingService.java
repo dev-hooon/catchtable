@@ -38,7 +38,7 @@ public class OwnerWaitingService {
     }
 
     @Transactional
-    public OwnerWaitingResponse entryWaiting(Long ownerId){
+    public OwnerWaitingResponse entryWaiting(Long ownerId) {
         Owner owner = ownerRepository.findById(ownerId)
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_OWNER));
         Long enteredWaitingId = waitingLineRepository.entry(owner.getShop().getId());

@@ -2,7 +2,6 @@ package com.prgrms.catchtable.waiting.repository.waitingline;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_END_LINE;
 import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_DOES_NOT_EXIST;
-import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_LINE_EMPTY;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -73,6 +72,7 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
         });
         return waitingId;
     }
+
     public void cancel(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
         redisTemplate.execute(new SessionCallback<>() {

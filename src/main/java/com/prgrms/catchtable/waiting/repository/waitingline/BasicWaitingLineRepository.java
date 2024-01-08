@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.waiting.repository.waitingline;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_END_LINE;
-import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_ENTRY;
 import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_DOES_NOT_EXIST;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;

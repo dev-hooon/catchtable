@@ -137,7 +137,7 @@ class RedisWaitingLineRepositoryTest {
 
     @DisplayName("웨이팅이 없으면 웨이팅 사이즈 0을 반환한다.")
     @Test
-    void getWaitingLineSize(){
+    void getWaitingLineSize() {
         //given
         Long shopId = 1L;
         //when

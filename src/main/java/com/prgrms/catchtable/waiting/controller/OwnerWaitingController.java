@@ -26,7 +26,8 @@ public class OwnerWaitingController {
     }
 
     @PatchMapping("/{ownerId}")
-    public ResponseEntity<OwnerWaitingResponse> entryWaiting(@PathVariable("ownerId") Long ownerId){
+    public ResponseEntity<OwnerWaitingResponse> entryWaiting(
+        @PathVariable("ownerId") Long ownerId) {
         OwnerWaitingResponse response = ownerWaitingService.entryWaiting(ownerId);
         return ResponseEntity.ok(response);
     }
