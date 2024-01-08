@@ -50,7 +50,7 @@ public class OwnerReservationService {
 
         reservation.changeStatus(modifyStatus); // 해당 예약의 상태를 요청으로 들어온 상태로 변경
 
-        reservation.getReservationTime().reverseOccupied(); // 해당 예약의 예약시간을 빈 상태로 변경
+        reservation.getReservationTime().setOccupiedFalse(); // 해당 예약의 예약시간을 빈 상태로 변경
     }
 
     /**

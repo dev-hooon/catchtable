@@ -49,7 +49,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(shop);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        savedReservationTime.reverseOccupied();
+        savedReservationTime.setOccupiedTrue();
         log.info("예약 시간 차지 여부 : {}", savedReservationTime.isOccupied());
         Reservation reservation = reservationRepository.save(
             ReservationFixture.getReservation(savedReservationTime));
@@ -57,7 +57,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         ReservationTime reservationTime2 = ReservationFixture.getAnotherReservationTimeNotPreOccupied();
         reservationTime2.insertShop(shop);
         ReservationTime savedReservationTime2 = reservationTimeRepository.save(reservationTime2);
-        savedReservationTime2.reverseOccupied();
+        savedReservationTime2.setOccupiedTrue();
         log.info("예약 시간 차지 여부 : {}", savedReservationTime.isOccupied());
         Reservation reservation2 = reservationRepository.save(
             ReservationFixture.getReservation(savedReservationTime2));

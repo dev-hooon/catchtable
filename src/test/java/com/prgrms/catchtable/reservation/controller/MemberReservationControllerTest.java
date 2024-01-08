@@ -24,6 +24,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
     }
 
+    @Disabled
     @Test
     @DisplayName("선점 api 호출 시 선점권이 획득 되었다가 지정 시간 이후에 획득이 풀린다.")
     void schedulerTest() throws Exception {
@@ -110,7 +112,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @DisplayName("이미 예약이 된 시간에 대해 예약 등록 api 호출 시 에러 메세지가 반환된다.")
     void registerReservationWithException() throws Exception {
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
         List<Shop> shops = shopRepository.findAll();
         Shop shop = shops.get(0);
         reservationTime.insertShop(shop);

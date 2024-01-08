@@ -126,7 +126,7 @@ class MemberReservationServiceTest {
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
 
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
         when(reservationTimeRepository.findByIdWithShop(any(Long.class))).thenReturn(
             Optional.of(reservationTime));
 

@@ -45,7 +45,7 @@ public class MemberReservationService {
         Long reservationTimeId = request.reservationTimeId();
         while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
-                Thread.sleep(1_500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -79,7 +79,7 @@ public class MemberReservationService {
 
         validateIsOccupied(reservationTime);
 
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedTrue();
 
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
@@ -133,7 +133,7 @@ public class MemberReservationService {
 
         ReservationTime reservationTime = reservation.getReservationTime(); // 해당 예약의 예약시간 차지 여부 true로 변경
 
-        reservationTime.reverseOccupied();
+        reservationTime.setOccupiedFalse();
 
         return toCancelReservationResponse(reservation);
     }
