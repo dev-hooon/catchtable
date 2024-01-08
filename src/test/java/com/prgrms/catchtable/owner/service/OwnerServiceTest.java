@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
@@ -77,12 +78,12 @@ class OwnerServiceTest {
         //given
         LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email, password);
         String encodePassword = passwordEncoder.encode(password);
-        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email());
+        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email(), Role.OWNER);
 
         //when
         when(ownerRepository.findOwnerByEmail(loginOwnerRequest.email())).thenReturn(
             Optional.of(OwnerFixture.getOwner(email, encodePassword)));
-        when(jwtTokenProvider.createToken(loginOwnerRequest.email())).thenReturn(token);
+        when(jwtTokenProvider.createToken(loginOwnerRequest.email(), Role.OWNER)).thenReturn(token);
 
         //then
         assertThat(ownerService.loginOwner(loginOwnerRequest)).isEqualTo(token);

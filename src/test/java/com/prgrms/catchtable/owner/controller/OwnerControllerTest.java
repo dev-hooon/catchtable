@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -73,7 +74,7 @@ class OwnerControllerTest extends BaseIntegrationTest {
         //given
         LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(joinEmail,
             password);
-        Token token = jwtTokenProvider.createToken(joinEmail);
+        Token token = jwtTokenProvider.createToken(joinEmail, Role.OWNER);
 
         //then
         mockMvc.perform(post("/owners/login")

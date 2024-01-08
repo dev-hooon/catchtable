@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.jwt.config.JwtConfig;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
@@ -45,7 +46,7 @@ class RefreshTokenServiceTest {
         when(jwtConfig.getClientSecret()).thenReturn(clientSecretKey);
         when(jwtConfig.getExpiryMinute()).thenReturn(1);
         when(jwtConfig.getExpiryMinuteRefresh()).thenReturn(1);
-        token = jwtTokenProvider.createToken(email);
+        token = jwtTokenProvider.createToken(email, Role.OWNER);
     }
 
     @Test
@@ -65,7 +66,7 @@ class RefreshTokenServiceTest {
     @DisplayName("이미 유효한 RefreshToken을 갖고 있는 유저가 RefreshToken을 새로 발급한다면, DB에서 삭제 후 저장해준다.")
     void deleteAndSaveRefreshToken() {
         //given
-        Token newToken = jwtTokenProvider.createToken(email);
+        Token newToken = jwtTokenProvider.createToken(email, Role.OWNER);
 
         //when
         when(refreshTokenRepository.existsRefreshTokenByEmail(email)).thenReturn(true);
@@ -83,7 +84,7 @@ class RefreshTokenServiceTest {
     void getRefreshTokenTest() {
         //given
         String invalidEmail = "qwer1234@naver.com";
-        Token invalidToken = jwtTokenProvider.createToken(invalidEmail);
+        Token invalidToken = jwtTokenProvider.createToken(invalidEmail, Role.OWNER);
 
         RefreshToken refreshToken = RefreshToken.builder()
             .token(token.getRefreshToken())

@@ -3,6 +3,7 @@ package com.prgrms.catchtable.jwt.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.jwt.config.JwtConfig;
 import com.prgrms.catchtable.jwt.service.JwtUserDetailsService;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -34,7 +35,7 @@ class JwtTokenProviderTest {
         when(config.getClientSecret()).thenReturn(clientKey);
         when(config.getExpiryMinute()).thenReturn(1);
         when(config.getExpiryMinuteRefresh()).thenReturn(1);
-        Token token = jwtTokenProvider.createToken(email);
+        Token token = jwtTokenProvider.createToken(email, Role.MEMBER);
 
         //then
         assertThat(jwtTokenProvider.validateToken(token.getAccessToken())).isTrue();
@@ -48,7 +49,7 @@ class JwtTokenProviderTest {
         when(config.getClientSecret()).thenReturn(clientKey);
         when(config.getExpiryMinute()).thenReturn(0);
         when(config.getExpiryMinuteRefresh()).thenReturn(0);
-        Token token = jwtTokenProvider.createToken(email);
+        Token token = jwtTokenProvider.createToken(email, Role.OWNER);
 
         //then
         assertThat(jwtTokenProvider.validateToken(token.getAccessToken())).isFalse();
@@ -65,9 +66,9 @@ class JwtTokenProviderTest {
         when(config.getClientSecret()).thenReturn(clientKey);
         when(config.getExpiryMinute()).thenReturn(1);
         when(config.getExpiryMinuteRefresh()).thenReturn(1);
-        Token token = jwtTokenProvider.createToken(email);
+        Token token = jwtTokenProvider.createToken(email, Role.MEMBER);
 
-        when(jwtUserDetailsService.loadUserByUsername(email))
+        when(jwtUserDetailsService.loadUserByUsername(email, Role.MEMBER))
             .thenReturn(member);
 
         //then

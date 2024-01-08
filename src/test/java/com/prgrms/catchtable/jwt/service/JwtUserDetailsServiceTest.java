@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
@@ -37,9 +38,9 @@ class JwtUserDetailsServiceTest {
         when(memberRepository.findMemberByEmail(invalidEmail)).thenReturn(Optional.empty());
 
         //then
-        assertThat(jwtUserDetailsService.loadUserByUsername(email)).isEqualTo(member);
+        assertThat(jwtUserDetailsService.loadUserByUsername(email, Role.MEMBER)).isEqualTo(member);
         assertThatThrownBy(
-            () -> jwtUserDetailsService.loadUserByUsername(invalidEmail)).isInstanceOf(
+            () -> jwtUserDetailsService.loadUserByUsername(invalidEmail, Role.MEMBER)).isInstanceOf(
             NotFoundCustomException.class);
 
     }
