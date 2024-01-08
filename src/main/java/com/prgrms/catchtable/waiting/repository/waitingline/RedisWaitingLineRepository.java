@@ -44,15 +44,14 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
     }
 
     public List<Long> getShopWaitingIdsInOrder(Long shopId) {
-        List<String> stringList = redisTemplate.opsForList().range("s" + shopId, 0, -1);
-        if (stringList == null) {
+        List<String> waitingIds = redisTemplate.opsForList().range("s" + shopId, 0, -1);
+        if (waitingIds == null) {
             throw new BadRequestCustomException(WAITING_DOES_NOT_EXIST);
         }
-        List<Long> longList = new ArrayList<>(stringList.stream()
+        Collections.reverse(waitingIds);
+        return new ArrayList<>(waitingIds.stream()
             .map(Long::parseLong)
             .toList());
-        Collections.reverse(longList);
-        return longList;
     }
 
     public void entry(Long shopId, Long waitingId) {
