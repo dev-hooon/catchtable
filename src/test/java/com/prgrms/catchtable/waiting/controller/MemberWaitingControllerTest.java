@@ -21,7 +21,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;

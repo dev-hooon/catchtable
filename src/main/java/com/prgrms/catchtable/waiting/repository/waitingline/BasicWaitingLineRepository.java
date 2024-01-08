@@ -7,6 +7,7 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_DOES_NOT_
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
@@ -31,6 +32,11 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
             throw new BadRequestCustomException(CAN_NOT_ENTRY);
         }
         waitingLine.remove();
+    }
+
+    public List<Long> getShopWaitingIdsInOrder(Long shopId) {
+        Queue<Long> waitingLine = waitingLines.get(shopId);
+        return waitingLine.stream().toList();
     }
 
     public void cancel(Long shopId, Long waitingId) {

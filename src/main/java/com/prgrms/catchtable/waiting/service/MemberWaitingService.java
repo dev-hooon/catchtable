@@ -15,8 +15,8 @@ import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingResponse;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalDate;
@@ -39,7 +39,7 @@ public class MemberWaitingService {
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
 
-    public WaitingResponse createWaiting(Long shopId, Long memberId,
+    public MemberWaitingResponse createWaiting(Long shopId, Long memberId,
         CreateWaitingRequest request) {
         // 연관 엔티티 조회
         Member member = getMemberEntity(memberId);
@@ -63,7 +63,7 @@ public class MemberWaitingService {
     }
 
     @Transactional
-    public WaitingResponse postponeWaiting(Long memberId) {
+    public MemberWaitingResponse postponeWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
         Waiting waiting = getWaitingEntityInProgress(member);
 
@@ -77,7 +77,7 @@ public class MemberWaitingService {
     }
 
     @Transactional
-    public WaitingResponse cancelWaiting(Long memberId) {
+    public MemberWaitingResponse cancelWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
         Waiting waiting = getWaitingEntityInProgress(member);
 
@@ -89,7 +89,7 @@ public class MemberWaitingService {
     }
 
     @Transactional(readOnly = true)
-    public WaitingResponse getWaiting(Long memberId) {
+    public MemberWaitingResponse getWaiting(Long memberId) {
         Member member = getMemberEntity(memberId);
         Waiting waiting = getWaitingEntityInProgress(member);
 

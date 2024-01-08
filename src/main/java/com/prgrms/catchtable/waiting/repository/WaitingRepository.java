@@ -5,6 +5,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,10 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
         + "where w.member = :member and w.status = :status")
     Optional<Waiting> findByMemberAndStatusWithShop(@Param("member") Member member,
         @Param("status") WaitingStatus status);
+
+    @Query("select w from Waiting w where w.id in :ids")
+    List<Waiting> findByIds(@Param("ids") List<Long> ids);
+
+    @Query("select w from Waiting w join fetch w.member where w.id = :id")
+    Optional<Waiting> findWaitingWithMember(@Param("id") Long id);
 }
