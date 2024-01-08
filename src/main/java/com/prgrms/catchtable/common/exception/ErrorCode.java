@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorCode {
     NOT_EXIST_MEMBER("존재하지 않는 회원입니다."),
+    NOT_EXIST_OWNER("존재하지 않는 점주입니다."),
     NOT_FOUND_REFRESH_TOKEN("유효하지 않은 RefreshToken입니다."),
     TOKEN_EXPIRES("토큰이 만료되었습니다. 다시 로그인 해 주세요."),
 

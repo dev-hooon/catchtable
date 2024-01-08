@@ -75,7 +75,9 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         String email = getEmail(token);
-        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
+        Role role = getRole(token);
+
+        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email, role);
         return new UsernamePasswordAuthenticationToken(userDetails, "",
             userDetails.getAuthorities());
     }
@@ -88,5 +90,15 @@ public class JwtTokenProvider {
             .getBody();
 
         return claims.getSubject();
+    }
+
+    private Role getRole(String token){
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(jwtConfig.getClientSecret())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        return (Role) claims.get(JWT_ROLE);
     }
 }
