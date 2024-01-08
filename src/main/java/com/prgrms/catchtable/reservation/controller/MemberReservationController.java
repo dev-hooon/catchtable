@@ -4,11 +4,14 @@ import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.CreateReservationResponse;
+import com.prgrms.catchtable.reservation.dto.response.GetAllReservationResponse;
 import com.prgrms.catchtable.reservation.dto.response.ModifyReservationResponse;
 import com.prgrms.catchtable.reservation.service.MemberReservationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +50,10 @@ public class MemberReservationController {
     public ResponseEntity<CancelReservationResponse> cancelReservation(
         @PathVariable("reservationId") Long reservationId) {
         return ResponseEntity.ok(memberReservationService.cancelReservation(reservationId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GetAllReservationResponse>> getAllReservation() {
+        return ResponseEntity.ok(memberReservationService.getAllReservation());
     }
 }

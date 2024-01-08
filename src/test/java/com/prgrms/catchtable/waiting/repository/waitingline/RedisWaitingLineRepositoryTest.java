@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -118,5 +119,20 @@ class RedisWaitingLineRepositoryTest {
             .isEqualTo(1);
         assertThat(repository.findRank(1L, 3L))
             .isEqualTo(2);
+    }
+
+    @DisplayName("특정 가게의 웨이팅 아이디를 rank 순으로 가져온다.")
+    @Test
+    void getShopWaitingIdOrder() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
+        //when
+        List<Long> waitingIds = repository.getShopWaitingIdsInOrder(shopId);
+        //then
+        System.out.println("waitingIds = " + waitingIds);
+        assertThat(waitingIds.get(0)).isEqualTo(1L);
     }
 }

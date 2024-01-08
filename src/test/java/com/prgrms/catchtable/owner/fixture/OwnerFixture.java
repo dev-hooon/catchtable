@@ -28,6 +28,21 @@ public class OwnerFixture {
         return owner;
     }
 
+
+    public static Owner getOwner(Shop shop) {
+        Owner owner = Owner.builder()
+            .name("ownerA")
+            .email("email")
+            .password("password")
+            .phoneNumber("010-3462-2480")
+            .gender(MALE)
+            .dateBirth(LocalDate.of(2000, 9, 13))
+            .build();
+        ReflectionTestUtils.setField(shop, "id", 1L);
+        owner.insertShop(shop);
+        return owner;
+    }
+
     public static JoinOwnerRequest getJoinOwnerRequest(String email, String password) {
         return JoinOwnerRequest.builder()
             .name("ownerA")

@@ -1,10 +1,8 @@
 package com.prgrms.catchtable.waiting.domain;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.CAN_NOT_COMPLETE_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.POSTPONE_REMAINING_CNT_0;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.NO_SHOW;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static jakarta.persistence.ConstraintMode.NO_CONSTRAINT;
 import static jakarta.persistence.EnumType.STRING;
@@ -77,13 +75,9 @@ public class Waiting extends BaseEntity {
         remainingPostponeCount--;
     }
 
-    public void completeWaiting() {
-        if (status == NO_SHOW || status == CANCELED) {
-            throw new BadRequestCustomException(CAN_NOT_COMPLETE_WAITING);
-        }
+    public void changeStatusCompleted() {
         status = COMPLETED;
     }
-
 
     public void changeStatusCanceled() {
         status = CANCELED;

@@ -1,9 +1,9 @@
-package com.prgrms.catchtable.waiting.dto;
+package com.prgrms.catchtable.waiting.dto.response;
 
 import lombok.Builder;
 
 @Builder
-public record WaitingResponse(
+public record MemberWaitingResponse(
     Long waitingId,
     Long shopId,
     String shopName,
