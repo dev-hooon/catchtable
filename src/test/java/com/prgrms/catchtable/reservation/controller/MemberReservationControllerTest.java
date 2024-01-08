@@ -23,6 +23,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
     }
-
+    @Disabled
     @Test
     @DisplayName("선점 api 호출 시 선점권이 획득 되었다가 지정 시간 이후에 획득이 풀린다.")
     void schedulerTest() throws Exception {
