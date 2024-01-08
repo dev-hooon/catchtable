@@ -5,6 +5,7 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_EMAIL
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
+import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.domain.Gender;
 import com.prgrms.catchtable.owner.domain.Owner;
@@ -25,6 +26,7 @@ public class OwnerService {
     private final OwnerRepository ownerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public JoinOwnerResponse joinOwner(JoinOwnerRequest joinOwnerRequest) {
@@ -59,13 +61,19 @@ public class OwnerService {
         //password 확인
         validatePassword(loginRequest, loginOwner);
 
-        return jwtTokenProvider.createToken(loginOwner.getEmail());
+        return createTotalToken(loginOwner.getEmail());
     }
 
     private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner) {
         if (!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())) {
             throw new BadRequestCustomException(BAD_REQUEST_EMAIL_OR_PASSWORD);
         }
+    }
+
+    private Token createTotalToken(String email){
+        Token totalToken = jwtTokenProvider.createToken(email);
+        refreshTokenService.saveRefreshToken(totalToken);
+        return totalToken;
     }
 
 }
