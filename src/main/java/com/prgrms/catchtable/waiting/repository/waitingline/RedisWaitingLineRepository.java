@@ -5,6 +5,8 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_DOES_NOT_
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,18 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
                 return operations.exec();
             }
         });
+    }
+
+    public List<Long> getShopWaitingIdsInOrder(Long shopId){
+        List<String> stringList = redisTemplate.opsForList().range("s" + shopId, 0, -1);
+        if (stringList == null) {
+            throw new BadRequestCustomException(WAITING_DOES_NOT_EXIST);
+        }
+        List<Long> longList = new ArrayList<>(stringList.stream()
+            .map(Long::parseLong)
+            .toList());
+        Collections.reverse(longList);
+        return longList;
     }
 
     public void entry(Long shopId, Long waitingId) {
