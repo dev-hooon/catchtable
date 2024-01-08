@@ -17,8 +17,7 @@ public class WaitingFixture {
 
     public static Waiting completedWaiting(Member member, Shop shop, int waitingNumber) {
         Waiting waiting = waiting(member, shop, waitingNumber);
-        waiting.completeWaiting();
+        waiting.changeStatusCompleted();
         return waiting;
     }
-
 }

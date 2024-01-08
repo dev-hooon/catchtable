@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.waiting.repository.waitingline;
 
+import java.util.List;
+
 public interface WaitingLineRepository {
 
     void save(Long shopId, Long waitingId);
@@ -13,6 +15,8 @@ public interface WaitingLineRepository {
     Long findRank(Long shopId, Long waitingId);
 
     Long getWaitingLineSize(Long shopId);
+
+    List<Long> getShopWaitingIdsInOrder(Long shopId);
 
     void printWaitingLine(Long shopId);
 }

@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
-import com.prgrms.catchtable.waiting.dto.CreateWaitingRequest;
-import com.prgrms.catchtable.waiting.dto.WaitingResponse;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
         CreateWaitingRequest request = CreateWaitingRequest
             .builder()
             .peopleCount(2).build();
-        WaitingResponse response = WaitingResponse.builder()
+        MemberWaitingResponse response = MemberWaitingResponse.builder()
             .waitingId(201L)
             .shopId(1L)
             .shopName("shop1")
