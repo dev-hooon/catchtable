@@ -28,6 +28,7 @@ public class OwnerFixture {
         return owner;
     }
 
+
     public static Owner getOwner(Shop shop) {
         Owner owner = Owner.builder()
             .name("ownerA")

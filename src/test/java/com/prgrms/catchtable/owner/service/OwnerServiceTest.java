@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.owner.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -105,7 +106,8 @@ class OwnerServiceTest {
     @DisplayName("비밀번호가 다르면 로그인을 실패한다.")
     void loginFailurePassword() {
         //given
-        LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email, wrongPassword);
+        LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email,
+            wrongPassword);
         String encodePassword = passwordEncoder.encode(password);
 
         //when
