@@ -45,7 +45,7 @@ public class MemberReservationService {
         Long reservationTimeId = request.reservationTimeId();
         while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
-                Thread.sleep(1_500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

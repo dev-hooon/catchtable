@@ -43,7 +43,6 @@ public class MemberReservationServiceIntegrationTest {
         reservationTimeRepository.save(reservationTime);
     }
 
-    @Disabled
     @Test
     @DisplayName("동시에 요청이 들어오면 하나만 선점권이 true로 바뀌고 나머진 예외가 발생한다.")
     void concurrencyTest() throws InterruptedException {
