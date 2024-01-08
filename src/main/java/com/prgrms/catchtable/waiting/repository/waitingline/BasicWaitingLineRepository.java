@@ -26,12 +26,9 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
         waitingLine.add(waitingId);
     }
 
-    public void entry(Long shopId, Long waitingId) {
+    public Long entry(Long shopId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
-        if (!Objects.equals(waitingLine.peek(), waitingId)) {
-            throw new BadRequestCustomException(CAN_NOT_ENTRY);
-        }
-        waitingLine.remove();
+        return waitingLine.remove();
     }
 
     public List<Long> getShopWaitingIdsInOrder(Long shopId) {

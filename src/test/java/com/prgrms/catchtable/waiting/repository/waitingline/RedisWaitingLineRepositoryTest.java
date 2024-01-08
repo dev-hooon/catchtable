@@ -52,10 +52,9 @@ class RedisWaitingLineRepositoryTest {
         repository.save(shopId, 3L);
 
         //when
-        repository.entry(1L, 1L);
+        repository.entry(1L);
 
         //then
-
         assertThrows(NotFoundCustomException.class,
             () -> repository.findRank(1L, 1L));
         assertThat(repository.findRank(1L, 2L))
@@ -134,5 +133,16 @@ class RedisWaitingLineRepositoryTest {
         //then
         System.out.println("waitingIds = " + waitingIds);
         assertThat(waitingIds.get(0)).isEqualTo(1L);
+    }
+
+    @DisplayName("웨이팅이 없으면 웨이팅 사이즈 0을 반환한다.")
+    @Test
+    void getWaitingLineSize(){
+        //given
+        Long shopId = 1L;
+        //when
+        Long waitingLineSize = repository.getWaitingLineSize(shopId);
+        //then
+        assertThat(waitingLineSize).isZero();
     }
 }
