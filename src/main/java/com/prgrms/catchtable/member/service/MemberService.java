@@ -17,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    private final JwtTokenProvider jwtTokenProvider;
-
     private final RefreshTokenService refreshTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Token oauthLogin(OAuthAttribute attributes) {
