@@ -93,11 +93,10 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
     void getAllReservation() throws Exception {
         Owner owner = ownerRepository.findAll().get(0);
 
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByShopId(owner.getShop().getId());
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByShopId(
+            owner.getShop().getId());
         Reservation reservation1 = reservations.get(0);
         Reservation reservation2 = reservations.get(1);
-
-
 
         mockMvc.perform(get("/owners/shop")
                 .contentType(APPLICATION_JSON)

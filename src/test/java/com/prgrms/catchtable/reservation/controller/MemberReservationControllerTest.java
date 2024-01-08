@@ -184,7 +184,8 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         mockMvc.perform(get("/reservations"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reservationId").value(savedReservation.getId()))
-            .andExpect(jsonPath("$[0].date").value(savedReservation.getReservationTime().getTime().toString()))
+            .andExpect(jsonPath("$[0].date").value(
+                savedReservation.getReservationTime().getTime().toString()))
             .andExpect(jsonPath("$[0].peopleCount").value(savedReservation.getPeopleCount()))
             .andExpect(jsonPath("$[0].shopName").value(savedReservation.getShop().getName()));
     }
