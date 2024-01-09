@@ -4,6 +4,7 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.*;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.dto.request.ShopSearchCondition;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.dto.ShopMapper;
@@ -30,5 +31,11 @@ public class MemberShopService {
         Shop findShop = shopRepository.findById(id)
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_SHOP));
         return ShopMapper.toGetShopResponse(findShop);
+    }
+
+    @Transactional(readOnly = true)
+    public GetAllShopResponse getBySearch(ShopSearchCondition condition){
+        List<Shop> searchShop = shopRepository.search(condition);
+        return ShopMapper.toGetAllShopResponse(searchShop);
     }
 }
