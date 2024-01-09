@@ -47,14 +47,14 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     private ReservationRepository reservationRepository;
     @Autowired
     private MemberRepository memberRepository;
-
+    private Member member = MemberFixture.member("dlswns661035@gmail.com");
 
     @BeforeEach
     void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+
         Member savedMember = memberRepository.save(member);
 
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
@@ -81,6 +81,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
+            .andExpect(jsonPath("$.memberName").value(member.getName()))
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
     }
@@ -122,8 +123,11 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
-
+        Reservation reservation = reservationRepository.findAllWithReservationTimeAndShopByMemberId(
+            member).get(0);
         assertThat(reservationTime.isOccupied()).isTrue();
+        assertThat(reservation.getReservationTime()).isEqualTo(reservationTime);
+        assertThat(reservation.getShop()).isEqualTo(reservationTime.getShop());
     }
 
     @Test
