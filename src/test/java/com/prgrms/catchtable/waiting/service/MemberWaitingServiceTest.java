@@ -16,10 +16,12 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -129,7 +131,7 @@ class MemberWaitingServiceTest {
         );
     }
 
-    @DisplayName("점주의 웨이팅를 조회할 수 있다.")
+    @DisplayName("회원의 진행 중인 웨이팅를 조회할 수 있다.")
     @Test
     void getWaiting() {
         //given
@@ -153,5 +155,29 @@ class MemberWaitingServiceTest {
         );
     }
 
+    @DisplayName("회원의 웨이팅 목록을 모두 조회할 수 있다.")
+    @Test
+    void getMemberAllWaiting() {
+        //given
+        Member member = mock(Member.class);
+        Shop shop = mock(Shop.class);
+        Waiting waiting = mock(Waiting.class);
 
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(waitingRepository.findWaitingWithMember(member)).willReturn(
+            List.of(waiting));
+        given(waiting.getShop()).willReturn(shop);
+        given(waiting.getStatus()).willReturn(CANCELED);
+
+        //when
+        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberAllWaiting(
+            1L);
+
+        //then
+        assertAll(
+            assertThat(response.memberWaitings().get(0).peopleCount())::isNotNull,
+            assertThat(response.memberWaitings().get(0).waitingNumber())::isNotNull,
+            assertThat(response.memberWaitings().get(0).status())::isNotNull
+        );
+    }
 }
