@@ -170,7 +170,7 @@ class MemberWaitingServiceTest {
         given(waiting.getStatus()).willReturn(CANCELED);
 
         //when
-        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberAllWaiting(
+        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
             1L);
 
         //then

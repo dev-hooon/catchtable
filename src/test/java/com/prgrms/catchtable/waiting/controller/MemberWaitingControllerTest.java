@@ -1,8 +1,10 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -22,6 +24,7 @@ import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.fixture.WaitingFixture;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
 import java.util.List;
@@ -197,5 +200,26 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.peopleCount").value(waiting3.getPeopleCount()))
             .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("회원의 웨이팅 이력 조회 API를 호출할 수 있다.")
+    @Test
+    void getMemberWaitingHistory() throws Exception {
+        //when, then
+        Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 23);
+        Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 233);
+        waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting));
+        mockMvc.perform(get("/waitings/all/{memberId}", member1.getId())
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.memberWaitings", hasSize(3)))
+            .andExpect(jsonPath("$.memberWaitings[0].waitingId").value(waiting1.getId()))
+            .andExpect(jsonPath("$.memberWaitings[0].status").value(PROGRESS.getDescription()))
+            .andExpect(jsonPath("$.memberWaitings[1].waitingId").value(canceledWaiting.getId()))
+            .andExpect(jsonPath("$.memberWaitings[1].status").value(CANCELED.getDescription()))
+            .andExpect(jsonPath("$.memberWaitings[2].waitingId").value(completedWaiting.getId()))
+            .andExpect(jsonPath("$.memberWaitings[2].status").value(COMPLETED.getDescription()))
+            .andDo(MockMvcResultHandlers.print())
+        ;
     }
 }
