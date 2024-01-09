@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 import com.prgrms.catchtable.common.data.shop.ShopData;
+import com.prgrms.catchtable.member.MemberFixture;
+import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.fixture.ReservationFixture;
@@ -28,25 +31,31 @@ class ReservationRepositoryTest {
     private ShopRepository shopRepository;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("예약 엔티티 조회 시 페치 조인을 통해 예약시간과 매장 엔티티를 한번에 조회한다.")
     void findAllWithReservationTimeAndShop() {
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member savedMember = memberRepository.save(member);
+
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
         reservationTime.insertShop(savedShop);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        Reservation reservation = ReservationFixture.getReservation(savedReservationTime);
+        Reservation reservation = ReservationFixture.getReservation(savedReservationTime, member);
         reservationRepository.save(reservation);
 
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(savedMember);
         Reservation findReservation = reservations.get(0);
 
         assertAll(
             () -> assertThat(findReservation.getReservationTime()).isEqualTo(savedReservationTime),
-            () -> assertThat(findReservation.getShop()).isEqualTo(savedShop)
+            () -> assertThat(findReservation.getShop()).isEqualTo(savedShop),
+            () -> assertThat(findReservation.getMember()).isEqualTo(savedMember)
         );
     }
 
