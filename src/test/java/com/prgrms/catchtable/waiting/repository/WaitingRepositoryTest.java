@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.repository;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.catchtable.member.MemberFixture;
@@ -14,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,9 +63,10 @@ class WaitingRepositoryTest {
     @DisplayName("특정 가게의 당일 대기 번호를 조회할 수 있다.")
     @Test
     void countByShopAndCreatedAtBetween() {
-        Waiting yesterdayWaiting = WaitingFixture.waiting(member1, shop, 1);
+        //given
+        Waiting yesterdayWaiting = WaitingFixture.progressWaiting(member1, shop, 1);
         Waiting completedWaiting = WaitingFixture.completedWaiting(member2, shop, 2);
-        Waiting normalWaiting = WaitingFixture.waiting(member3, shop, 3);
+        Waiting normalWaiting = WaitingFixture.progressWaiting(member3, shop, 3);
         waitingRepository.saveAll(List.of(yesterdayWaiting, completedWaiting, normalWaiting));
 
         ReflectionTestUtils.setField(yesterdayWaiting, "createdAt",
@@ -79,17 +80,48 @@ class WaitingRepositoryTest {
         assertThat(count).isEqualTo(2L); //waiting2, waiting3
     }
 
-    @DisplayName("멤버의 아이디 리스트로 Waiting을 조회 가능하다.")
+    @DisplayName("멤버의 아이디 리스트로 waiting 목록을 조회 가능하다.")
     @Test
     void findByIdsWithMember() {
-        Waiting waiting1 = WaitingFixture.waiting(member1, shop, 1);
-        Waiting waiting2 = WaitingFixture.waiting(member2, shop, 2);
-        Waiting waiting3 = WaitingFixture.waiting(member3, shop, 3);
+        Waiting waiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
+        Waiting waiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
+        Waiting waiting3 = WaitingFixture.progressWaiting(member3, shop, 3);
         waitingRepository.saveAll(List.of(waiting1, waiting2, waiting3));
         List<Long> waitingIds = List.of(waiting1.getId(), waiting2.getId(), waiting3.getId());
         //when
         List<Waiting> waitings = waitingRepository.findByIds(waitingIds);
         //then
-        Assertions.assertThat(waitings).containsExactly(waiting1, waiting2, waiting3);
+        assertThat(waitings).containsExactly(waiting1, waiting2, waiting3);
+    }
+
+    @DisplayName("멤버의 진행 중인 웨이팅을 조회할 수 있다.")
+    @Test
+    void findByMemberAndStatusWithShop() {
+        //given
+        Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 1);
+        Waiting progressWaiting = WaitingFixture.progressWaiting(member1, shop, 2);
+        waitingRepository.saveAll(List.of(completedWaiting, progressWaiting));
+        //when
+        Waiting waiting = waitingRepository.findByMemberAndStatusWithShop(
+            member1, PROGRESS).orElseThrow();
+
+        //then
+        assertThat(waiting.getWaitingNumber()).isEqualTo(2);
+    }
+
+    @DisplayName("특정 멤버의 웨이팅 목록을 조회할 수 있다.")
+    @Test
+    void findWaitingWithMember() {
+        //given
+        Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 1);
+        Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 2);
+        Waiting progressWaiting = WaitingFixture.progressWaiting(member1, shop, 3);
+
+        waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting, progressWaiting));
+        //when
+        List<Waiting> memberAllWaitings = waitingRepository.findWaitingWithMember(member1);
+        //then
+        assertThat(memberAllWaitings).containsExactly(canceledWaiting, completedWaiting,
+            progressWaiting);
     }
 }
