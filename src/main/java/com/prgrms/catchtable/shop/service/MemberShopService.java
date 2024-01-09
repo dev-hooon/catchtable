@@ -1,7 +1,11 @@
 package com.prgrms.catchtable.shop.service;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.dto.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.GetShopResponse;
 import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
@@ -19,5 +23,12 @@ public class MemberShopService {
     public GetAllShopResponse getAll() {
         List<Shop> allShop = shopRepository.findAll();
         return ShopMapper.toGetAllShopResponse(allShop);
+    }
+
+    @Transactional(readOnly = true)
+    public GetShopResponse getById(Long id){
+        Shop findShop = shopRepository.findById(id)
+            .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_SHOP));
+        return ShopMapper.toGetShopResponse(findShop);
     }
 }
