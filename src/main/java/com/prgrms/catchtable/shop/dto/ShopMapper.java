@@ -3,6 +3,10 @@ package com.prgrms.catchtable.shop.dto;
 import com.prgrms.catchtable.shop.domain.Address;
 import com.prgrms.catchtable.shop.domain.Category;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
+import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
 import java.math.BigDecimal;
 import java.util.List;
 

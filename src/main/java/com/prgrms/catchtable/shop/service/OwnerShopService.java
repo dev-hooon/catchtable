@@ -2,8 +2,8 @@ package com.prgrms.catchtable.shop.service;
 
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.RegistShopRequest;
-import com.prgrms.catchtable.shop.dto.RegistShopResponse;
+import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
 import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;

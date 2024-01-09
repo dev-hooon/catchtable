@@ -2,8 +2,8 @@ package com.prgrms.catchtable.shop.controller;
 
 import com.prgrms.catchtable.common.login.LogIn;
 import com.prgrms.catchtable.owner.domain.Owner;
-import com.prgrms.catchtable.shop.dto.RegistShopRequest;
-import com.prgrms.catchtable.shop.dto.RegistShopResponse;
+import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
 import com.prgrms.catchtable.shop.service.OwnerShopService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

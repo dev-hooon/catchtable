@@ -4,8 +4,8 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.*;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.GetAllShopResponse;
-import com.prgrms.catchtable.shop.dto.GetShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;

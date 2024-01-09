@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.shop.controller;
 
-import com.prgrms.catchtable.shop.dto.GetAllShopResponse;
-import com.prgrms.catchtable.shop.dto.GetShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.service.MemberShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

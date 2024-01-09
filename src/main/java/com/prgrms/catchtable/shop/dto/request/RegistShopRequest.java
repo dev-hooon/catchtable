@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.shop.dto;
+package com.prgrms.catchtable.shop.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
