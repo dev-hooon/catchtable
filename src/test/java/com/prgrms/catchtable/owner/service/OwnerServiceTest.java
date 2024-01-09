@@ -79,7 +79,8 @@ class OwnerServiceTest {
         //given
         LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email, password);
         String encodePassword = passwordEncoder.encode(password);
-        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email(), Role.OWNER);
+        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email(),
+            Role.OWNER);
 
         //when
         when(ownerRepository.findOwnerByEmail(loginOwnerRequest.email())).thenReturn(
