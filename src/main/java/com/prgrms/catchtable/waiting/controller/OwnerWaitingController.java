@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import com.prgrms.catchtable.common.login.LogIn;
+import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.service.OwnerWaitingService;
@@ -18,17 +20,17 @@ public class OwnerWaitingController {
 
     private final OwnerWaitingService ownerWaitingService;
 
-    @GetMapping("/{ownerId}")
+    @GetMapping
     public ResponseEntity<OwnerWaitingListResponse> getOwnerAllWaiting(
-        @PathVariable("ownerId") Long ownerId) {
-        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(ownerId);
+        @LogIn Owner owner) {
+        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(owner);
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{ownerId}")
+    @PatchMapping
     public ResponseEntity<OwnerWaitingResponse> entryWaiting(
-        @PathVariable("ownerId") Long ownerId) {
-        OwnerWaitingResponse response = ownerWaitingService.entryWaiting(ownerId);
+        @LogIn Owner owner) {
+        OwnerWaitingResponse response = ownerWaitingService.entryWaiting(owner);
         return ResponseEntity.ok(response);
     }
 }

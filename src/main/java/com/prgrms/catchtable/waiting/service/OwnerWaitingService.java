@@ -28,9 +28,7 @@ public class OwnerWaitingService {
     private final OwnerRepository ownerRepository;
 
     @Transactional(readOnly = true)
-    public OwnerWaitingListResponse getOwnerAllWaiting(Long ownerId) {
-        Owner owner = ownerRepository.findById(ownerId)
-            .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_OWNER));
+    public OwnerWaitingListResponse getOwnerAllWaiting(Owner owner) {
         List<Long> waitingIds = waitingLineRepository.getShopWaitingIdsInOrder(
             owner.getShop().getId());
         List<Waiting> waitings = waitingRepository.findByIds(waitingIds);
@@ -38,9 +36,7 @@ public class OwnerWaitingService {
     }
 
     @Transactional
-    public OwnerWaitingResponse entryWaiting(Long ownerId) {
-        Owner owner = ownerRepository.findById(ownerId)
-            .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_OWNER));
+    public OwnerWaitingResponse entryWaiting(Owner owner) {
         Long enteredWaitingId = waitingLineRepository.entry(owner.getShop().getId());
         Waiting waiting = waitingRepository.findById(enteredWaitingId)
             .orElseThrow(() -> new NotFoundCustomException(WAITING_DOES_NOT_EXIST));
