@@ -42,7 +42,8 @@ public class MemberReservationService {
     private final ReservationLockRepository reservationLockRepository;
 
     @Transactional
-    public CreateReservationResponse preOccupyReservation(Member member, CreateReservationRequest request) {
+    public CreateReservationResponse preOccupyReservation(Member member,
+        CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
         while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
@@ -73,7 +74,8 @@ public class MemberReservationService {
     }
 
     @Transactional
-    public CreateReservationResponse registerReservation(Member member, CreateReservationRequest request) {
+    public CreateReservationResponse registerReservation(Member member,
+        CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
                 request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
@@ -94,7 +96,8 @@ public class MemberReservationService {
 
     @Transactional(readOnly = true)
     public List<GetAllReservationResponse> getAllReservation(Member member) {
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(member);
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(
+            member);
         return reservations.stream()
             .map(ReservationMapper::toGetAllReservationRepsonse)
             .toList();

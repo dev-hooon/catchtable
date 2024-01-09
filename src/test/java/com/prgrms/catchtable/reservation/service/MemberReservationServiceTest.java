@@ -117,7 +117,8 @@ class MemberReservationServiceTest {
             Optional.of(reservationTime));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
 
-        CreateReservationResponse response = memberReservationService.registerReservation(member, request);
+        CreateReservationResponse response = memberReservationService.registerReservation(member,
+            request);
 
         assertAll(
             () -> assertThat(response.date()).isEqualTo(reservationTime.getTime()),
@@ -147,7 +148,7 @@ class MemberReservationServiceTest {
         Member member = MemberFixture.member("dlswns661035@gmail.com");
 
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        Reservation reservation = ReservationFixture.getReservation(reservationTime,member);
+        Reservation reservation = ReservationFixture.getReservation(reservationTime, member);
 
         when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(
             List.of(reservation));
@@ -167,7 +168,8 @@ class MemberReservationServiceTest {
     @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
     void getAllReservationWithNoResult() {
         Member member = MemberFixture.member("dlswns661035@gmail.com");
-        when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(List.of());
+        when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(
+            List.of());
 
         List<GetAllReservationResponse> all = memberReservationService.getAllReservation(member);
         assertThat(all).isEmpty();

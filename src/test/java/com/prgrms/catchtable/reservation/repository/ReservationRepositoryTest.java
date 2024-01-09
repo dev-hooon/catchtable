@@ -49,7 +49,8 @@ class ReservationRepositoryTest {
         Reservation reservation = ReservationFixture.getReservation(savedReservationTime, member);
         reservationRepository.save(reservation);
 
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(savedMember);
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(
+            savedMember);
         Reservation findReservation = reservations.get(0);
 
         assertAll(

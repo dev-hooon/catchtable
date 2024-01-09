@@ -1,19 +1,17 @@
 package com.prgrms.catchtable.reservation.controller;
 
-import static com.prgrms.catchtable.common.Role.*;
+import static com.prgrms.catchtable.common.Role.MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -51,7 +49,6 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     private MemberRepository memberRepository;
 
 
-
     @BeforeEach
     void setUp() {
         Shop shop = ShopData.getShop();
@@ -66,7 +63,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
 
         Token token = jwtTokenProvider.createToken(savedMember.getEmail(), MEMBER);
         httpHeaders.add("AccessToken", token.getAccessToken());
-        httpHeaders.add("RefreshToken",token.getRefreshToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
     }
 
     @Test
@@ -99,7 +96,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations")
-                .headers(httpHeaders)
+            .headers(httpHeaders)
             .contentType(APPLICATION_JSON)
             .content(asJsonString(request)));
 
