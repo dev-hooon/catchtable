@@ -51,12 +51,13 @@ class MemberReservationServiceTest {
     private ReservationTimeRepository reservationTimeRepository;
     @InjectMocks
     private MemberReservationService memberReservationService;
+    private final String email = "dlswns661035@gmail.com";
 
     @Test
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
     void validateReservation() {
         //given
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
@@ -84,7 +85,7 @@ class MemberReservationServiceTest {
     @DisplayName("예약시간 선점권이 이미 타인에게 있는 경우 예외가 발생한다.")
     void alreadyPreOccupied() {
         //given
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         ReflectionTestUtils.setField(reservationTime, "id", 1L);
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
@@ -103,7 +104,7 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("최종예약을 등록할 때 예약시간이 비었으면 성공적으로 예약 등록을 완료한다.")
     void registerReservation() {
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
         Reservation reservation = Reservation.builder()
@@ -130,7 +131,7 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("최종예약을 등록할 때 타인이 이미 예약한 경우 예외가 발생한다.")
     void registerReservationAlreadyOccupied() {
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
 
@@ -145,7 +146,7 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("예약 전체 조회를 할 수 있다")
     void getAllReservation() {
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
 
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         Reservation reservation = ReservationFixture.getReservation(reservationTime, member);
@@ -167,7 +168,7 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
     void getAllReservationWithNoResult() {
-        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member member = MemberFixture.member(email);
         when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(
             List.of());
 
