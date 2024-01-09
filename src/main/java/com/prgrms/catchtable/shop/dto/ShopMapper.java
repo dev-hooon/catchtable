@@ -4,6 +4,7 @@ import com.prgrms.catchtable.shop.domain.Address;
 import com.prgrms.catchtable.shop.domain.Category;
 import com.prgrms.catchtable.shop.domain.Shop;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ShopMapper {
 
@@ -23,10 +24,30 @@ public class ShopMapper {
             .build();
     }
 
-    public static RegistShopResponse of(Shop shop){
+    public static RegistShopResponse toRegistShopResponse(Shop shop){
         return RegistShopResponse.builder()
             .name(shop.getName())
             .rating(Integer.parseInt(String.valueOf(shop.getRating())))
+            .category(shop.getCategory().getType())
+            .city(shop.getAddress().getCity())
+            .district(shop.getAddress().getDistrict())
+            .capacity(shop.getCapacity())
+            .openingTime(shop.getOpeningTime())
+            .closingTime(shop.getClosingTime())
+            .build();
+    }
+
+    public static GetAllShopResponse toGetAllShopResponse(List<Shop> shops){
+        return new GetAllShopResponse(shops.stream()
+            .map(ShopMapper::toGetShopResponse)
+            .toList());
+    }
+
+    public static GetShopResponse toGetShopResponse(Shop shop){
+        return GetShopResponse.builder()
+            .id(shop.getId())
+            .name(shop.getName())
+            .rating(shop.getRating())
             .category(shop.getCategory().getType())
             .city(shop.getAddress().getCity())
             .district(shop.getAddress().getDistrict())
