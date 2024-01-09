@@ -57,7 +57,7 @@ public class MemberReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetAllReservationResponse>> getAllReservation() {
-        return ResponseEntity.ok(memberReservationService.getAllReservation());
+    public ResponseEntity<List<GetAllReservationResponse>> getAllReservation(@LogIn Member member) {
+        return ResponseEntity.ok(memberReservationService.getAllReservation(member));
     }
 }
