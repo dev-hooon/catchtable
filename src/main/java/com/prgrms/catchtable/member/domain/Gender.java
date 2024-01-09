@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.member.domain;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.BAD_REQUEST_INPUT_GENDER_TYPE;
+import static com.prgrms.catchtable.common.exception.ErrorCode.INVALID_INPUT_TYPE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public enum Gender {
         return Arrays.stream(values())
             .filter(gender -> gender.isEqual(input))
             .findAny()
-            .orElseThrow(() -> new BadRequestCustomException(BAD_REQUEST_INPUT_GENDER_TYPE));
+            .orElseThrow(() -> new BadRequestCustomException(INVALID_INPUT_TYPE));
     }
 
     private boolean isEqual(String input) {

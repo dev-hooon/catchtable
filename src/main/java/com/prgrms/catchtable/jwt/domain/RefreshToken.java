@@ -1,9 +1,12 @@
 package com.prgrms.catchtable.jwt.domain;
 
+import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.prgrms.catchtable.common.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,10 +29,15 @@ public class RefreshToken {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "role")
+    @Enumerated(STRING)
+    private Role role;
+
     @Builder
-    public RefreshToken(String token, String email) {
+    public RefreshToken(String token, String email, Role role) {
         this.token = token;
         this.email = email;
+        this.role = role;
     }
 
 }

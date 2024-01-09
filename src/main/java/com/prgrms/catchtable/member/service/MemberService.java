@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.member.service;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
@@ -17,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    private final JwtTokenProvider jwtTokenProvider;
-
     private final RefreshTokenService refreshTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Token oauthLogin(OAuthAttribute attributes) {
@@ -36,7 +35,7 @@ public class MemberService {
     }
 
     private Token createTotalToken(String email) {
-        Token totalToken = jwtTokenProvider.createToken(email);
+        Token totalToken = jwtTokenProvider.createToken(email, Role.MEMBER);
         refreshTokenService.saveRefreshToken(totalToken);
         return totalToken;
     }

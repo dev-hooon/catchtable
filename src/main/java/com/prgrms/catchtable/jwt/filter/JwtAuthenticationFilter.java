@@ -2,6 +2,7 @@ package com.prgrms.catchtable.jwt.filter;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.TOKEN_EXPIRES;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
@@ -48,7 +49,8 @@ public class JwtAuthenticationFilter extends GenericFilter {
                         RefreshToken refreshTokenEntity = refreshTokenService.getRefreshTokenByToken(
                             refreshToken);
                         String email = refreshTokenEntity.getEmail();
-                        Token newToken = jwtTokenProvider.createToken(email);
+                        Role role = refreshTokenEntity.getRole();
+                        Token newToken = jwtTokenProvider.createToken(email, role);
 
                         ((HttpServletResponse) response).setHeader("AccessToken",
                             newToken.getAccessToken());

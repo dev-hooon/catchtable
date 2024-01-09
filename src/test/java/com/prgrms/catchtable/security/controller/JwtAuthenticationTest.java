@@ -3,6 +3,7 @@ package com.prgrms.catchtable.security.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.jwt.filter.JwtAuthenticationFilter;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
@@ -55,7 +56,7 @@ class JwtAuthenticationTest {
         memberRepository.save(loginMember);
 
         //토큰 발급
-        token = jwtTokenProvider.createToken(email);
+        token = jwtTokenProvider.createToken(email, Role.MEMBER);
         refreshTokenService.saveRefreshToken(token);
 
         //필터 추가

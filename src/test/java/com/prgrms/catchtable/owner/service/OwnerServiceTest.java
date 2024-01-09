@@ -6,8 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
+import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.dto.request.JoinOwnerRequest;
@@ -25,10 +27,11 @@ class OwnerServiceTest {
 
     private final OwnerRepository ownerRepository = mock(OwnerRepository.class);
     private final JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
+    private final RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final OwnerService ownerService = new OwnerService(ownerRepository, passwordEncoder,
-        jwtTokenProvider);
+        jwtTokenProvider, refreshTokenService);
 
     private final String email = "abc1234@gmail.com";
     private final String password = "qwer1234";
@@ -76,12 +79,12 @@ class OwnerServiceTest {
         //given
         LoginOwnerRequest loginOwnerRequest = OwnerFixture.getLoginOwnerRequest(email, password);
         String encodePassword = passwordEncoder.encode(password);
-        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email());
+        Token token = new Token("AccessToken", "RefreshToken", loginOwnerRequest.email(), Role.OWNER);
 
         //when
         when(ownerRepository.findOwnerByEmail(loginOwnerRequest.email())).thenReturn(
             Optional.of(OwnerFixture.getOwner(email, encodePassword)));
-        when(jwtTokenProvider.createToken(loginOwnerRequest.email())).thenReturn(token);
+        when(jwtTokenProvider.createToken(loginOwnerRequest.email(), Role.OWNER)).thenReturn(token);
 
         //then
         assertThat(ownerService.loginOwner(loginOwnerRequest)).isEqualTo(token);
