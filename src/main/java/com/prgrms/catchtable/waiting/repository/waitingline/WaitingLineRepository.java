@@ -6,7 +6,7 @@ public interface WaitingLineRepository {
 
     void save(Long shopId, Long waitingId);
 
-    void entry(Long shopId, Long waitingId);
+    Long entry(Long shopId);
 
     void cancel(Long shopId, Long waitingId);
 

@@ -28,7 +28,8 @@ public enum ErrorCode {
     POSTPONE_REMAINING_CNT_0("이미 두 차례 대기를 미뤘습니다."),
     CAN_NOT_CANCEL_WAITING("웨이팅 취소 처리가 불가한 상태입니다."),
     CAN_NOT_ENTRY("웨이팅을 입장 처리할 수 없습니다"),
-    WAITING_DOES_NOT_EXIST("웨이팅이 존재하지 않습니다"),
+    WAITING_DOES_NOT_EXIST("해당 아이디의 웨이팅이 존재하지 않습니다."),
+    WAITING_LINE_EMPTY("가게에 웨이팅이 존재하지 않습니다."),
     SHOP_NOT_RUNNING("가게가 영업시간이 아닙니다."),
     INTERNAL_SERVER_ERROR("내부 서버 오류입니다."),
 
