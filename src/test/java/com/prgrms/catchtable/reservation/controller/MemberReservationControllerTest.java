@@ -13,6 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
+import com.prgrms.catchtable.jwt.token.Token;
+import com.prgrms.catchtable.member.MemberFixture;
+import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -40,15 +44,26 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     private ShopRepository shopRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+
+
 
     @BeforeEach
     void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member savedMember = memberRepository.save(member);
+
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(savedShop);
         reservationTimeRepository.save(reservationTime);
+
+        Token token = jwtTokenProvider.createToken(savedMember.getEmail());
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken",token.getRefreshToken());
     }
 
     @Test
@@ -62,6 +77,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
 
         mockMvc.perform(post("/reservations")
                 .contentType(APPLICATION_JSON)
+                .headers(httpHeaders)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
@@ -80,6 +96,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations")
+                .headers(httpHeaders)
             .contentType(APPLICATION_JSON)
             .content(asJsonString(request)));
 
@@ -98,6 +115,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations/success")
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
