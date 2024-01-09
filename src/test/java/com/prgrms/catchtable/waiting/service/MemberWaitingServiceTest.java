@@ -87,7 +87,6 @@ class MemberWaitingServiceTest {
         Member member = mock(Member.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
             Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
@@ -96,7 +95,7 @@ class MemberWaitingServiceTest {
         doNothing().when(waiting).decreasePostponeRemainingCount();
 
         //when
-        MemberWaitingResponse response = memberWaitingService.postponeWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.postponeWaiting(member);
         //then
         assertAll(
             assertThat(response.peopleCount())::isNotNull,
@@ -113,7 +112,6 @@ class MemberWaitingServiceTest {
         Member member = mock(Member.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
             Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
@@ -121,7 +119,7 @@ class MemberWaitingServiceTest {
         doNothing().when(waiting).changeStatusCanceled();
 
         //when
-        MemberWaitingResponse response = memberWaitingService.cancelWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.cancelWaiting(member);
 
         //then
         assertAll(
@@ -139,13 +137,12 @@ class MemberWaitingServiceTest {
         Member member = mock(Member.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
             Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         //when
-        MemberWaitingResponse response = memberWaitingService.getWaiting(1L);
+        MemberWaitingResponse response = memberWaitingService.getWaiting(member);
 
         //then
         assertAll(
@@ -163,7 +160,6 @@ class MemberWaitingServiceTest {
         Shop shop = mock(Shop.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.findWaitingWithMember(member)).willReturn(
             List.of(waiting));
         given(waiting.getShop()).willReturn(shop);
@@ -171,7 +167,7 @@ class MemberWaitingServiceTest {
 
         //when
         MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
-            1L);
+            member);
 
         //then
         assertAll(

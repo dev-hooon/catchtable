@@ -66,8 +66,7 @@ public class MemberWaitingService {
     }
 
     @Transactional
-    public MemberWaitingResponse postponeWaiting(Long memberId) {
-        Member member = getMemberEntity(memberId);
+    public MemberWaitingResponse postponeWaiting(Member member) {
         Waiting waiting = getWaitingEntityInProgress(member);
 
         Shop shop = waiting.getShop();
@@ -80,8 +79,7 @@ public class MemberWaitingService {
     }
 
     @Transactional
-    public MemberWaitingResponse cancelWaiting(Long memberId) {
-        Member member = getMemberEntity(memberId);
+    public MemberWaitingResponse cancelWaiting(Member member) {
         Waiting waiting = getWaitingEntityInProgress(member);
 
         Shop shop = waiting.getShop();
@@ -92,8 +90,7 @@ public class MemberWaitingService {
     }
 
     @Transactional(readOnly = true)
-    public MemberWaitingResponse getWaiting(Long memberId) {
-        Member member = getMemberEntity(memberId);
+    public MemberWaitingResponse getWaiting(Member member) {
         Waiting waiting = getWaitingEntityInProgress(member);
 
         Shop shop = waiting.getShop();
@@ -103,8 +100,7 @@ public class MemberWaitingService {
     }
 
     @Transactional(readOnly = true)
-    public MemberWaitingHistoryListResponse getMemberWaitingHistory(Long memberId) {
-        Member member = getMemberEntity(memberId);
+    public MemberWaitingHistoryListResponse getMemberWaitingHistory(Member member) {
         List<Waiting> waitings = waitingRepository.findWaitingWithMember(member);
         return toMemberWaitingListResponse(waitings);
     }

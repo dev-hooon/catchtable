@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static com.prgrms.catchtable.common.Role.MEMBER;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
@@ -35,6 +37,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -130,8 +133,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void postponeWaiting() throws Exception {
         //when, then
-        mockMvc.perform(patch("/waitings/{memberId}", member2.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(patch("/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member2)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
@@ -144,8 +148,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @DisplayName("맨 뒤의 멤버가 웨이팅 지연 API 호출 시 예외를 반환한다.")
     @Test
     void postponeWaiting_fails() throws Exception {
-        mockMvc.perform(patch("/waitings/{memberId}", member3.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(patch("/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member3)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 맨뒤라 웨이팅을 미룰 수 없습니다."))
             .andDo(MockMvcResultHandlers.print());
@@ -158,8 +163,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     void postponeWaiting_fails2() throws Exception {
         ReflectionTestUtils.setField(waiting2, "remainingPostponeCount", 0);
         waitingRepository.save(waiting2);
-        mockMvc.perform(patch("/waitings/{memberId}", member2.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(patch("/waitings")
+            .contentType(APPLICATION_JSON)
+            .headers(getHttpHeaders(member2)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 두 차례 대기를 미뤘습니다."))
             .andDo(MockMvcResultHandlers.print());
@@ -169,8 +175,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void cancelWaiting() throws Exception {
         //when, then
-        mockMvc.perform(delete("/waitings/{memberId}", member1.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(delete("/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member1)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
@@ -190,14 +197,15 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void getWaiting() throws Exception {
         //when, then
-        mockMvc.perform(get("/waitings/{memberId}", member3.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(get("/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member2)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
-            .andExpect(jsonPath("$.rank").value(3L))
-            .andExpect(jsonPath("$.waitingNumber").value(waiting3.getWaitingNumber()))
-            .andExpect(jsonPath("$.peopleCount").value(waiting3.getPeopleCount()))
+            .andExpect(jsonPath("$.rank").value(2L))
+            .andExpect(jsonPath("$.waitingNumber").value(waiting2.getWaitingNumber()))
+            .andExpect(jsonPath("$.peopleCount").value(waiting2.getPeopleCount()))
             .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());
     }
@@ -209,8 +217,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 23);
         Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 233);
         waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting));
-        mockMvc.perform(get("/waitings/all/{memberId}", member1.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(get("/waitings/all")
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member1)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.memberWaitings", hasSize(3)))
             .andExpect(jsonPath("$.memberWaitings[0].waitingId").value(waiting1.getId()))
@@ -221,5 +230,12 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.memberWaitings[2].status").value(COMPLETED.getDescription()))
             .andDo(MockMvcResultHandlers.print())
         ;
+    }
+
+    private HttpHeaders getHttpHeaders(Member member) {
+        Token token = jwtTokenProvider.createToken(member.getEmail(), MEMBER);
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
+        return httpHeaders;
     }
 }
