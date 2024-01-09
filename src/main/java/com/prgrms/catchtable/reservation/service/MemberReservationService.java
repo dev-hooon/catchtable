@@ -93,8 +93,8 @@ public class MemberReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<GetAllReservationResponse> getAllReservation() {
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();
+    public List<GetAllReservationResponse> getAllReservation(Member member) {
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(member);
         return reservations.stream()
             .map(ReservationMapper::toGetAllReservationRepsonse)
             .toList();
