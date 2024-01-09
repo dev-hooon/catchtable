@@ -37,3 +37,4 @@ out/
 .vscode/
 application.yaml
 .DS_Store
+src/main/generated/**
