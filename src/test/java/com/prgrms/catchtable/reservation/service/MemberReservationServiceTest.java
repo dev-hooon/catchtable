@@ -144,12 +144,14 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("예약 전체 조회를 할 수 있다")
     void getAllReservation() {
-        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
-        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
 
-        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(
+        ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
+        Reservation reservation = ReservationFixture.getReservation(reservationTime,member);
+
+        when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(
             List.of(reservation));
-        List<GetAllReservationResponse> all = memberReservationService.getAllReservation();
+        List<GetAllReservationResponse> all = memberReservationService.getAllReservation(member);
         GetAllReservationResponse findReservation = all.get(0);
 
         assertAll(
@@ -164,9 +166,10 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("예약 내역이 하나도 없을 시 조회되는 예약이 없다.")
     void getAllReservationWithNoResult() {
-        when(reservationRepository.findAllWithReservationTimeAndShop()).thenReturn(List.of());
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        when(reservationRepository.findAllWithReservationTimeAndShopByMemberId(member)).thenReturn(List.of());
 
-        List<GetAllReservationResponse> all = memberReservationService.getAllReservation();
+        List<GetAllReservationResponse> all = memberReservationService.getAllReservation(member);
         assertThat(all).isEmpty();
     }
 
