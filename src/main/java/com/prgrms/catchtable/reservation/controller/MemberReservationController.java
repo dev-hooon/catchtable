@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.reservation.controller;
 
+import com.prgrms.catchtable.common.login.LogIn;
+import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
 import com.prgrms.catchtable.reservation.dto.request.ModifyReservationRequest;
 import com.prgrms.catchtable.reservation.dto.response.CancelReservationResponse;
@@ -28,14 +30,16 @@ public class MemberReservationController {
 
     @PostMapping
     public ResponseEntity<CreateReservationResponse> preOccupyReservation(
+        @LogIn Member member,
         @RequestBody CreateReservationRequest request) {
-        return ResponseEntity.ok(memberReservationService.preOccupyReservation(request));
+        return ResponseEntity.ok(memberReservationService.preOccupyReservation(member, request));
     }
 
     @PostMapping("/success")
     public ResponseEntity<CreateReservationResponse> registerReservation(
+        @LogIn Member member,
         @RequestBody CreateReservationRequest request) {
-        return ResponseEntity.ok(memberReservationService.registerReservation(request));
+        return ResponseEntity.ok(memberReservationService.registerReservation(member, request));
     }
 
     @PatchMapping("/{reservationId}")
