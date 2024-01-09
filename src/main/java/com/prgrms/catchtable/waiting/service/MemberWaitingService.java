@@ -6,8 +6,8 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRES
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingListResponse;
-import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingResponse;
+import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
@@ -103,7 +103,7 @@ public class MemberWaitingService {
     }
 
     @Transactional(readOnly = true)
-    public MemberWaitingHistoryListResponse getMemberAllWaiting(Long memberId) {
+    public MemberWaitingHistoryListResponse getMemberWaitingHistory(Long memberId) {
         Member member = getMemberEntity(memberId);
         List<Waiting> waitings = waitingRepository.findWaitingWithMember(member);
         return toMemberWaitingListResponse(waitings);

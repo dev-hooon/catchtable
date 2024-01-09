@@ -4,5 +4,6 @@ import java.util.List;
 
 public record MemberWaitingHistoryListResponse(
     List<MemberWaitingHistoryResponse> memberWaitings
-){
+) {
+
 }

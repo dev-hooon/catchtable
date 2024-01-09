@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.waiting.repository;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.prgrms.catchtable.member.MemberFixture;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -122,6 +121,7 @@ class WaitingRepositoryTest {
         //when
         List<Waiting> memberAllWaitings = waitingRepository.findWaitingWithMember(member1);
         //then
-        assertThat(memberAllWaitings).containsExactly(canceledWaiting, completedWaiting, progressWaiting);
+        assertThat(memberAllWaitings).containsExactly(canceledWaiting, completedWaiting,
+            progressWaiting);
     }
 }

@@ -56,7 +56,8 @@ public class MemberWaitingController {
     @GetMapping("/all/{memberId}")
     public ResponseEntity<MemberWaitingHistoryListResponse> getMemberWaitingHistory(
         @PathVariable("memberId") Long memberId) {
-        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(memberId);
+        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
+            memberId);
         return ResponseEntity.ok(response);
     }
 }

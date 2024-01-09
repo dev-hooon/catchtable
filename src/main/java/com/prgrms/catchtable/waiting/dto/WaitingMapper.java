@@ -53,7 +53,8 @@ public class WaitingMapper {
             .build();
     }
 
-    public static MemberWaitingHistoryListResponse toMemberWaitingListResponse(List<Waiting> waitings){
+    public static MemberWaitingHistoryListResponse toMemberWaitingListResponse(
+        List<Waiting> waitings) {
         List<MemberWaitingHistoryResponse> list = new ArrayList<>();
         for (Waiting waiting : waitings) {
             list.add(toMemberWaitingHistoryResponse(waiting));
