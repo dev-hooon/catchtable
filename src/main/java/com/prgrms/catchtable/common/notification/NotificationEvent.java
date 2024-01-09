@@ -18,13 +18,13 @@ public class NotificationEvent {
 
     @Async
     @TransactionalEventListener(phase = AFTER_COMMIT) // 호출한쪽의 트랜잭션이 커밋 된 후 이벤트 발생
-    public void sentMessage(Member member, NotificationContent content) {
+    public void sendMessage(Member member, NotificationContent content) {
         notificationService.sendMessageAndSave(member, content);
     }
 
     @Async
     @TransactionalEventListener(phase = AFTER_COMMIT) // 호출한쪽의 트랜잭션이 커밋 된 후 이벤트 발생
-    public void sentMessage(Owner owner, NotificationContent content) {
+    public void sendMessage(Owner owner, NotificationContent content) {
         notificationService.sendMessageAndSave(owner, content);
     }
 }
