@@ -5,11 +5,11 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.common.notification.NotificationContent;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.notification.domain.NotificationMember;
 import com.prgrms.catchtable.notification.domain.NotificationOwner;
-import com.prgrms.catchtable.notification.dto.request.SendMessageRequest;
 import com.prgrms.catchtable.notification.repository.NotificationMemberRepository;
 import com.prgrms.catchtable.notification.repository.NotificationOwnerRepository;
 import com.prgrms.catchtable.owner.domain.Owner;
@@ -38,15 +38,11 @@ public class NotificationService {
     private final OwnerRepository ownerRepository; // 추후 삭제 예정
     private JSONObject jsonObject;
 
-    public void sendMessageToMemberAndSave(SendMessageRequest request) {
+    public void sendMessageAndSave(Member member, NotificationContent content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
-        // member 예제 데이터
-        Member member = Member.builder()
-            .email("dlswns661035@gmail.com") // 이 부분 이메일 바꿔서 하면 해당 이메일의 슬랙 개인으로 dm 보냄
-            .build();
 
         String email = member.getEmail();
-        String message = request.content().getMessage();
+        String message = content.getMessage();
         String slackId = getSlackIdByEmail(email); // 이메일을 통해 사용자의 슬랙 고유 ID 추출
 
         requestToSendMessage(slackId, message); // 알림 요청 보내는 함수 호출
@@ -60,15 +56,11 @@ public class NotificationService {
 
     }
 
-    public void sendMessageToOwnerAndSave(SendMessageRequest request) {
+    public void sendMessageAndSave(Owner owner, NotificationContent content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
-        //Owner 예제 데이터
-        Owner owner = Owner.builder()
-            .email("dlswns661035@gmail.com") // 이 부분 이메일 바꿔서 하면 해당 이메일의 슬랙 개인으로 dm 보냄
-            .build();
 
         String email = owner.getEmail();
-        String message = request.content().getMessage();
+        String message = content.getMessage();
         String slackId = getSlackIdByEmail(email);
 
         requestToSendMessage(slackId, message);
