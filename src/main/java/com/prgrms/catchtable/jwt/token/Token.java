@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.jwt.token;
 
+import com.prgrms.catchtable.common.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,4 +13,6 @@ public class Token {
     private String refreshToken;
 
     private String email;
+
+    private Role role;
 }

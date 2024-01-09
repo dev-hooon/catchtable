@@ -2,6 +2,7 @@ package com.prgrms.catchtable.jwt.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_FOUND_REFRESH_TOKEN;
 
+import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
@@ -19,6 +20,7 @@ public class RefreshTokenService {
     @Transactional
     public void saveRefreshToken(Token totalToken) {
         String email = totalToken.getEmail();
+        Role role = totalToken.getRole();
 
         if (refreshTokenRepository.existsRefreshTokenByEmail(email)) {
             refreshTokenRepository.deleteRefreshTokenByEmail(email);
@@ -27,6 +29,7 @@ public class RefreshTokenService {
         RefreshToken newRefreshToken = RefreshToken.builder()
             .token(totalToken.getRefreshToken())
             .email(email)
+            .role(role)
             .build();
 
         refreshTokenRepository.save(newRefreshToken);
