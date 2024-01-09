@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.waiting.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
-import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRESS_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
@@ -12,7 +11,6 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.domain.Member;
-import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
@@ -38,14 +36,12 @@ public class MemberWaitingService {
     private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
         LocalTime.of(23, 59, 59));
     private final WaitingRepository waitingRepository;
-    private final MemberRepository memberRepository;
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
 
-    public MemberWaitingResponse createWaiting(Long shopId, Long memberId,
+    public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {
         // 연관 엔티티 조회
-        Member member = getMemberEntity(memberId);
         Shop shop = getShopEntity(shopId);
 
         // 기존 waiting이 있는지 검증
@@ -110,12 +106,6 @@ public class MemberWaitingService {
         if (waitingRepository.existsByMember(member)) {
             throw new BadRequestCustomException(EXISTING_MEMBER_WAITING);
         }
-    }
-
-    public Member getMemberEntity(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(
-            () -> new NotFoundCustomException(NOT_EXIST_MEMBER)
-        );
     }
 
     public Shop getShopEntity(Long shopId) {

@@ -11,7 +11,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 import com.prgrms.catchtable.member.domain.Member;
-import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
@@ -37,8 +36,6 @@ class MemberWaitingServiceTest {
     private WaitingRepository waitingRepository;
     @Mock
     private ShopRepository shopRepository;
-    @Mock
-    private MemberRepository memberRepository;
 
     @Mock
     private WaitingLineRepository waitingLineRepository;
@@ -60,17 +57,17 @@ class MemberWaitingServiceTest {
             .waitingNumber(1)
             .peopleCount(2)
             .build();
+
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
         given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
         given(shop.getId()).willReturn(1L);
 
-        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(waitingRepository.existsByMember(member)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
         given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
-        MemberWaitingResponse response = memberWaitingService.createWaiting(1L, 1L, request);
+        MemberWaitingResponse response = memberWaitingService.createWaiting(1L, member, request);
         //then
         assertAll(
             () -> assertThat(response.peopleCount()).isEqualTo(2),

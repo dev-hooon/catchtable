@@ -25,11 +25,11 @@ public class MemberWaitingController {
 
     private final MemberWaitingService memberWaitingService;
 
-    @PostMapping("/{shopId}/{memberId}")
+    @PostMapping("/{shopId}")
     public ResponseEntity<MemberWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
-        @PathVariable("memberId") Long memberId,
+        @LogIn Member member,
         @Valid @RequestBody CreateWaitingRequest request) {
-        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, memberId,
+        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, member,
             request);
         return ResponseEntity.ok(response);
     }
@@ -58,7 +58,8 @@ public class MemberWaitingController {
     @GetMapping("/all")
     public ResponseEntity<MemberWaitingHistoryListResponse> getMemberWaitingHistory(
         @LogIn Member member) {
-        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(member);
+        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
+            member);
         return ResponseEntity.ok(response);
     }
 }

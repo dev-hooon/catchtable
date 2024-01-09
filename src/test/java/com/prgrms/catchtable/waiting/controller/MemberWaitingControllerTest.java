@@ -115,9 +115,10 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .peopleCount(2).build();
 
         // when, then
-        mockMvc.perform(post("/waitings/{shopId}/{memberId}", shop.getId(), member4.getId())
+        mockMvc.perform(post("/waitings/{shopId}", shop.getId())
                 .contentType(APPLICATION_JSON)
-                .content(asJsonString(request)))
+                .content(asJsonString(request))
+                .headers(getHttpHeaders(member4)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
@@ -164,8 +165,8 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         ReflectionTestUtils.setField(waiting2, "remainingPostponeCount", 0);
         waitingRepository.save(waiting2);
         mockMvc.perform(patch("/waitings")
-            .contentType(APPLICATION_JSON)
-            .headers(getHttpHeaders(member2)))
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member2)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("이미 두 차례 대기를 미뤘습니다."))
             .andDo(MockMvcResultHandlers.print());
