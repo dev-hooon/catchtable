@@ -36,7 +36,7 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     }
 
     private BooleanExpression equalsName(String name){
-        if(name.isEmpty()){
+        if(name == null){
             return null;
         }
 
@@ -44,10 +44,16 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     }
 
     private BooleanExpression equalCategory(String category){
+        if (category == null){
+            return null;
+        }
         return shop.category.eq(Category.of(category));
     }
 
     private BooleanExpression equalCity(String city) {
+        if (city == null){
+            return null;
+        }
         return shop.address.city.eq(city);
     }
 
