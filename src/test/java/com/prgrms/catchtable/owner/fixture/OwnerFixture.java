@@ -13,6 +13,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class OwnerFixture {
 
+    public static Owner getOwner(){
+        return Owner.builder()
+            .name("ownerA")
+            .email("email1234@gmail.com")
+            .password("test1234")
+            .phoneNumber("010-3462-2480")
+            .gender(MALE)
+            .dateBirth(LocalDate.of(2000, 9, 13))
+            .build();
+    }
+
     public static Owner getOwner(String email, String password) {
         Owner owner = Owner.builder()
             .name("ownerA")

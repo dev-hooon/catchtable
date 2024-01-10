@@ -3,6 +3,7 @@ package com.prgrms.catchtable.shop.fixture;
 import com.prgrms.catchtable.shop.domain.Address;
 import com.prgrms.catchtable.shop.domain.Category;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
@@ -29,6 +30,19 @@ public class ShopFixture {
             .capacity(30)
             .openingTime(LocalTime.of(0, 0))
             .closingTime(LocalTime.of(23, 59, 59))
+            .build();
+    }
+
+    public static RegistShopRequest getRequestDto(Shop shop){
+        return RegistShopRequest.builder()
+            .name(shop.getName())
+            .rating(shop.getRating())
+            .category(shop.getCategory().getType())
+            .city(shop.getAddress().getCity())
+            .district(shop.getAddress().getDistrict())
+            .capacity(shop.getCapacity())
+            .openingTime(shop.getOpeningTime())
+            .closingTime(shop.getClosingTime())
             .build();
     }
 }
