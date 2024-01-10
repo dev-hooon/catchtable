@@ -8,6 +8,7 @@ import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.dto.request.ShopSearchCondition;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ class ShopRepositoryTest {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @BeforeEach
+    void init() {
+        shopRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("이름 검색을 통해 Shop을 조회할 수 있다.")
