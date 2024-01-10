@@ -20,7 +20,7 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
     }
 
     @Override
-    public List<Shop> search(ShopSearchCondition condition) {
+    public List<Shop> findSearch(ShopSearchCondition condition) {
         return queryFactory
             .selectFrom(shop)
             .where(

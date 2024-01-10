@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ShopRepositoryCustom {
 
-    List<Shop> search(ShopSearchCondition condition);
+    List<Shop> findSearch(ShopSearchCondition condition);
 
 }
