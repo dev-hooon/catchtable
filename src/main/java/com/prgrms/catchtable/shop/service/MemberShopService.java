@@ -35,7 +35,7 @@ public class MemberShopService {
 
     @Transactional(readOnly = true)
     public GetAllShopResponse getBySearch(ShopSearchCondition condition){
-        List<Shop> searchShop = shopRepository.search(condition);
+        List<Shop> searchShop = shopRepository.findSearch(condition);
         return ShopMapper.toGetAllShopResponse(searchShop);
     }
 }
