@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 import com.prgrms.catchtable.shop.domain.Category;
@@ -43,7 +42,8 @@ class ShopRepositoryTest {
         //given
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
-        ShopSearchCondition condition = new ShopSearchCondition(savedShop.getName(), Category.WESTERN_FOOD.getType(), null);
+        ShopSearchCondition condition = new ShopSearchCondition(savedShop.getName(),
+            Category.WESTERN_FOOD.getType(), null);
 
         //when
         List<Shop> searchList = shopRepository.findSearch(condition);
@@ -58,7 +58,8 @@ class ShopRepositoryTest {
         //given
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
-        ShopSearchCondition condition = new ShopSearchCondition(savedShop.getName(), Category.KOREAN_FOOD.getType(), savedShop.getAddress().getCity());
+        ShopSearchCondition condition = new ShopSearchCondition(savedShop.getName(),
+            Category.KOREAN_FOOD.getType(), savedShop.getAddress().getCity());
 
         //when
         List<Shop> searchList = shopRepository.findSearch(condition);

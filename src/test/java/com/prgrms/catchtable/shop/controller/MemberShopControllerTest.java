@@ -72,7 +72,8 @@ class MemberShopControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.shopResponses.[0].rating").value(shop.getRating()))
             .andExpect(jsonPath("$.shopResponses.[0].category").value(shop.getCategory().getType()))
             .andExpect(jsonPath("$.shopResponses.[0].city").value(shop.getAddress().getCity()))
-            .andExpect(jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
+            .andExpect(
+                jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
             .andExpect(jsonPath("$.shopResponses.[0].capacity").value(shop.getCapacity()));
     }
 
@@ -84,8 +85,8 @@ class MemberShopControllerTest extends BaseIntegrationTest {
 
         //then
         mockMvc.perform(get("/shops/{shopId}", shop1.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .headers(httpHeaders))
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(shop.getName()))
             .andExpect(jsonPath("$.rating").value(shop.getRating()))
@@ -100,7 +101,8 @@ class MemberShopControllerTest extends BaseIntegrationTest {
     void getBySearchTest() throws Exception {
         //given
         Shop shop1 = shopRepository.findAll().get(0);
-        ShopSearchCondition shopSearchCondition = new ShopSearchCondition(shop1.getName(), shop1.getCategory().getType(), shop1.getAddress().getCity());
+        ShopSearchCondition shopSearchCondition = new ShopSearchCondition(shop1.getName(),
+            shop1.getCategory().getType(), shop1.getAddress().getCity());
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         //when
@@ -118,7 +120,8 @@ class MemberShopControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.shopResponses.[0].rating").value(shop.getRating()))
             .andExpect(jsonPath("$.shopResponses.[0].category").value(shop.getCategory().getType()))
             .andExpect(jsonPath("$.shopResponses.[0].city").value(shop.getAddress().getCity()))
-            .andExpect(jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
+            .andExpect(
+                jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
             .andExpect(jsonPath("$.shopResponses.[0].capacity").value(shop.getCapacity()));
 
     }

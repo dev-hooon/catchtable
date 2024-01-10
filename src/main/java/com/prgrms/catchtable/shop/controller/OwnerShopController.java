@@ -22,8 +22,9 @@ public class OwnerShopController {
     private final OwnerShopService shopService;
 
     @PostMapping("/shops")
-    public ResponseEntity<RegistShopResponse> registShop(@Valid @RequestBody RegistShopRequest request, @LogIn
-        Owner owner){
+    public ResponseEntity<RegistShopResponse> registShop(
+        @Valid @RequestBody RegistShopRequest request, @LogIn
+    Owner owner) {
         RegistShopResponse registShopResponse = shopService.registShop(request, owner);
         return ResponseEntity.status(HttpStatus.CREATED).body(registShopResponse);
     }

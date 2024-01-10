@@ -33,7 +33,7 @@ public class ShopFixture {
             .build();
     }
 
-    public static RegistShopRequest getRequestDto(Shop shop){
+    public static RegistShopRequest getRequestDto(Shop shop) {
         return RegistShopRequest.builder()
             .name(shop.getName())
             .rating(shop.getRating())

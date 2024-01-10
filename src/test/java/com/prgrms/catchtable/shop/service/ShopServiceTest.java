@@ -3,24 +3,19 @@ package com.prgrms.catchtable.shop.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
-import com.prgrms.catchtable.shop.dto.request.ShopSearchCondition;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
 import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,6 +81,7 @@ class ShopServiceTest {
 
         //then
         assertThat(memberShopService.getById(1L).name()).isEqualTo(shop.getName());
-        assertThatThrownBy(()->memberShopService.getById(2L)).isInstanceOf(BadRequestCustomException.class);
+        assertThatThrownBy(() -> memberShopService.getById(2L)).isInstanceOf(
+            BadRequestCustomException.class);
     }
 }

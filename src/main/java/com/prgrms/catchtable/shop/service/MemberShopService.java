@@ -1,13 +1,13 @@
 package com.prgrms.catchtable.shop.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.shop.domain.Shop;
+import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.dto.request.ShopSearchCondition;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
-import com.prgrms.catchtable.shop.dto.ShopMapper;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +27,14 @@ public class MemberShopService {
     }
 
     @Transactional(readOnly = true)
-    public GetShopResponse getById(Long id){
+    public GetShopResponse getById(Long id) {
         Shop findShop = shopRepository.findShopById(id)
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_SHOP));
         return ShopMapper.toGetShopResponse(findShop);
     }
 
     @Transactional(readOnly = true)
-    public GetAllShopResponse getBySearch(ShopSearchCondition condition){
+    public GetAllShopResponse getBySearch(ShopSearchCondition condition) {
         List<Shop> searchShop = shopRepository.findSearch(condition);
         return ShopMapper.toGetAllShopResponse(searchShop);
     }

@@ -1,6 +1,6 @@
 package com.prgrms.catchtable.shop.repository;
 
-import static com.prgrms.catchtable.shop.domain.QShop.*;
+import static com.prgrms.catchtable.shop.domain.QShop.shop;
 
 import com.prgrms.catchtable.shop.domain.Category;
 import com.prgrms.catchtable.shop.domain.Shop;
@@ -11,11 +11,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-public class ShopRepositoryImpl implements ShopRepositoryCustom{
+public class ShopRepositoryImpl implements ShopRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public ShopRepositoryImpl(EntityManager em){
+    public ShopRepositoryImpl(EntityManager em) {
         queryFactory = new JPAQueryFactory(em);
     }
 
@@ -35,23 +35,23 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom{
             .fetch();
     }
 
-    private BooleanExpression equalsName(String name){
-        if(name == null){
+    private BooleanExpression equalsName(String name) {
+        if (name == null) {
             return null;
         }
 
         return shop.name.eq(name);
     }
 
-    private BooleanExpression equalCategory(String category){
-        if (category == null){
+    private BooleanExpression equalCategory(String category) {
+        if (category == null) {
             return null;
         }
         return shop.category.eq(Category.of(category));
     }
 
     private BooleanExpression equalCity(String city) {
-        if (city == null){
+        if (city == null) {
             return null;
         }
         return shop.address.city.eq(city);

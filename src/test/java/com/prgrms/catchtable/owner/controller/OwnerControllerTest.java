@@ -22,14 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class OwnerControllerTest extends BaseIntegrationTest {
 
+    private final String joinEmail = "qwer@56782naver.com";
+    private final String notJoinEmail = "abc1234@gmail.com";
+    private final String password = "qwer1234";
     @Autowired
     private OwnerService ownerService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-    private final String joinEmail = "qwer@56782naver.com";
-    private final String notJoinEmail = "abc1234@gmail.com";
-    private final String password = "qwer1234";
 
     @BeforeEach
     public void init() {

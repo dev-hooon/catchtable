@@ -7,7 +7,6 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
-import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -16,7 +15,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;

@@ -20,17 +20,18 @@ public class MemberShopController {
     private final MemberShopService memberShopService;
 
     @GetMapping
-    public ResponseEntity<GetAllShopResponse> getAll(){
+    public ResponseEntity<GetAllShopResponse> getAll() {
         return ResponseEntity.ok(memberShopService.getAll());
     }
 
     @GetMapping("/{shopId}")
-    public ResponseEntity<GetShopResponse> getById(@PathVariable("shopId") Long id){
+    public ResponseEntity<GetShopResponse> getById(@PathVariable("shopId") Long id) {
         return ResponseEntity.ok(memberShopService.getById(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<GetAllShopResponse> getBySearch(@ModelAttribute ShopSearchCondition condition){
+    public ResponseEntity<GetAllShopResponse> getBySearch(
+        @ModelAttribute ShopSearchCondition condition) {
         return ResponseEntity.ok(memberShopService.getBySearch(condition));
     }
 

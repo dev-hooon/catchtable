@@ -7,12 +7,11 @@ import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ShopMapper {
 
-    public static Shop toEntity(RegistShopRequest registShopRequest){
+    public static Shop toEntity(RegistShopRequest registShopRequest) {
 
         return Shop.builder()
             .name(registShopRequest.name())
@@ -28,7 +27,7 @@ public class ShopMapper {
             .build();
     }
 
-    public static RegistShopResponse toRegistShopResponse(Shop shop){
+    public static RegistShopResponse toRegistShopResponse(Shop shop) {
         return RegistShopResponse.builder()
             .name(shop.getName())
             .rating(shop.getRating())
@@ -41,13 +40,13 @@ public class ShopMapper {
             .build();
     }
 
-    public static GetAllShopResponse toGetAllShopResponse(List<Shop> shops){
+    public static GetAllShopResponse toGetAllShopResponse(List<Shop> shops) {
         return new GetAllShopResponse(shops.stream()
             .map(ShopMapper::toGetShopResponse)
             .toList());
     }
 
-    public static GetShopResponse toGetShopResponse(Shop shop){
+    public static GetShopResponse toGetShopResponse(Shop shop) {
         return GetShopResponse.builder()
             .id(shop.getId())
             .name(shop.getName())

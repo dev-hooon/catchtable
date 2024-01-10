@@ -16,14 +16,14 @@ public enum Category {
 
     private final String type;
 
-    public static Category of(String input){
+    public static Category of(String input) {
         return Arrays.stream(values())
             .filter(category -> category.isEqual(input))
             .findAny()
             .orElseThrow(() -> new BadRequestCustomException(ErrorCode.INVALID_INPUT_TYPE));
     }
 
-    private boolean isEqual(String input){
+    private boolean isEqual(String input) {
         return type.equals(input);
     }
 }

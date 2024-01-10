@@ -13,11 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public abstract class BaseIntegrationTest {
 
+    public static ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     public JwtTokenProvider jwtTokenProvider;
-
-    public static ObjectMapper objectMapper = new ObjectMapper();
-
     public HttpHeaders httpHeaders = new HttpHeaders();
     @Autowired
     public MockMvc mockMvc;

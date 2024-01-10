@@ -41,6 +41,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class MemberReservationServiceTest {
 
+    private final String email = "dlswns661035@gmail.com";
     @Mock
     private ReservationRepository reservationRepository;
     @Mock
@@ -51,7 +52,6 @@ class MemberReservationServiceTest {
     private ReservationTimeRepository reservationTimeRepository;
     @InjectMocks
     private MemberReservationService memberReservationService;
-    private final String email = "dlswns661035@gmail.com";
 
     @Test
     @DisplayName("예약시간의 선점 여부를 검증하고 선점권이 빈 것을 확인한다.")
