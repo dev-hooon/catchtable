@@ -38,11 +38,11 @@ public class NotificationService {
     private final OwnerRepository ownerRepository; // 추후 삭제 예정
     private JSONObject jsonObject;
 
-    public void sendMessageAndSave(Member member, NotificationContent content) {
+    public void sendMessageAndSave(Member member, String content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
 
         String email = member.getEmail();
-        String message = content.getMessage();
+        String message = content;
         String slackId = getSlackIdByEmail(email); // 이메일을 통해 사용자의 슬랙 고유 ID 추출
 
         requestToSendMessage(slackId, message); // 알림 요청 보내는 함수 호출
@@ -56,11 +56,11 @@ public class NotificationService {
 
     }
 
-    public void sendMessageAndSave(Owner owner, NotificationContent content) {
+    public void sendMessageAndSave(Owner owner, String content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
 
         String email = owner.getEmail();
-        String message = content.getMessage();
+        String message = content;
         String slackId = getSlackIdByEmail(email);
 
         requestToSendMessage(slackId, message);

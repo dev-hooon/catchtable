@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record SendMessageToMemberRequest(Member member,
-                                         NotificationContent content) {
+                                         String content) {
 
 }

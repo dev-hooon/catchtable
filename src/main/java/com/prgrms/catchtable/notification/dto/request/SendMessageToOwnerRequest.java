@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record SendMessageToOwnerRequest(Owner owner,
-                                        NotificationContent content) {
+                                        String content) {
 
 }
