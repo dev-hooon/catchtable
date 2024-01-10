@@ -16,7 +16,7 @@ public class ShopMapper {
 
         return Shop.builder()
             .name(registShopRequest.name())
-            .rating(BigDecimal.valueOf(registShopRequest.rating()))
+            .rating(registShopRequest.rating())
             .category(Category.of(registShopRequest.category()))
             .address(Address.builder()
                 .city(registShopRequest.city())
@@ -31,7 +31,7 @@ public class ShopMapper {
     public static RegistShopResponse toRegistShopResponse(Shop shop){
         return RegistShopResponse.builder()
             .name(shop.getName())
-            .rating(Integer.parseInt(String.valueOf(shop.getRating())))
+            .rating(shop.getRating())
             .category(shop.getCategory().getType())
             .city(shop.getAddress().getCity())
             .district(shop.getAddress().getDistrict())
