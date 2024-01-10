@@ -49,6 +49,7 @@ public class ReservationTime {
 
     public void insertShop(Shop shop) {
         this.shop = shop;
+        shop.getReservationTimeList().add(this);
     }
 
     public void setOccupiedTrue() {

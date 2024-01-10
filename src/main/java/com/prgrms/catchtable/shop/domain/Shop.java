@@ -7,17 +7,24 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
@@ -51,6 +58,9 @@ public class Shop extends BaseEntity {
     @Column(name = "closing_time")
     private LocalTime closingTime;
 
+    @BatchSize(size = 30)
+    @OneToMany(mappedBy = "shop")
+    private List<ReservationTime> reservationTimeList = new ArrayList<>();
 
     @Builder
     public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
