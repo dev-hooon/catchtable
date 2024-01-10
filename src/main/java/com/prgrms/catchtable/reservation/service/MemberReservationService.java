@@ -62,7 +62,7 @@ public class MemberReservationService {
                 Thread.currentThread().interrupt();
             }
         }
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId)
+        ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(reservationTimeId)
             .orElseThrow(() -> {
                     reservationLockRepository.unlock(reservationTimeId);
                     return new NotFoundCustomException(NOT_EXIST_TIME);

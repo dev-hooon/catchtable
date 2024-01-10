@@ -29,7 +29,8 @@ class OwnerRepositoryTest {
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
 
-        Owner owner = OwnerFixture.getOwner(savedShop);
+        Owner owner = OwnerFixture.getOwner("injun", "injun2480");
+        owner.insertShop(savedShop);
         Owner savedOwner = ownerRepository.save(owner);
 
         Owner findOwner = ownerRepository.findOwnerByShop(savedShop).orElseThrow();
