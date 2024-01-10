@@ -63,9 +63,7 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .headers(getHttpHeaders(member)))
             .andExpect(status().isOk())
-            .andDo(document("waiting-create",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
+            .andDo(restDocs.document(
                 requestFields(
                     fieldWithPath("peopleCount").type(JsonFieldType.NUMBER)
                         .description("인원수")
@@ -91,12 +89,5 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
             ));
 
 
-    }
-
-    private HttpHeaders getHttpHeaders(Member member) {
-        Token token = jwtTokenProvider.createToken(member.getEmail(), MEMBER);
-        httpHeaders.add("AccessToken", token.getAccessToken());
-        httpHeaders.add("RefreshToken", token.getRefreshToken());
-        return httpHeaders;
     }
 }
