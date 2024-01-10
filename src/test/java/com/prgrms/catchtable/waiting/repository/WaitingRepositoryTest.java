@@ -1,7 +1,10 @@
 package com.prgrms.catchtable.waiting.repository;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
@@ -15,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -123,5 +127,32 @@ class WaitingRepositoryTest {
         //then
         assertThat(memberAllWaitings).containsExactly(canceledWaiting, completedWaiting,
             progressWaiting);
+    }
+
+    @DisplayName("벌크 연산으로 진행 중인 대기 상태를 취소 상태로 업데이트 할 수 있다.")
+    @Test
+    void test() {
+        //given
+        Waiting progressWaiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
+        Waiting progressWaiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
+        Waiting progressWaiting3 = WaitingFixture.progressWaiting(member3, shop, 3);
+        Waiting completedWaiting = WaitingFixture.completedWaiting(member3, shop, 4);
+
+        waitingRepository.saveAll(
+            List.of(progressWaiting1, progressWaiting2, progressWaiting3, completedWaiting));
+        //when
+        waitingRepository.updateWaitingStatus(CANCELED,PROGRESS);
+        Waiting waiting1 = waitingRepository.findById(progressWaiting1.getId()).orElseThrow();
+        Waiting waiting2 = waitingRepository.findById(progressWaiting2.getId()).orElseThrow();
+        Waiting waiting3 = waitingRepository.findById(progressWaiting3.getId()).orElseThrow();
+        Waiting waiting4 = waitingRepository.findById(completedWaiting.getId()).orElseThrow();
+
+        //then
+        assertAll(
+            () -> assertThat(waiting1.getStatus()).isEqualTo(CANCELED),
+            () -> assertThat(waiting2.getStatus()).isEqualTo(CANCELED),
+            () -> assertThat(waiting3.getStatus()).isEqualTo(CANCELED),
+            () -> assertThat(waiting4.getStatus()).isEqualTo(COMPLETED)
+        );
     }
 }
