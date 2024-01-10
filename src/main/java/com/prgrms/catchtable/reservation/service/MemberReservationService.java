@@ -171,7 +171,8 @@ public class MemberReservationService {
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_OWNER));
 
         SendMessageToOwnerRequest sendMessageToOwner = new SendMessageToOwnerRequest(owner,
-            RESERVATION_CANCELLED.apply(reservationTime.getTime().toString())); // 해당 시간의 예약 취소 메세지 dto 생성
+            RESERVATION_CANCELLED.apply(
+                reservationTime.getTime().toString())); // 해당 시간의 예약 취소 메세지 dto 생성
 
         publisher.publishEvent(sendMessageToOwner); // 취소한 예약의 매장 점주에게 예약 취소 알림 발송
 

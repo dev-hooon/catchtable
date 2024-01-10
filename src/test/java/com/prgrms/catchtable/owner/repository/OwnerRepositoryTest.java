@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 class OwnerRepositoryTest {
+
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
@@ -24,7 +25,7 @@ class OwnerRepositoryTest {
 
     @Test
     @DisplayName("매장을 통해 점주를 찾을 수 있다")
-    void findByShop(){
+    void findByShop() {
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
 

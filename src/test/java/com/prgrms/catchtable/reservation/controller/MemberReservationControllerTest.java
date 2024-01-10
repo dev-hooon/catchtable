@@ -54,7 +54,6 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
-
         Member savedMember = memberRepository.save(member);
 
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();

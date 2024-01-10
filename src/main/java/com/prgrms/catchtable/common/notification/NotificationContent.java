@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.common.notification;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ public enum NotificationContent {
 
     private final Function<String, String> expression;
 
-    public String apply(String time){
+    public String apply(String time) {
         return expression.apply(time);
     }
 

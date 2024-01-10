@@ -22,7 +22,7 @@ public class NotificationEvent {
     @TransactionalEventListener(phase = AFTER_COMMIT) // 호출한쪽의 트랜잭션이 커밋 된 후 이벤트 발생
     public void sendMessage(SendMessageToMemberRequest request) {
         Member member = request.member();
-        if(member.isNotification_activated()){
+        if (member.isNotification_activated()) {
             notificationService.sendMessageAndSave(member, request.content());
         }
     }
@@ -31,7 +31,7 @@ public class NotificationEvent {
     @TransactionalEventListener(phase = AFTER_COMMIT) // 호출한쪽의 트랜잭션이 커밋 된 후 이벤트 발생
     public void sendMessage(SendMessageToOwnerRequest request) {
         Owner owner = request.owner();
-        if(owner.isNotification_activated()){
+        if (owner.isNotification_activated()) {
             notificationService.sendMessageAndSave(request.owner(), request.content());
         }
     }

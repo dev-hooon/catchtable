@@ -5,7 +5,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
-import com.prgrms.catchtable.common.notification.NotificationContent;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.notification.domain.NotificationMember;
