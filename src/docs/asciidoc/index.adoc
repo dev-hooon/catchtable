@@ -12,4 +12,4 @@ endif::[]
 [[CatchTable-API]]
 == Waiting API
 
-include::api/album/waiting.adoc[]
+include::api/waiting/waiting.adoc[]
