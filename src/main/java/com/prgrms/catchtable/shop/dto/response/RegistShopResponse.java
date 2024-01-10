@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.shop.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import lombok.Builder;
 
@@ -8,7 +9,7 @@ import lombok.Builder;
 public record RegistShopResponse(
 
     String name,
-    int rating,
+    BigDecimal rating,
     String category,
     String city,
     String district,
