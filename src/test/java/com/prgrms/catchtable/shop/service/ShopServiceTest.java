@@ -81,8 +81,8 @@ class ShopServiceTest {
         Shop shop = ShopFixture.shop();
 
         //when
-        when(shopRepository.findByIdWithTime(1L)).thenReturn(Optional.of(shop));
-        when(shopRepository.findByIdWithTime(2L)).thenReturn(Optional.empty());
+        when(shopRepository.findShopById(1L)).thenReturn(Optional.of(shop));
+        when(shopRepository.findShopById(2L)).thenReturn(Optional.empty());
 
         //then
         assertThat(memberShopService.getById(1L).name()).isEqualTo(shop.getName());

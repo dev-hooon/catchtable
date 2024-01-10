@@ -28,7 +28,7 @@ public class MemberShopService {
 
     @Transactional(readOnly = true)
     public GetShopResponse getById(Long id){
-        Shop findShop = shopRepository.findByIdWithTime(id)
+        Shop findShop = shopRepository.findShopById(id)
             .orElseThrow(() -> new BadRequestCustomException(NOT_EXIST_SHOP));
         return ShopMapper.toGetShopResponse(findShop);
     }
