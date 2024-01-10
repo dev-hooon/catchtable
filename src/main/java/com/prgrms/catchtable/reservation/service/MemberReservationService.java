@@ -2,9 +2,11 @@ package com.prgrms.catchtable.reservation.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PREOCCUPIED_RESERVATION_TIME;
+import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_OWNER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_RESERVATION;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_TIME;
-import static com.prgrms.catchtable.common.notification.NotificationContent.*;
+import static com.prgrms.catchtable.common.notification.NotificationContent.RESERVATION_CANCELLED;
+import static com.prgrms.catchtable.common.notification.NotificationContent.RESERVATION_COMPLETED;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 import static com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper.toCancelReservationResponse;
@@ -14,9 +16,11 @@ import static java.lang.Boolean.FALSE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
-import com.prgrms.catchtable.common.notification.NotificationContent;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.notification.dto.request.SendMessageToMemberRequest;
+import com.prgrms.catchtable.notification.dto.request.SendMessageToOwnerRequest;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
@@ -44,6 +48,7 @@ public class MemberReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationAsync reservationAsync;
     private final ReservationLockRepository reservationLockRepository;
+    private final OwnerRepository ownerRepository;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
@@ -97,12 +102,22 @@ public class MemberReservationService {
             .build();
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        SendMessageToMemberRequest sendMessage = new SendMessageToMemberRequest(
-            member,
-            RESERVATION_COMPLETED
-        );
+        Owner owner = ownerRepository.findOwnerByShop(reservationTime.getShop())
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_OWNER));
 
-        publisher.publishEvent(sendMessage);
+        SendMessageToMemberRequest sendMessageToMember = new SendMessageToMemberRequest(
+            member,
+            RESERVATION_COMPLETED.apply(reservationTime.getTime().toString())
+        ); // 회원에게 보낼 해당 시간대의 예약 완료 알림 생성
+
+        SendMessageToOwnerRequest sendMessageToOwner = new SendMessageToOwnerRequest(
+            owner,
+            RESERVATION_COMPLETED.apply(reservationTime.getTime().toString())
+        ); // 점주에게 보낼 보낼 해당 시간대의 예약 완료 알림 생성
+
+        publisher.publishEvent(sendMessageToMember); // 회원에게 예약등록 알림 발송
+        publisher.publishEvent(sendMessageToOwner); // 점주에게 예약등록 알림 발송
+
         return toCreateReservationResponse(savedReservation);
     }
 
@@ -151,6 +166,14 @@ public class MemberReservationService {
         ReservationTime reservationTime = reservation.getReservationTime(); // 해당 예약의 예약시간 차지 여부 true로 변경
 
         reservationTime.setOccupiedFalse();
+
+        Owner owner = ownerRepository.findOwnerByShop(reservationTime.getShop())
+            .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_OWNER));
+
+        SendMessageToOwnerRequest sendMessageToOwner = new SendMessageToOwnerRequest(owner,
+            RESERVATION_CANCELLED.apply(reservationTime.getTime().toString())); // 해당 시간의 예약 취소 메세지 dto 생성
+
+        publisher.publishEvent(sendMessageToOwner); // 취소한 예약의 매장 점주에게 예약 취소 알림 발송
 
         return toCancelReservationResponse(reservation);
     }
