@@ -53,11 +53,12 @@ public class Reservation extends BaseEntity {
 
     @Builder
     public Reservation(ReservationStatus status, int peopleCount,
-        ReservationTime reservationTime) {
+        ReservationTime reservationTime, Member member) {
         this.status = status;
         this.peopleCount = peopleCount;
         this.reservationTime = reservationTime;
         this.shop = reservationTime.getShop();
+        this.member = member;
     }
 
     public void modifyReservation(ReservationTime reservationTime, int peopleCount) {

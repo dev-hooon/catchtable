@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.reservation.controller;
 
+import static com.prgrms.catchtable.common.Role.MEMBER;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,6 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
+import com.prgrms.catchtable.jwt.token.Token;
+import com.prgrms.catchtable.member.MemberFixture;
+import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -40,15 +45,25 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     private ShopRepository shopRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    private Member member = MemberFixture.member("dlswns661035@gmail.com");
 
     @BeforeEach
     void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
 
+
+        Member savedMember = memberRepository.save(member);
+
         ReservationTime reservationTime = ReservationFixture.getReservationTimeNotPreOccupied();
         reservationTime.insertShop(savedShop);
         reservationTimeRepository.save(reservationTime);
+
+        Token token = jwtTokenProvider.createToken(savedMember.getEmail(), MEMBER);
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
     }
 
     @Test
@@ -62,9 +77,11 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
 
         mockMvc.perform(post("/reservations")
                 .contentType(APPLICATION_JSON)
+                .headers(httpHeaders)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
+            .andExpect(jsonPath("$.memberName").value(member.getName()))
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
     }
@@ -80,6 +97,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations")
+            .headers(httpHeaders)
             .contentType(APPLICATION_JSON)
             .content(asJsonString(request)));
 
@@ -98,14 +116,18 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             reservationTime.getId());
 
         mockMvc.perform(post("/reservations/success")
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopName").value(reservationTime.getShop().getName()))
             .andExpect(jsonPath("$.date").value(reservationTime.getTime().toString()))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()));
-
+        Reservation reservation = reservationRepository.findAllWithReservationTimeAndShopByMemberId(
+            member).get(0);
         assertThat(reservationTime.isOccupied()).isTrue();
+        assertThat(reservation.getReservationTime()).isEqualTo(reservationTime);
+        assertThat(reservation.getShop()).isEqualTo(reservationTime.getShop());
     }
 
     @Test
@@ -122,6 +144,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             savedReservationTime.getId());
         mockMvc.perform(post("/reservations/success")
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isBadRequest())
@@ -178,12 +201,14 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @Test
     @DisplayName("회원은 자신의 예약내역을 조회할 수 있다.")
     void getAllReservation() throws Exception {
+        Member member = memberRepository.findAll().get(0);
         Reservation reservation = ReservationFixture.getReservation(
-            reservationTimeRepository.findAll().get(0));
+            reservationTimeRepository.findAll().get(0), member);
 
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        mockMvc.perform(get("/reservations"))
+        mockMvc.perform(get("/reservations")
+                .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reservationId").value(savedReservation.getId()))
             .andExpect(jsonPath("$[0].date").value(

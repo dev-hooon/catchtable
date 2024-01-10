@@ -3,6 +3,7 @@ package com.prgrms.catchtable.reservation.fixture;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.COMPLETED;
 
 import com.prgrms.catchtable.common.data.shop.ShopData;
+import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationStatus;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
@@ -92,6 +93,18 @@ public class ReservationFixture {
         ReservationStatus status) {
         return ModifyReservationStatusRequest.builder()
             .status(status)
+            .build();
+    }
+
+    public static Reservation getReservation(ReservationTime reservationTime, Member member) {
+        if (!reservationTime.isOccupied()) {
+            reservationTime.setOccupiedTrue();
+        }
+        return Reservation.builder()
+            .status(COMPLETED)
+            .peopleCount(4)
+            .reservationTime(reservationTime)
+            .member(member)
             .build();
     }
 

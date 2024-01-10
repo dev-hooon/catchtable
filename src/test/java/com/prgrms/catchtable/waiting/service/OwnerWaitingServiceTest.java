@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -11,6 +12,7 @@ import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
+import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.fixture.WaitingFixture;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
@@ -47,8 +49,8 @@ class OwnerWaitingServiceTest {
         Member member2 = mock(Member.class);
         Owner owner = mock(Owner.class);
         Shop shop = mock(Shop.class);
-        Waiting waiting1 = WaitingFixture.waiting(member1, shop, 1);
-        Waiting waiting2 = WaitingFixture.waiting(member2, shop, 2);
+        Waiting waiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
+        Waiting waiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
 
         given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
@@ -61,14 +63,40 @@ class OwnerWaitingServiceTest {
         OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(1L);
 
         //then
-        assertThat(response.shopWaitings()).hasSize(2);
+        assertAll(
+            () -> assertThat(response.shopWaitings()).hasSize(2),
+            () -> assertThat(response.shopWaitings().get(0).waitingId())
+                .isEqualTo(waiting1.getId()),
+            () -> assertThat(response.shopWaitings().get(0).waitingNumber())
+                .isEqualTo(waiting1.getWaitingNumber()),
+            () -> assertThat(response.shopWaitings().get(1).waitingId())
+                .isEqualTo(waiting2.getId()),
+            () -> assertThat(response.shopWaitings().get(1).waitingNumber())
+                .isEqualTo(waiting2.getWaitingNumber())
+        );
+    }
 
-        assertThat(response.shopWaitings().get(0).waitingId()).isEqualTo(waiting1.getId());
-        assertThat(response.shopWaitings().get(0).waitingNumber()).isEqualTo(
-            waiting1.getWaitingNumber());
+    @DisplayName("웨이팅 손님을 입장시킬 수 있다.")
+    @Test
+    void entryWaiting() {
+        //given
+        Member member = mock(Member.class);
+        Owner owner = mock(Owner.class);
+        Shop shop = mock(Shop.class);
+        Waiting waiting = WaitingFixture.progressWaiting(member, shop, 1);
 
-        assertThat(response.shopWaitings().get(1).waitingId()).isEqualTo(waiting2.getId());
-        assertThat(response.shopWaitings().get(1).waitingNumber()).isEqualTo(
-            waiting2.getWaitingNumber());
+        given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
+        given(owner.getShop()).willReturn(shop);
+        given(waitingLineRepository.entry(any(Long.class))).willReturn(1L);
+        given(waitingRepository.findById(1L)).willReturn(Optional.of(waiting));
+        //when
+        OwnerWaitingResponse response = ownerWaitingService.entryWaiting(1L);
+        //then
+        assertAll(
+            () -> assertThat(response.waitingId()).isEqualTo(waiting.getId()),
+            () -> assertThat(response.peopleCount()).isEqualTo(2),
+            () -> assertThat(response.rank()).isZero(),
+            () -> assertThat(response.waitingNumber()).isEqualTo(waiting.getWaitingNumber())
+        );
     }
 }

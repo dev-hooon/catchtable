@@ -1,4 +1,4 @@
-package com.prgrms.catchtable.common;
+package com.prgrms.catchtable.common.notification;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

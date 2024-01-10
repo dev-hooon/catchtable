@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import jakarta.validation.Valid;
@@ -49,6 +50,14 @@ public class MemberWaitingController {
     public ResponseEntity<MemberWaitingResponse> getWaiting(
         @PathVariable("memberId") Long memberId) {
         MemberWaitingResponse response = memberWaitingService.getWaiting(memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all/{memberId}")
+    public ResponseEntity<MemberWaitingHistoryListResponse> getMemberWaitingHistory(
+        @PathVariable("memberId") Long memberId) {
+        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
+            memberId);
         return ResponseEntity.ok(response);
     }
 }

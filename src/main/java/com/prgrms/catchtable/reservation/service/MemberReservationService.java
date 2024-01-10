@@ -13,6 +13,7 @@ import static java.lang.Boolean.FALSE;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
+import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.mapper.ReservationMapper;
@@ -41,7 +42,8 @@ public class MemberReservationService {
     private final ReservationLockRepository reservationLockRepository;
 
     @Transactional
-    public CreateReservationResponse preOccupyReservation(CreateReservationRequest request) {
+    public CreateReservationResponse preOccupyReservation(Member member,
+        CreateReservationRequest request) {
         Long reservationTimeId = request.reservationTimeId();
         while (FALSE.equals(reservationLockRepository.lock(reservationTimeId))) {
             try {
@@ -65,14 +67,15 @@ public class MemberReservationService {
 
         return CreateReservationResponse.builder()
             .shopName(shop.getName())
-            .memberName("memberA")
+            .memberName(member.getName())
             .date(reservationTime.getTime())
             .peopleCount(request.peopleCount())
             .build();
     }
 
     @Transactional
-    public CreateReservationResponse registerReservation(CreateReservationRequest request) {
+    public CreateReservationResponse registerReservation(Member member,
+        CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
                 request.reservationTimeId()).
             orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_TIME));
@@ -85,14 +88,16 @@ public class MemberReservationService {
             .status(COMPLETED)
             .peopleCount(request.peopleCount())
             .reservationTime(reservationTime)
+            .member(member)
             .build();
         Reservation savedReservation = reservationRepository.save(reservation);
         return toCreateReservationResponse(savedReservation);
     }
 
     @Transactional(readOnly = true)
-    public List<GetAllReservationResponse> getAllReservation() {
-        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShop();
+    public List<GetAllReservationResponse> getAllReservation(Member member) {
+        List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByMemberId(
+            member);
         return reservations.stream()
             .map(ReservationMapper::toGetAllReservationRepsonse)
             .toList();

@@ -54,8 +54,8 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
             .toList());
     }
 
-    public void entry(Long shopId, Long waitingId) {
-        validateIfWaitingExists(shopId, waitingId);
+    public Long entry(Long shopId) {
+        Long waitingId = getShopWaitingIdsInOrder(shopId).get(0);
         redisTemplate.execute(new SessionCallback<>() {
             @Override
             public <K, V> Object execute(RedisOperations<K, V> operations)
@@ -70,6 +70,7 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
                 return operations.exec();
             }
         });
+        return waitingId;
     }
 
     public void cancel(Long shopId, Long waitingId) {

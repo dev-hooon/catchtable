@@ -25,6 +25,8 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
     @Query("select w from Waiting w where w.id in :ids")
     List<Waiting> findByIds(@Param("ids") List<Long> ids);
 
-    @Query("select w from Waiting w join fetch w.member where w.id = :id")
-    Optional<Waiting> findWaitingWithMember(@Param("id") Long id);
+    @Query("select w from Waiting w "
+        + "join fetch w.shop "
+        + "join fetch w.member where w.member = :member")
+    List<Waiting> findWaitingWithMember(@Param("member") Member member);
 }

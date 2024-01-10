@@ -30,9 +30,10 @@ class BasicWaitingLineRepositoryTest {
         repository.save(shopId, 3L);
 
         //when
-        repository.entry(1L, 1L);
+        Long enteredWaitingId = repository.entry(1L);
 
         //then
+        assertThat(enteredWaitingId).isEqualTo(1L);
         assertThat(repository.findRank(1L, 1L))
             .isEqualTo(-1);
         assertThat(repository.findRank(1L, 2L))
