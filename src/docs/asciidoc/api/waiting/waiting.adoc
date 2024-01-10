@@ -3,10 +3,10 @@
 
 ==== HTTP Request
 
-include::{snippets}/waiting-create/http-request.adoc[]
-include::{snippets}/waiting-create/request-fields.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-request.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/request-fields.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/waiting-create/http-response.adoc[]
-include::{snippets}/waiting-create/response-fields.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/response-fields.adoc[]
