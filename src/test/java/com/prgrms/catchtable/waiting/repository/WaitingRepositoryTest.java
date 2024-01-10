@@ -131,7 +131,7 @@ class WaitingRepositoryTest {
 
     @DisplayName("벌크 연산으로 진행 중인 대기 상태를 취소 상태로 업데이트 할 수 있다.")
     @Test
-    void test() {
+    void updateWaitingStatus() {
         //given
         Waiting progressWaiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
         Waiting progressWaiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
@@ -142,6 +142,7 @@ class WaitingRepositoryTest {
             List.of(progressWaiting1, progressWaiting2, progressWaiting3, completedWaiting));
         //when
         waitingRepository.updateWaitingStatus(CANCELED,PROGRESS);
+        System.out.println("progressWaiting3 = " + progressWaiting3.getStatus());
         Waiting waiting1 = waitingRepository.findById(progressWaiting1.getId()).orElseThrow();
         Waiting waiting2 = waitingRepository.findById(progressWaiting2.getId()).orElseThrow();
         Waiting waiting3 = waitingRepository.findById(progressWaiting3.getId()).orElseThrow();
