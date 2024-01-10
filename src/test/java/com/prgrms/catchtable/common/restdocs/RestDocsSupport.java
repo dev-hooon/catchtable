@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -38,7 +37,8 @@ public abstract class RestDocsSupport {
         final RestDocumentationContextProvider provider) throws ServletException {
         DelegatingFilterProxy delegateProxyFilter = new DelegatingFilterProxy();
         delegateProxyFilter.init(
-            new MockFilterConfig(context.getServletContext(), BeanIds.SPRING_SECURITY_FILTER_CHAIN));
+            new MockFilterConfig(context.getServletContext(),
+                BeanIds.SPRING_SECURITY_FILTER_CHAIN));
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(

@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,6 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
     private MemberWaitingService memberWaitingService;
     @Autowired
     private MemberRepository memberRepository;
-
 
 
     @DisplayName("웨이팅 생성 API")
@@ -96,7 +94,7 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
     }
 
     private HttpHeaders getHttpHeaders(Member member) {
-        Token token = jwtTokenProvider.createToken(member.getEmail(),MEMBER);
+        Token token = jwtTokenProvider.createToken(member.getEmail(), MEMBER);
         httpHeaders.add("AccessToken", token.getAccessToken());
         httpHeaders.add("RefreshToken", token.getRefreshToken());
         return httpHeaders;

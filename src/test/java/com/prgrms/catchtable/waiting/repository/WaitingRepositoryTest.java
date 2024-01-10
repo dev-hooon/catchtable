@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -141,7 +140,7 @@ class WaitingRepositoryTest {
         waitingRepository.saveAll(
             List.of(progressWaiting1, progressWaiting2, progressWaiting3, completedWaiting));
         //when
-        waitingRepository.updateWaitingStatus(CANCELED,PROGRESS);
+        waitingRepository.updateWaitingStatus(CANCELED, PROGRESS);
         System.out.println("progressWaiting3 = " + progressWaiting3.getStatus());
         Waiting waiting1 = waitingRepository.findById(progressWaiting1.getId()).orElseThrow();
         Waiting waiting2 = waitingRepository.findById(progressWaiting2.getId()).orElseThrow();

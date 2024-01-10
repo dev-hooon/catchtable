@@ -24,7 +24,7 @@ class WaitingSchedulerTest {
     private StringRedisTemplate redisTemplate;
 
     @AfterEach
-    void clear(){
+    void clear() {
         redisTemplate.delete("s1");
     }
 
@@ -39,7 +39,7 @@ class WaitingSchedulerTest {
 
         assertThat(waitingLineRepository.getWaitingLineSize(shopId)).isEqualTo(3);
 
-        Thread.sleep(60*1000);
+        Thread.sleep(60 * 1000);
         assertThat(waitingLineRepository.getWaitingLineSize(shopId)).isZero();
 
     }

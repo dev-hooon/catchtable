@@ -1,6 +1,5 @@
 package com.prgrms.catchtable.waiting.controller;
 
-import static com.prgrms.catchtable.common.Role.MEMBER;
 import static com.prgrms.catchtable.common.Role.OWNER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
