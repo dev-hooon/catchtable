@@ -34,7 +34,7 @@ class ShopRepositoryTest {
         List<Shop> searchList = shopRepository.findSearch(condition);
 
         //then
-        assertThat(searchList.get(0)).isEqualTo(savedShop);
+        assertThat(searchList.get(0).getId()).isEqualTo(savedShop.getId());
     }
 
     @Test
@@ -49,7 +49,7 @@ class ShopRepositoryTest {
         List<Shop> searchList = shopRepository.findSearch(condition);
 
         //then
-        assertThat(searchList.get(0)).isEqualTo(savedShop);
+        assertThat(searchList.get(0).getId()).isEqualTo(savedShop.getId());
     }
 
     @Test
