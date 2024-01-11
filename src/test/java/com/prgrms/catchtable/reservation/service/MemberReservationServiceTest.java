@@ -272,6 +272,7 @@ class MemberReservationServiceTest {
     @DisplayName("예약을 취소할 수 있다")
     void cancelReservation() {
         //given
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
         ReservationTime reservationTime = ReservationFixture.getReservationTimeOccupied();
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(1L);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
@@ -283,6 +284,7 @@ class MemberReservationServiceTest {
         when(ownerRepository.findOwnerByShop(any(Shop.class))).thenReturn(Optional.of(owner));
         //when
         CancelReservationResponse response = memberReservationService.cancelReservation(
+            member,
             reservation.getId());
 
         //then
@@ -297,11 +299,12 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시 예외가 발생한다")
     void cancelReservationNotExist() {
+        Member member = MemberFixture.member("asd@gmail.com");
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.empty());
 
         assertThrows(NotFoundCustomException.class,
-            () -> memberReservationService.cancelReservation(1L));
+            () -> memberReservationService.cancelReservation(member, 1L));
     }
 
 }

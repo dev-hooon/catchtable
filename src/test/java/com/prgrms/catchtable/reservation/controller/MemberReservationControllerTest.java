@@ -207,6 +207,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(CANCELLED.toString()));
