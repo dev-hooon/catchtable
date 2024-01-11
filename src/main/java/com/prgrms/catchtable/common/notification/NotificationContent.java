@@ -15,7 +15,7 @@ public enum NotificationContent {
 
     private final Function<String, String> expression;
 
-    public String apply(String time) {
+    public String getMessage(String time) {
         return expression.apply(time);
     }
 

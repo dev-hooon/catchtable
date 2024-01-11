@@ -169,11 +169,11 @@ public class MemberReservationService {
 
         SendMessageToMemberRequest sendMessageToMember = new SendMessageToMemberRequest(
             member,
-            content.apply(reservationTime.getTime().toString())
+            content.getMessage(reservationTime.getTime().toString())
         ); // 회원에게 보낼 해당 시간대의 예약 완료 알림 생성
 
         SendMessageToOwnerRequest sendMessageToOwner = new SendMessageToOwnerRequest(owner,
-            content.apply(
+            content.getMessage(
                 reservationTime.getTime().toString())); // 해당 시간의 예약 취소 메세지 dto 생성
 
         publisher.publishEvent(sendMessageToMember);
