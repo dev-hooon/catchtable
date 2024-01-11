@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class MemberReservationControllerDocsTest extends RestDocsSupport {
+
     @MockBean
     private MemberReservationService memberReservationService;
 
@@ -45,11 +46,10 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
     private MemberRepository memberRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Member member = MemberFixture.member("dlswns6asd61035@gmail.com");
         Member savedMember = memberRepository.save(member);
     }
-
 
 
     @Test
@@ -68,28 +68,28 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
         when(memberReservationService.preOccupyReservation(member, request)).thenReturn(response);
 
         mockMvc.perform(post("/reservations")
-            .headers(getHttpHeaders(member))
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+                .headers(getHttpHeaders(member))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
-                requestFields(
-                    fieldWithPath("reservationTimeId").type(NUMBER)
-                        .description("예약시간 id"),
-                    fieldWithPath("peopleCount").type(NUMBER)
-                        .description("예약 인원")
-                ),
-                responseFields(
-                    fieldWithPath("shopName").type(STRING)
-                        .description("매장명"),
-                    fieldWithPath("memberName").type(STRING)
-                        .description("예약자 이름"),
-                    fieldWithPath("date").type(STRING)
-                        .description("예약 날짜 및 시간"),
-                    fieldWithPath("peopleCount").type(NUMBER)
-                        .description("예약 인원")
+                    requestFields(
+                        fieldWithPath("reservationTimeId").type(NUMBER)
+                            .description("예약시간 id"),
+                        fieldWithPath("peopleCount").type(NUMBER)
+                            .description("예약 인원")
+                    ),
+                    responseFields(
+                        fieldWithPath("shopName").type(STRING)
+                            .description("매장명"),
+                        fieldWithPath("memberName").type(STRING)
+                            .description("예약자 이름"),
+                        fieldWithPath("date").type(STRING)
+                            .description("예약 날짜 및 시간"),
+                        fieldWithPath("peopleCount").type(NUMBER)
+                            .description("예약 인원")
+                    )
                 )
-            )
             );
     }
 
@@ -158,7 +158,7 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
         when(memberReservationService.getAllReservation(member)).thenReturn(response);
 
         mockMvc.perform(get("/reservations")
-            .headers(getHttpHeaders(member)))
+                .headers(getHttpHeaders(member)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 responseFields(
@@ -171,7 +171,7 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("[0].peopleCount").type(NUMBER)
                         .description("예약 인원 수"),
                     fieldWithPath("[0].status").type(STRING)
-                            .description("예약 상태"),
+                        .description("예약 상태"),
                     fieldWithPath("[1].reservationId").type(NUMBER)
                         .description("예약 id"),
                     fieldWithPath("[1].date").type(STRING)
@@ -203,9 +203,9 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
         when(memberReservationService.modifyReservation(1L, request)).thenReturn(response);
 
         mockMvc.perform(patch("/reservations/{reservationId}", 1)
-            .contentType(APPLICATION_JSON)
-            .headers(getHttpHeaders(member))
-            .content(objectMapper.writeValueAsString(request)))
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member))
+                .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 requestFields(
@@ -239,8 +239,8 @@ public class MemberReservationControllerDocsTest extends RestDocsSupport {
         when(memberReservationService.cancelReservation(member, 1L)).thenReturn(response);
 
         mockMvc.perform(delete("/reservations/{reservationId}", 1L)
-            .contentType(APPLICATION_JSON)
-            .headers(getHttpHeaders(member)))
+                .contentType(APPLICATION_JSON)
+                .headers(getHttpHeaders(member)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 responseFields(

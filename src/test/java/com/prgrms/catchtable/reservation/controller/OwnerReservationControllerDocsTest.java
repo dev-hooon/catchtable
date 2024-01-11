@@ -33,13 +33,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OwnerReservationControllerDocsTest extends RestDocsSupport {
+
     @MockBean
     private OwnerReservationService ownerReservationService;
     @Autowired
     private OwnerRepository ownerRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Owner owner = OwnerFixture.getOwner("dlswns", "dlswns24802840");
         ownerRepository.save(owner);
     }
@@ -54,9 +55,9 @@ public class OwnerReservationControllerDocsTest extends RestDocsSupport {
         doNothing().when(ownerReservationService).modifyReservationStatus(1L, request);
 
         mockMvc.perform(patch("/owners/shop/{reservationId}", 1)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))
-            .headers(getHttpHeaders(owner)))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .headers(getHttpHeaders(owner)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 requestFields(
@@ -87,7 +88,7 @@ public class OwnerReservationControllerDocsTest extends RestDocsSupport {
         Mockito.when(ownerReservationService.getAllReservation(owner)).thenReturn(response);
 
         mockMvc.perform(get("/owners/shop")
-            .headers(getHttpHeaders(owner)))
+                .headers(getHttpHeaders(owner)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 responseFields(
