@@ -52,8 +52,9 @@ public class MemberReservationController {
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<CancelReservationResponse> cancelReservation(
+        @LogIn Member member,
         @PathVariable("reservationId") Long reservationId) {
-        return ResponseEntity.ok(memberReservationService.cancelReservation(reservationId));
+        return ResponseEntity.ok(memberReservationService.cancelReservation(member, reservationId));
     }
 
     @GetMapping
