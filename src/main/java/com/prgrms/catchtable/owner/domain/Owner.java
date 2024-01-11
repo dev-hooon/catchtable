@@ -61,6 +61,9 @@ public class Owner extends BaseEntity implements UserDetails {
     @Column(name = "date_birth")
     private LocalDate dateBirth;
 
+    @Column(name = "notification_activated")
+    private boolean notification_activated;
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "shop_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shop shop;
@@ -75,6 +78,7 @@ public class Owner extends BaseEntity implements UserDetails {
         this.gender = gender;
         this.dateBirth = dateBirth;
         this.role = Role.OWNER;
+        this.notification_activated = true;
     }
 
     @Override
