@@ -71,7 +71,8 @@ class MemberReservationServiceTest {
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
-        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(
+            Optional.of(reservationTime));
         when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
         when(reservationLockRepository.unlock(1L)).thenReturn(TRUE);
         doNothing().when(reservationAsync).setPreOcuppied(reservationTime);
@@ -99,7 +100,8 @@ class MemberReservationServiceTest {
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
-        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(
+            Optional.of(reservationTime));
         when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
 
         //when

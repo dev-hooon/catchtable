@@ -76,7 +76,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         shopRepository.deleteAll();
     }
 

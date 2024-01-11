@@ -63,7 +63,8 @@ public class MemberReservationService {
                 Thread.currentThread().interrupt();
             }
         }
-        ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(reservationTimeId)
+        ReservationTime reservationTime = reservationTimeRepository.findByIdWithShop(
+                reservationTimeId)
             .orElseThrow(() -> {
                     reservationLockRepository.unlock(reservationTimeId);
                     return new NotFoundCustomException(NOT_EXIST_TIME);
@@ -103,7 +104,8 @@ public class MemberReservationService {
             .build();
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        sendMessageToMemberAndOwner(member, reservationTime, RESERVATION_COMPLETED); //점주와 회원에게 알림 발송
+        sendMessageToMemberAndOwner(member, reservationTime,
+            RESERVATION_COMPLETED); //점주와 회원에게 알림 발송
 
         return toCreateReservationResponse(savedReservation);
     }
@@ -159,7 +161,8 @@ public class MemberReservationService {
         return toCancelReservationResponse(reservation);
     }
 
-    private void sendMessageToMemberAndOwner(Member member, ReservationTime reservationTime, NotificationContent content) {
+    private void sendMessageToMemberAndOwner(Member member, ReservationTime reservationTime,
+        NotificationContent content) {
 
         Owner owner = ownerRepository.findOwnerByShop(reservationTime.getShop())
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_OWNER));
