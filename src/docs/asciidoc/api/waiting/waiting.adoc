@@ -1,0 +1,12 @@
+[[waiting-create]]
+=== 웨이팅 등록
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-request.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/response-fields.adoc[]

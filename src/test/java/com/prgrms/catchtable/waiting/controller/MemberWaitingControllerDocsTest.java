@@ -1,12 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -14,22 +9,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
+import com.prgrms.catchtable.member.MemberFixture;
+import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.service.MemberWaitingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class MemberWaitingControllerDocsTest extends RestDocsSupport {
 
-    private final MemberWaitingService memberWaitingService = mock(MemberWaitingService.class);
+    @MockBean
+    private MemberWaitingService memberWaitingService;
+    @Autowired
+    private MemberRepository memberRepository;
 
-    @Override
-    protected Object initController() {
-        return new MemberWaitingController(memberWaitingService);
-    }
 
     @DisplayName("웨이팅 생성 API")
     @Test
@@ -47,17 +47,16 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
             .remainingPostponeCount(2)
             .status("진행 중")
             .build();
+        Member member = MemberFixture.member("test@naver.com");
+        memberRepository.save(member);
+        given(memberWaitingService.createWaiting(1L, member, request)).willReturn(response);
 
-        given(memberWaitingService.createWaiting(1L, 1L, request)).willReturn(response);
-
-        mockMvc.perform(post("/waitings/{shopId}/{memberId}", 1, 1)
+        mockMvc.perform(post("/waitings/{shopId}", 1)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                .content(objectMapper.writeValueAsString(request))
+                .headers(getHttpHeaders(member)))
             .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print())
-            .andDo(document("waiting-create",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
+            .andDo(restDocs.document(
                 requestFields(
                     fieldWithPath("peopleCount").type(JsonFieldType.NUMBER)
                         .description("인원수")

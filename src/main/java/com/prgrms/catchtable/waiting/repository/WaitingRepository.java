@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
@@ -29,4 +31,10 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
         + "join fetch w.shop "
         + "join fetch w.member where w.member = :member")
     List<Waiting> findWaitingWithMember(@Param("member") Member member);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("update Waiting w set w.status = :newStatus where w.status = :currentStatus")
+    void updateWaitingStatus(@Param("newStatus") WaitingStatus newStatus,
+        @Param("currentStatus") WaitingStatus currentStatus);
 }

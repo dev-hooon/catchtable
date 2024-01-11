@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import com.prgrms.catchtable.common.login.LogIn;
+import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
@@ -23,41 +25,41 @@ public class MemberWaitingController {
 
     private final MemberWaitingService memberWaitingService;
 
-    @PostMapping("/{shopId}/{memberId}")
+    @PostMapping("/{shopId}")
     public ResponseEntity<MemberWaitingResponse> createWaiting(@PathVariable("shopId") Long shopId,
-        @PathVariable("memberId") Long memberId,
+        @LogIn Member member,
         @Valid @RequestBody CreateWaitingRequest request) {
-        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, memberId,
+        MemberWaitingResponse response = memberWaitingService.createWaiting(shopId, member,
             request);
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{memberId}")
+    @PatchMapping
     public ResponseEntity<MemberWaitingResponse> postponeWaiting(
-        @PathVariable("memberId") Long memberId) {
-        MemberWaitingResponse response = memberWaitingService.postponeWaiting(memberId);
+        @LogIn Member member) {
+        MemberWaitingResponse response = memberWaitingService.postponeWaiting(member);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{memberId}")
+    @DeleteMapping
     public ResponseEntity<MemberWaitingResponse> cancelWaiting(
-        @PathVariable("memberId") Long memberId) {
-        MemberWaitingResponse response = memberWaitingService.cancelWaiting(memberId);
+        @LogIn Member member) {
+        MemberWaitingResponse response = memberWaitingService.cancelWaiting(member);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping
     public ResponseEntity<MemberWaitingResponse> getWaiting(
-        @PathVariable("memberId") Long memberId) {
-        MemberWaitingResponse response = memberWaitingService.getWaiting(memberId);
+        @LogIn Member member) {
+        MemberWaitingResponse response = memberWaitingService.getWaiting(member);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all/{memberId}")
+    @GetMapping("/all")
     public ResponseEntity<MemberWaitingHistoryListResponse> getMemberWaitingHistory(
-        @PathVariable("memberId") Long memberId) {
+        @LogIn Member member) {
         MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
-            memberId);
+            member);
         return ResponseEntity.ok(response);
     }
 }
