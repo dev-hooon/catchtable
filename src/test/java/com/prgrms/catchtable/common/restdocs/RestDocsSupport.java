@@ -1,11 +1,13 @@
 package com.prgrms.catchtable.common.restdocs;
 
 import static com.prgrms.catchtable.common.Role.MEMBER;
+import static com.prgrms.catchtable.common.Role.OWNER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.owner.domain.Owner;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,6 +66,13 @@ public abstract class RestDocsSupport {
 
     public HttpHeaders getHttpHeaders(Member member) {
         Token token = jwtTokenProvider.createToken(member.getEmail(), MEMBER);
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
+        return httpHeaders;
+    }
+
+    public HttpHeaders getHttpHeaders(Owner owner) {
+        Token token = jwtTokenProvider.createToken(owner.getEmail(), OWNER);
         httpHeaders.add("AccessToken", token.getAccessToken());
         httpHeaders.add("RefreshToken", token.getRefreshToken());
         return httpHeaders;
