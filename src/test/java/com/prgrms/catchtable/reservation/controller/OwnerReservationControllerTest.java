@@ -1,15 +1,19 @@
 package com.prgrms.catchtable.reservation.controller;
 
+import static com.prgrms.catchtable.common.Role.MEMBER;
+import static com.prgrms.catchtable.common.Role.OWNER;
 import static com.prgrms.catchtable.reservation.domain.ReservationStatus.CANCELLED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
@@ -65,6 +69,10 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         Owner owner = OwnerFixture.getOwner("email", "password");
         owner.insertShop(shop);
         ownerRepository.save(owner);
+
+        Token token = jwtTokenProvider.createToken(owner.getEmail(), OWNER);
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
     }
 
     @Test
@@ -79,7 +87,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
 
         //then
         assertThat(reservation.getReservationTime().isOccupied()).isTrue(); // 취소처리 전엔 예약시간 차있음
-        mockMvc.perform(post("/owners/shop/{reservationId}", reservation.getId())
+        mockMvc.perform(patch("/owners/shop/{reservationId}", reservation.getId())
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk());
@@ -100,6 +108,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
 
         mockMvc.perform(get("/owners/shop")
                 .contentType(APPLICATION_JSON)
+                .headers(httpHeaders)
                 .content(asJsonString(owner.getId())))
             .andExpect(status().isOk())
             .andExpect(
