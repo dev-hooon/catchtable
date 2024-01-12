@@ -131,7 +131,6 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
         return Long.valueOf(waitingId);
     }
 
-
     public Long getWaitingLineSize(Long shopId) {
         return redisTemplate.opsForList().size("s" + shopId);
     }
@@ -153,10 +152,6 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
 
     public void printWaitingLine(Long shopId) {
         List<String> waitingLine = redisTemplate.opsForList().range("s" + shopId, 0, -1);
-        if (waitingLine != null) {
-            log.info("Queue: {}", waitingLine);
-        } else {
-            log.warn("Queue is empty or not found for Shop ID: {}", shopId);
-        }
+        log.info("Queue: {}", waitingLine);
     }
 }
