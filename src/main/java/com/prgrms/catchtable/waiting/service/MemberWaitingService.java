@@ -3,6 +3,9 @@ package com.prgrms.catchtable.waiting.service;
 import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRESS_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
+import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.CANCELED;
+import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.REGISTERED;
+import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.THIRD_RANK;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingListResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingResponse;
@@ -120,22 +123,22 @@ public class MemberWaitingService {
                 .getMember();
             SendMessageToMemberRequest request = SendMessageToMemberRequest.builder()
                 .member(thirdRankMember)
-                .content("3번째 순서로 곧 입장하실 차례입니다.")
+                .content(THIRD_RANK.getMessage())
                 .build();
             publisher.publishEvent(request);
         }
     }
 
     public void sendMessageToMember(Member member, WaitingStatus status, Long rank) {
-        String content;
+        StringBuilder content = new StringBuilder();
         if (status == PROGRESS) {
-            content = String.format("웨이팅이 등록되었습니다. %d번째 순서입니다.", rank);
+            content.append(String.format(REGISTERED.getMessage(), rank));
         } else {
-            content = "웨이팅이 취소되었습니다.";
+            content.append(CANCELED.getMessage());
         }
         SendMessageToMemberRequest request = SendMessageToMemberRequest.builder()
             .member(member)
-            .content(content)
+            .content(content.toString())
             .build();
         publisher.publishEvent(request);
     }
