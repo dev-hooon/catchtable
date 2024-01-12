@@ -8,7 +8,6 @@ public record MemberWaitingHistoryResponse(
     Long shopId,
     String shopName,
     int peopleCount,
-    int waitingNumber,
     String status
 ) {
 

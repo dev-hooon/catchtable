@@ -40,9 +40,9 @@ class OwnerWaitingServiceTest {
     @InjectMocks
     private OwnerWaitingService ownerWaitingService;
 
-    @DisplayName("owner의 waiting 목록을 모두 가져온다.")
+    @DisplayName("가게의 waiting 목록을 모두 가져온다.")
     @Test
-    void getOwnerAllWaiting() {
+    void getShopAllWaiting() {
         //given
         List<Long> waitingIds = List.of(1L, 2L);
         Member member1 = mock(Member.class);
@@ -59,7 +59,7 @@ class OwnerWaitingServiceTest {
         given(waitingRepository.findByIds(waitingIds)).willReturn(List.of(waiting1, waiting2));
 
         //when
-        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(owner);
+        OwnerWaitingListResponse response = ownerWaitingService.getShopAllWaiting(owner);
 
         //then
         assertAll(

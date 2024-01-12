@@ -20,9 +20,9 @@ public class OwnerWaitingController {
     private final OwnerWaitingService ownerWaitingService;
 
     @GetMapping
-    public ResponseEntity<OwnerWaitingListResponse> getOwnerAllWaiting(
+    public ResponseEntity<OwnerWaitingListResponse> getShopAllWaiting(
         @LogIn Owner owner) {
-        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(owner);
+        OwnerWaitingListResponse response = ownerWaitingService.getShopAllWaiting(owner);
         return ResponseEntity.ok(response);
     }
 

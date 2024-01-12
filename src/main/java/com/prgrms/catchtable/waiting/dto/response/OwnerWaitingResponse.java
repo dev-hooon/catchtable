@@ -7,7 +7,8 @@ public record OwnerWaitingResponse(
     Long waitingId,
     int waitingNumber,
     Long rank,
-    int peopleCount
+    int peopleCount,
+    String status
 ) {
 
 }

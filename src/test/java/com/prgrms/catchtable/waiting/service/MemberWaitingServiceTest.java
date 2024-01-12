@@ -169,7 +169,6 @@ class MemberWaitingServiceTest {
         //then
         assertAll(
             assertThat(response.memberWaitings().get(0).peopleCount())::isNotNull,
-            assertThat(response.memberWaitings().get(0).waitingNumber())::isNotNull,
             assertThat(response.memberWaitings().get(0).status())::isNotNull
         );
     }
