@@ -5,7 +5,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
-import com.prgrms.catchtable.common.notification.NotificationContent;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.notification.domain.NotificationMember;
@@ -37,11 +36,11 @@ public class NotificationService {
     private String slackToken;
     private JSONObject jsonObject;
 
-    public void sendMessageAndSave(Member member, NotificationContent content) {
+    public void sendMessageAndSave(Member member, String content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
 
         String email = member.getEmail();
-        String message = content.getMessage();
+        String message = content;
         String slackId = getSlackIdByEmail(email); // 이메일을 통해 사용자의 슬랙 고유 ID 추출
 
         requestToSendMessage(slackId, message); // 알림 요청 보내는 함수 호출
@@ -55,11 +54,11 @@ public class NotificationService {
 
     }
 
-    public void sendMessageAndSave(Owner owner, NotificationContent content) {
+    public void sendMessageAndSave(Owner owner, String content) {
         String url = "https://slack.com/api/chat.postMessage"; // slack 메세지를 보내도록 요청하는 Slack API
 
         String email = owner.getEmail();
-        String message = content.getMessage();
+        String message = content;
         String slackId = getSlackIdByEmail(email);
 
         requestToSendMessage(slackId, message);

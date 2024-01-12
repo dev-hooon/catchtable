@@ -15,6 +15,9 @@ import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.fixture.OwnerFixture;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -36,6 +39,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +54,10 @@ class MemberReservationServiceTest {
     private ReservationAsync reservationAsync;
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
+    @Mock
+    private OwnerRepository ownerRepository;
+    @Mock
+    private ApplicationEventPublisher publisher;
     @InjectMocks
     private MemberReservationService memberReservationService;
 
@@ -63,7 +71,8 @@ class MemberReservationServiceTest {
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
-        when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(
+            Optional.of(reservationTime));
         when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
         when(reservationLockRepository.unlock(1L)).thenReturn(TRUE);
         doNothing().when(reservationAsync).setPreOcuppied(reservationTime);
@@ -91,7 +100,8 @@ class MemberReservationServiceTest {
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequestWithId(
             reservationTime.getId());
 
-        when(reservationTimeRepository.findById(1L)).thenReturn(Optional.of(reservationTime));
+        when(reservationTimeRepository.findByIdWithShop(1L)).thenReturn(
+            Optional.of(reservationTime));
         when(reservationLockRepository.lock(1L)).thenReturn(TRUE);
 
         //when
@@ -106,6 +116,7 @@ class MemberReservationServiceTest {
     void registerReservation() {
         Member member = MemberFixture.member(email);
         ReservationTime reservationTime = ReservationFixture.getReservationTimePreOccupied();
+        Owner owner = OwnerFixture.getOwner("dlswns661035@gmail.com", "injun2480");
         CreateReservationRequest request = ReservationFixture.getCreateReservationRequest();
         Reservation reservation = Reservation.builder()
             .status(COMPLETED)
@@ -117,6 +128,8 @@ class MemberReservationServiceTest {
         when(reservationTimeRepository.findByIdWithShop(any(Long.class))).thenReturn(
             Optional.of(reservationTime));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+        when(ownerRepository.findOwnerByShop(any(Shop.class))).thenReturn(Optional.of(owner));
+//        doNothing().when(publisher.publishEvent(any(Object.class)));
 
         CreateReservationResponse response = memberReservationService.registerReservation(member,
             request);
@@ -261,16 +274,19 @@ class MemberReservationServiceTest {
     @DisplayName("예약을 취소할 수 있다")
     void cancelReservation() {
         //given
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
         ReservationTime reservationTime = ReservationFixture.getReservationTimeOccupied();
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(1L);
         Reservation reservation = ReservationFixture.getReservation(reservationTime);
         ReflectionTestUtils.setField(reservation, "id", 1L);
+        Owner owner = OwnerFixture.getOwner("dlswns661035@gmail.com", "injun2480");
 
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.of(reservation));
-
+        when(ownerRepository.findOwnerByShop(any(Shop.class))).thenReturn(Optional.of(owner));
         //when
         CancelReservationResponse response = memberReservationService.cancelReservation(
+            member,
             reservation.getId());
 
         //then
@@ -285,11 +301,12 @@ class MemberReservationServiceTest {
     @Test
     @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시 예외가 발생한다")
     void cancelReservationNotExist() {
+        Member member = MemberFixture.member("asd@gmail.com");
         when(reservationRepository.findByIdWithReservationTimeAndShop(1L)).thenReturn(
             Optional.empty());
 
         assertThrows(NotFoundCustomException.class,
-            () -> memberReservationService.cancelReservation(1L));
+            () -> memberReservationService.cancelReservation(member, 1L));
     }
 
 }

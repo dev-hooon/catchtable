@@ -11,8 +11,8 @@ import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -55,11 +55,9 @@ public class WaitingMapper {
 
     public static MemberWaitingHistoryListResponse toMemberWaitingListResponse(
         List<Waiting> waitings) {
-        List<MemberWaitingHistoryResponse> list = new ArrayList<>();
-        for (Waiting waiting : waitings) {
-            list.add(toMemberWaitingHistoryResponse(waiting));
-        }
-        return new MemberWaitingHistoryListResponse(list);
+        return new MemberWaitingHistoryListResponse(waitings.stream()
+            .map(WaitingMapper::toMemberWaitingHistoryResponse)
+            .toList());
     }
 
     public static OwnerWaitingResponse toOwnerWaitingResponse(Waiting waiting, Long rank) {
@@ -72,11 +70,11 @@ public class WaitingMapper {
     }
 
     public static OwnerWaitingListResponse toOwnerWaitingListResponse(List<Waiting> waitings) {
-        long rank = 1L;
-        List<OwnerWaitingResponse> list = new ArrayList<>();
-        for (Waiting waiting : waitings) {
-            list.add(toOwnerWaitingResponse(waiting, rank++));
-        }
-        return new OwnerWaitingListResponse(list);
+        AtomicLong rank = new AtomicLong(1);
+        return new OwnerWaitingListResponse(
+            waitings.stream()
+                .map(waiting -> toOwnerWaitingResponse(waiting, rank.getAndIncrement()))
+                .toList()
+        );
     }
 }

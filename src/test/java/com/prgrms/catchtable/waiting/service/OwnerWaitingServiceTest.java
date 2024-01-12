@@ -52,7 +52,6 @@ class OwnerWaitingServiceTest {
         Waiting waiting1 = WaitingFixture.progressWaiting(member1, shop, 1);
         Waiting waiting2 = WaitingFixture.progressWaiting(member2, shop, 2);
 
-        given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
         given(shop.getId()).willReturn(1L);
         given(waitingLineRepository.getShopWaitingIdsInOrder(any(Long.class))).willReturn(
@@ -60,7 +59,7 @@ class OwnerWaitingServiceTest {
         given(waitingRepository.findByIds(waitingIds)).willReturn(List.of(waiting1, waiting2));
 
         //when
-        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(1L);
+        OwnerWaitingListResponse response = ownerWaitingService.getOwnerAllWaiting(owner);
 
         //then
         assertAll(
@@ -85,12 +84,11 @@ class OwnerWaitingServiceTest {
         Shop shop = mock(Shop.class);
         Waiting waiting = WaitingFixture.progressWaiting(member, shop, 1);
 
-        given(ownerRepository.findById(1L)).willReturn(Optional.of(owner));
         given(owner.getShop()).willReturn(shop);
         given(waitingLineRepository.entry(any(Long.class))).willReturn(1L);
         given(waitingRepository.findById(1L)).willReturn(Optional.of(waiting));
         //when
-        OwnerWaitingResponse response = ownerWaitingService.entryWaiting(1L);
+        OwnerWaitingResponse response = ownerWaitingService.entryWaiting(owner);
         //then
         assertAll(
             () -> assertThat(response.waitingId()).isEqualTo(waiting.getId()),

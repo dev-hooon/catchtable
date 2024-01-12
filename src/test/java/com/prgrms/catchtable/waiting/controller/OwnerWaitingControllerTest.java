@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static com.prgrms.catchtable.common.Role.OWNER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
+import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
@@ -48,7 +50,6 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     private StringRedisTemplate redisTemplate;
 
     private Shop shop;
-    private Owner owner;
     private Waiting waiting1, waiting2, waiting3;
 
 
@@ -65,7 +66,7 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
 
-        owner = OwnerFixture.getOwner(shop);
+        Owner owner = OwnerFixture.getOwner(shop);
         ownerRepository.save(owner);
 
         waiting1 = Waiting.builder()
@@ -92,6 +93,10 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
         waitingLineRepository.save(shop.getId(), waiting1.getId());
         waitingLineRepository.save(shop.getId(), waiting2.getId());
         waitingLineRepository.save(shop.getId(), waiting3.getId());
+
+        Token token = jwtTokenProvider.createToken(owner.getEmail(), OWNER);
+        httpHeaders.add("AccessToken", token.getAccessToken());
+        httpHeaders.add("RefreshToken", token.getRefreshToken());
     }
 
     @AfterEach
@@ -107,8 +112,9 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void getWaiting() throws Exception {
         //when, then
-        mockMvc.perform(get("/owner/waitings/{ownerId}", owner.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(get("/owner/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopWaitings", hasSize(3)))
             .andExpect(jsonPath("$.shopWaitings[0].waitingId").value(waiting1.getId()))
@@ -128,8 +134,9 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void entryWaiting() throws Exception {
         //when, then
-        mockMvc.perform(patch("/owner/waitings/{ownerId}", owner.getId())
-                .contentType(APPLICATION_JSON))
+        mockMvc.perform(patch("/owner/waitings")
+                .contentType(APPLICATION_JSON)
+                .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.waitingId").value(waiting1.getId()))
             .andExpect(jsonPath("$.waitingNumber").value(waiting1.getWaitingNumber()))

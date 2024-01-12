@@ -31,6 +31,7 @@ import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -72,6 +73,11 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         Token token = jwtTokenProvider.createToken(savedMember.getEmail(), MEMBER);
         httpHeaders.add("AccessToken", token.getAccessToken());
         httpHeaders.add("RefreshToken", token.getRefreshToken());
+    }
+
+    @AfterEach
+    void tearDown() {
+        shopRepository.deleteAll();
     }
 
     @Test
@@ -201,6 +207,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(CANCELLED.toString()));

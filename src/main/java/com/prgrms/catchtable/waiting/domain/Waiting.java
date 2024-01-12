@@ -68,7 +68,7 @@ public class Waiting extends BaseEntity {
     }
 
     public void decreasePostponeRemainingCount() {
-        if (remainingPostponeCount <= 0) {
+        if (remainingPostponeCount == 0) {
             throw new BadRequestCustomException(POSTPONE_REMAINING_CNT_0);
         }
         remainingPostponeCount--;
