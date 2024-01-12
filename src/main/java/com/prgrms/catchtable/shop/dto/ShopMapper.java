@@ -7,6 +7,7 @@ import com.prgrms.catchtable.shop.domain.Menu;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponses;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.dto.response.MenuResponse;
 import com.prgrms.catchtable.shop.dto.response.RegisterShopResponse;
@@ -76,10 +77,19 @@ public class ShopMapper {
             .build();
     }
 
-    public static GetAllShopResponse toGetAllShopResponse(List<Shop> shops) {
-        return new GetAllShopResponse(shops.stream()
-            .map(ShopMapper::toGetShopResponse)
+    public static GetAllShopResponses toGetAllShopResponses(List<Shop> shops) {
+        return new GetAllShopResponses(shops.stream()
+            .map(ShopMapper::toGetAllShopResponse)
             .toList());
+    }
+
+    private static GetAllShopResponse toGetAllShopResponse(Shop shop) {
+        return GetAllShopResponse.builder()
+            .id(shop.getId())
+            .name(shop.getName())
+            .openingTime(shop.getOpeningTime())
+            .closingTime(shop.getClosingTime())
+            .build();
     }
 
     public static GetShopResponse toGetShopResponse(Shop shop) {

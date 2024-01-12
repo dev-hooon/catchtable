@@ -10,7 +10,7 @@ import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
-import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponses;
 import com.prgrms.catchtable.shop.dto.response.RegisterShopResponse;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -63,7 +63,7 @@ class ShopServiceTest {
 
         //when
         when(shopRepository.findAll()).thenReturn(allShop);
-        GetAllShopResponse all = memberShopService.getAll();
+        GetAllShopResponses all = memberShopService.getAll();
 
         //then
         assertThat(all.shopResponses().size()).isEqualTo(allShop.size());

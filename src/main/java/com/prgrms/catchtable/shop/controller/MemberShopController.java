@@ -1,7 +1,7 @@
 package com.prgrms.catchtable.shop.controller;
 
 import com.prgrms.catchtable.shop.dto.request.ShopSearchCondition;
-import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
+import com.prgrms.catchtable.shop.dto.response.GetAllShopResponses;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
 import com.prgrms.catchtable.shop.service.MemberShopService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class MemberShopController {
     private final MemberShopService memberShopService;
 
     @GetMapping
-    public ResponseEntity<GetAllShopResponse> getAll() {
+    public ResponseEntity<GetAllShopResponses> getAll() {
         return ResponseEntity.ok(memberShopService.getAll());
     }
 
@@ -30,7 +30,7 @@ public class MemberShopController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<GetAllShopResponse> getBySearch(
+    public ResponseEntity<GetAllShopResponses> getBySearch(
         @ModelAttribute ShopSearchCondition condition) {
         return ResponseEntity.ok(memberShopService.getBySearch(condition));
     }
