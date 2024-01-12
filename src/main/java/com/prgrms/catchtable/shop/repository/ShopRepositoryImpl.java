@@ -24,7 +24,7 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom {
         return queryFactory
             .selectFrom(shop)
             .where(
-                equalsName(condition.name()),
+                containsName(condition.name()),
                 equalCategory(condition.category()),
                 equalCity(condition.city())
             )
@@ -35,12 +35,12 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom {
             .fetch();
     }
 
-    private BooleanExpression equalsName(String name) {
+    private BooleanExpression containsName(String name) {
         if (name == null) {
             return null;
         }
 
-        return shop.name.eq(name);
+        return shop.name.contains(name);
     }
 
     private BooleanExpression equalCategory(String category) {
