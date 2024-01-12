@@ -88,12 +88,12 @@ class MemberShopControllerTest extends BaseIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(shop.getName()))
-            .andExpect(jsonPath("$.rating").value(shop.getRating()))
-            .andExpect(jsonPath("$.category").value(shop.getCategory().getType()))
-            .andExpect(jsonPath("$.city").value(shop.getAddress().getCity()))
-            .andExpect(jsonPath("$.district").value(shop.getAddress().getDistrict()))
-            .andExpect(jsonPath("$.capacity").value(shop.getCapacity()));
+            .andExpect(jsonPath("$.name").value(shop1.getName()))
+            .andExpect(jsonPath("$.rating").value(shop1.getRating()))
+            .andExpect(jsonPath("$.category").value(shop1.getCategory().getType()))
+            .andExpect(jsonPath("$.city").value(shop1.getAddress().getCity()))
+            .andExpect(jsonPath("$.district").value(shop1.getAddress().getDistrict()))
+            .andExpect(jsonPath("$.capacity").value(shop1.getCapacity()));
     }
 
     @Test
