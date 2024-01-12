@@ -24,7 +24,7 @@ public class OwnerWaitingService {
     private final WaitingLineRepository waitingLineRepository;
 
     @Transactional(readOnly = true)
-    public OwnerWaitingListResponse getOwnerAllWaiting(Owner owner) {
+    public OwnerWaitingListResponse getShopAllWaiting(Owner owner) {
         List<Long> waitingIds = waitingLineRepository.getShopWaitingIdsInOrder(
             owner.getShop().getId());
         List<Waiting> waitings = waitingRepository.findByIds(waitingIds);
