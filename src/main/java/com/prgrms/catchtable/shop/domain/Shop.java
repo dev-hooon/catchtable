@@ -56,10 +56,6 @@ public class Shop extends BaseEntity {
     @Column(name = "closing_time")
     private LocalTime closingTime;
 
-    @BatchSize(size = 30)
-    @OneToMany(mappedBy = "shop")
-    private List<ReservationTime> reservationTimeList = new ArrayList<>();
-
     @Builder
     public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
         LocalTime openingTime, LocalTime closingTime) {
