@@ -1,5 +1,7 @@
 package com.prgrms.catchtable.shop.domain;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+
 import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ public enum Category {
         return Arrays.stream(values())
             .filter(category -> category.isEqual(input))
             .findAny()
-            .orElseThrow(() -> new BadRequestCustomException(ErrorCode.INVALID_INPUT_TYPE));
+            .orElseThrow(() -> new BadRequestCustomException(INVALID_INPUT_TYPE));
     }
 
     private boolean isEqual(String input) {
