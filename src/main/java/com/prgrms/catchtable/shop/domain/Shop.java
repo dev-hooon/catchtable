@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.shop.domain;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.SHOP_NOT_RUNNING;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -8,6 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -56,9 +58,13 @@ public class Shop extends BaseEntity {
     @Column(name = "closing_time")
     private LocalTime closingTime;
 
+    @BatchSize(size = 30)
+    @OneToMany(mappedBy = "shop", cascade = ALL, orphanRemoval = true)
+    List<Menu> menuList = new ArrayList<>();
+
     @Builder
     public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
-        LocalTime openingTime, LocalTime closingTime) {
+        LocalTime openingTime, LocalTime closingTime, List<Menu> menuList) {
         this.name = name;
         this.rating = rating;
         this.category = category;
@@ -66,6 +72,10 @@ public class Shop extends BaseEntity {
         this.capacity = capacity;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
+        this.menuList = menuList;
+        for (Menu menu : menuList) {
+            menu.insertShop(this);
+        }
     }
 
     public void validateIfShopOpened(LocalTime localTime) {
