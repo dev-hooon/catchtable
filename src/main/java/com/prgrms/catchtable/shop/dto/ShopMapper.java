@@ -3,32 +3,32 @@ package com.prgrms.catchtable.shop.dto;
 import com.prgrms.catchtable.shop.domain.Address;
 import com.prgrms.catchtable.shop.domain.Category;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
 import com.prgrms.catchtable.shop.dto.response.GetShopResponse;
-import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
+import com.prgrms.catchtable.shop.dto.response.RegisterShopResponse;
 import java.util.List;
 
 public class ShopMapper {
 
-    public static Shop toEntity(RegistShopRequest registShopRequest) {
+    public static Shop toEntity(RegisterShopRequest registerShopRequest) {
 
         return Shop.builder()
-            .name(registShopRequest.name())
-            .rating(registShopRequest.rating())
-            .category(Category.of(registShopRequest.category()))
+            .name(registerShopRequest.name())
+            .rating(registerShopRequest.rating())
+            .category(Category.of(registerShopRequest.category()))
             .address(Address.builder()
-                .city(registShopRequest.city())
-                .district(registShopRequest.district())
+                .city(registerShopRequest.city())
+                .district(registerShopRequest.district())
                 .build())
-            .capacity(registShopRequest.capacity())
-            .openingTime(registShopRequest.openingTime())
-            .closingTime(registShopRequest.closingTime())
+            .capacity(registerShopRequest.capacity())
+            .openingTime(registerShopRequest.openingTime())
+            .closingTime(registerShopRequest.closingTime())
             .build();
     }
 
-    public static RegistShopResponse toRegistShopResponse(Shop shop) {
-        return RegistShopResponse.builder()
+    public static RegisterShopResponse toRegisterShopResponse(Shop shop) {
+        return RegisterShopResponse.builder()
             .name(shop.getName())
             .rating(shop.getRating())
             .category(shop.getCategory().getType())

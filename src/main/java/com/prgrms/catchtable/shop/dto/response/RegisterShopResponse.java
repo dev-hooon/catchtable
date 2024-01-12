@@ -3,11 +3,13 @@ package com.prgrms.catchtable.shop.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record RegistShopResponse(
+public record RegisterShopResponse(
 
+    Long id,
     String name,
     BigDecimal rating,
     String category,
@@ -17,7 +19,9 @@ public record RegistShopResponse(
     @JsonFormat(pattern = "kk:mm:ss")
     LocalTime openingTime,
     @JsonFormat(pattern = "kk:mm:ss")
-    LocalTime closingTime
+    LocalTime closingTime,
+    List<ReservationTimeResponse> reservationTimeResponseList,
+    List<MenuResponse> menuResponseList
 ) {
 
 }

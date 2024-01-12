@@ -9,9 +9,9 @@ import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponse;
-import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
+import com.prgrms.catchtable.shop.dto.response.RegisterShopResponse;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.util.List;
@@ -40,11 +40,11 @@ class ShopServiceTest {
         Owner owner = OwnerFixture.getOwner();
 
         Shop shop = ShopFixture.shop();
-        RegistShopRequest shopRequest = ShopFixture.getRequestDto(shop);
+        RegisterShopRequest shopRequest = ShopFixture.getRequestDto(shop);
 
         //when
         when(shopRepository.save(any(Shop.class))).thenReturn(shop);
-        RegistShopResponse registShopResponse = ownerShopService.registShop(shopRequest, owner);
+        RegisterShopResponse registShopResponse = ownerShopService.registerShop(shopRequest, owner);
 
         //then
         assertThat(registShopResponse.name()).isEqualTo(shop.getName());

@@ -13,7 +13,7 @@ import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
-import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
+import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ class OwnerShopControllerTest extends BaseIntegrationTest {
     void registShopTest() throws Exception {
         //given
         Shop shop = ShopFixture.shop();
-        RegistShopRequest shopRequest = ShopFixture.getRequestDto(shop);
+        RegisterShopRequest shopRequest = ShopFixture.getRequestDto(shop);
 
         //then
         mockMvc.perform(post("/owners/shops")

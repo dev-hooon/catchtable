@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record RegistShopRequest(
+public record RegisterShopRequest(
 
     String name,
     @Min(0)
@@ -21,8 +23,9 @@ public record RegistShopRequest(
     @JsonFormat(pattern = "kk:mm:ss")
     LocalTime openingTime,
     @JsonFormat(pattern = "kk:mm:ss")
-    LocalTime closingTime
-
+    LocalTime closingTime,
+    List<LocalDateTime> resservationTimeList,
+    List<RegisterMenuRequest> menuRequestList
 ) {
 
 }

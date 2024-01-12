@@ -2,8 +2,8 @@ package com.prgrms.catchtable.shop.controller;
 
 import com.prgrms.catchtable.common.login.LogIn;
 import com.prgrms.catchtable.owner.domain.Owner;
-import com.prgrms.catchtable.shop.dto.request.RegistShopRequest;
-import com.prgrms.catchtable.shop.dto.response.RegistShopResponse;
+import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
+import com.prgrms.catchtable.shop.dto.response.RegisterShopResponse;
 import com.prgrms.catchtable.shop.service.OwnerShopService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +22,11 @@ public class OwnerShopController {
     private final OwnerShopService shopService;
 
     @PostMapping("/shops")
-    public ResponseEntity<RegistShopResponse> registShop(
-        @Valid @RequestBody RegistShopRequest request, @LogIn
+    public ResponseEntity<RegisterShopResponse> registerShop(
+        @Valid @RequestBody RegisterShopRequest request, @LogIn
     Owner owner) {
-        RegistShopResponse registShopResponse = shopService.registShop(request, owner);
-        return ResponseEntity.status(HttpStatus.CREATED).body(registShopResponse);
+        RegisterShopResponse registerShopResponse = shopService.registerShop(request, owner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerShopResponse);
     }
 
 }
