@@ -92,7 +92,24 @@ public class ShopMapper {
             .build();
     }
 
-    public static GetShopResponse toGetShopResponse(Shop shop) {
+    public static GetShopResponse toGetShopResponse(Shop shop, List<ReservationTime> reservationTimeList) {
+
+        List<MenuResponse> menuResponses = shop.getMenuList().stream()
+            .map(menu -> MenuResponse.builder()
+                .id(menu.getId())
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .description(menu.getDescription())
+                .build())
+            .toList();
+
+        List<ReservationTimeResponse> timeResponses = reservationTimeList.stream()
+            .map(time -> ReservationTimeResponse.builder()
+                .id(time.getId())
+                .reservationTime(time.getTime())
+                .build())
+            .toList();
+
         return GetShopResponse.builder()
             .id(shop.getId())
             .name(shop.getName())
@@ -103,6 +120,8 @@ public class ShopMapper {
             .capacity(shop.getCapacity())
             .openingTime(shop.getOpeningTime())
             .closingTime(shop.getClosingTime())
+            .reservationTimeResponseList(timeResponses)
+            .menuResponseList(menuResponses)
             .build();
     }
 

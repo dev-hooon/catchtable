@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.reservation.repository;
 
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,7 @@ public interface ReservationTimeRepository extends JpaRepository<ReservationTime
     @Query("select rt from ReservationTime rt where rt.id = :reservationTimeId and rt.shop.id = :shopId")
     Optional<ReservationTime> findByIdAndShopId(@Param("reservationTimeId") Long reservationTimeId,
         @Param("shopId") Long shopId);
+
+    @Query("select rt from ReservationTime rt where rt.shop.id = :shopId")
+    List<ReservationTime> findByShopId(@Param("shopId") Long shopId);
 }

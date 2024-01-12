@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ShopRepository extends JpaRepository<Shop, Long>, ShopRepositoryCustom {
 
-    @EntityGraph(attributePaths = "reservationTimeList")
+    @EntityGraph(attributePaths = {"menuList"})
     Optional<Shop> findShopById(Long id);
 }

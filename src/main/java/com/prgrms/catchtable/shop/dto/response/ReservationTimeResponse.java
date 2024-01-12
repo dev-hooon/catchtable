@@ -8,7 +8,6 @@ import lombok.Builder;
 public record ReservationTimeResponse(
     Long id,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-
     LocalDateTime reservationTime
 ) {
 
