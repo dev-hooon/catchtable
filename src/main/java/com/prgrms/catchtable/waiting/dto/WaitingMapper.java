@@ -66,6 +66,7 @@ public class WaitingMapper {
             .waitingNumber(waiting.getWaitingNumber())
             .rank(rank)
             .peopleCount(waiting.getPeopleCount())
+            .status(waiting.getStatus().getDescription())
             .build();
     }
 
