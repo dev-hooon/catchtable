@@ -35,7 +35,7 @@ public enum ErrorCode {
 
     ALREADY_EXIST_OWNER("이미 존재하는 점주입니다"),
     INVALID_EMAIL_OR_PASSWORD("이메일 혹은 비밀번호를 확인해주세요"),
-    INVALID_INPUT_TYPE("성별 타입을 양식대로 입력해주세요");
+    INVALID_INPUT_TYPE("입력 값을 양식대로 입력해주세요");
 
     private final String message;
 }
