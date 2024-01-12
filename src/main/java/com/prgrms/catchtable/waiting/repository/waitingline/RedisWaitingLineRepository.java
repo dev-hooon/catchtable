@@ -123,7 +123,7 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
         return getWaitingLineSize(shopId) - index;
     }
 
-    public Long findRankThirdValue(Long shopId) {
+    public Long findThirdRankValue(Long shopId) {
         String waitingId = redisTemplate.opsForList().index("s" + shopId, -3);
         if (waitingId == null) {
             return null;

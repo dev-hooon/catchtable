@@ -72,7 +72,7 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
         return -1L;
     }
 
-    public Long findRankThirdValue(Long shopId) {
+    public Long findThirdRankValue(Long shopId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         int index = 0;
         for (Long element : waitingLine) {

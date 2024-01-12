@@ -148,27 +148,27 @@ class RedisWaitingLineRepositoryTest {
 
     @DisplayName("웨이팅 3번째 waitingId 반환")
     @Test
-    void findRankSecondValue() {
+    void findThirdRankValue() {
         //given
         Long shopId = 1L;
         repository.save(shopId, 1L);
         repository.save(shopId, 2L);
         repository.save(shopId, 3L);
         //when
-        Long waitingId = repository.findRankThirdValue(shopId);
+        Long waitingId = repository.findThirdRankValue(shopId);
         //then
         assertThat(waitingId).isEqualTo(3L);
     }
 
     @DisplayName("웨이팅 3번째 waitingId 없으면 null 반환")
     @Test
-    void findRankThirdValueNull() {
+    void findThirdRankValueNull() {
         //given
         Long shopId = 1L;
         repository.save(shopId, 1L);
         repository.save(shopId, 2L);
         //when
-        Long waitingId = repository.findRankThirdValue(shopId);
+        Long waitingId = repository.findThirdRankValue(shopId);
         //then
         assertThat(waitingId).isNull();
     }
