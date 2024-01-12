@@ -28,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 class MemberWaitingServiceTest {
@@ -36,6 +37,9 @@ class MemberWaitingServiceTest {
     private WaitingRepository waitingRepository;
     @Mock
     private ShopRepository shopRepository;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     @Mock
     private WaitingLineRepository waitingLineRepository;
@@ -113,6 +117,7 @@ class MemberWaitingServiceTest {
             Optional.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
+        given(waitingRepository.findWaitingWithMember(anyLong())).willReturn(waiting);
         doNothing().when(waiting).changeStatusCanceled();
 
         //when
@@ -157,7 +162,7 @@ class MemberWaitingServiceTest {
         Shop shop = mock(Shop.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(waitingRepository.findWaitingWithMember(member)).willReturn(
+        given(waitingRepository.findWaitingWithMemberAndShop(member)).willReturn(
             List.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
