@@ -16,7 +16,6 @@ import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,27 +122,28 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("오늘 날짜인 예약들만 가져올 수 있다.")
-    void findAllTodayReservation(){
+    void findAllTodayReservation() {
         Member member = MemberFixture.member("dls@gmail.com");
         Member savedMember = memberRepository.save(member);
         Shop shop = ShopFixture.shop();
         Shop savedShop = shopRepository.save(shop);
 
-        LocalDateTime startOfDay = LocalDateTime.of(2024,1,2,0,0);
-        LocalDateTime endOfDay = LocalDateTime.of(2024,1,3,0,0);
+        LocalDateTime startOfDay = LocalDateTime.of(2024, 1, 2, 0, 0);
+        LocalDateTime endOfDay = LocalDateTime.of(2024, 1, 3, 0, 0);
 
         ReservationTime time1 = ReservationTime.builder()
-            .time(LocalDateTime.of(2024,1,2,19,30))
+            .time(LocalDateTime.of(2024, 1, 2, 19, 30))
             .build();
         ReservationTime time2 = ReservationTime.builder()
-            .time(LocalDateTime.of(2024,1,3,15,30))
+            .time(LocalDateTime.of(2024, 1, 3, 15, 30))
             .build();
 
         time1.insertShop(savedShop); //예약시간 - 매장 매핑
         time2.insertShop(savedShop);
         reservationTimeRepository.saveAll(List.of(time1, time2));
 
-        Reservation reservation1 = ReservationFixture.getReservation(time1, savedMember); // 예약시간 - 예약 - 회원 매핑
+        Reservation reservation1 = ReservationFixture.getReservation(time1,
+            savedMember); // 예약시간 - 예약 - 회원 매핑
         Reservation reservation2 = ReservationFixture.getReservation(time2, savedMember);
 
         Reservation savedReservation1 = reservationRepository.save(reservation1);
