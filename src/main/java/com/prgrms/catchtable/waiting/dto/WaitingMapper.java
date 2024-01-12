@@ -48,7 +48,6 @@ public class WaitingMapper {
             .shopId(waiting.getShop().getId())
             .shopName(waiting.getShop().getName())
             .peopleCount(waiting.getPeopleCount())
-            .waitingNumber(waiting.getWaitingNumber())
             .status(waiting.getStatus().getDescription())
             .build();
     }
