@@ -162,7 +162,7 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
         //given
         MemberWaitingResponse response =
             WaitingFixture.memberWaitingResponse(2,
-            PROGRESS);
+                PROGRESS);
         given(memberWaitingService.getWaiting(member)).willReturn(response);
         //when, then
         mockMvc.perform(get("/waitings")

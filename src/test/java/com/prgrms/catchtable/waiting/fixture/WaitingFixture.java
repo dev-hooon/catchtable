@@ -29,7 +29,8 @@ public class WaitingFixture {
         return waiting;
     }
 
-    public static MemberWaitingResponse memberWaitingResponse(int remainingPostponeCount, WaitingStatus status){
+    public static MemberWaitingResponse memberWaitingResponse(int remainingPostponeCount,
+        WaitingStatus status) {
         return MemberWaitingResponse.builder()
             .waitingId(1L)
             .shopId(1L)
