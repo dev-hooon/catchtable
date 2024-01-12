@@ -20,11 +20,12 @@ public record RegisterShopRequest(
     String city,
     String district,
     int capacity,
-    @JsonFormat(pattern = "kk:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     LocalTime openingTime,
-    @JsonFormat(pattern = "kk:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     LocalTime closingTime,
-    List<LocalDateTime> resservationTimeList,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    List<LocalDateTime> reservationTimeRequestList,
     List<RegisterMenuRequest> menuRequestList
 ) {
 

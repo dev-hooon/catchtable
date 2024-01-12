@@ -73,9 +73,7 @@ public class Shop extends BaseEntity {
         this.openingTime = openingTime;
         this.closingTime = closingTime;
         this.menuList = menuList;
-        for (Menu menu : menuList) {
-            menu.insertShop(this);
-        }
+        menuList.forEach(menu -> menu.insertShop(this));
     }
 
     public void validateIfShopOpened(LocalTime localTime) {
