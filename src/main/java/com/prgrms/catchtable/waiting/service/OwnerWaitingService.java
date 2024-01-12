@@ -7,7 +7,6 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toOwnerWaitingResp
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.waiting.domain.Waiting;
-import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
