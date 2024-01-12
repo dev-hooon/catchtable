@@ -18,6 +18,9 @@ import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.fixture.OwnerFixture;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.reservation.domain.Reservation;
 import com.prgrms.catchtable.reservation.domain.ReservationTime;
 import com.prgrms.catchtable.reservation.dto.request.CreateReservationRequest;
@@ -47,12 +50,18 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     private ReservationRepository reservationRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private OwnerRepository ownerRepository;
     private Member member = MemberFixture.member("dlswns661035@gmail.com");
 
     @BeforeEach
     void setUp() {
         Shop shop = ShopData.getShop();
         Shop savedShop = shopRepository.save(shop);
+
+        Owner owner = OwnerFixture.getOwner("injun", "injun2480");
+        owner.insertShop(savedShop);
+        ownerRepository.save(owner);
 
         Member savedMember = memberRepository.save(member);
 
