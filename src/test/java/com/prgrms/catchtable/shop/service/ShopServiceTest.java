@@ -6,8 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
+import com.prgrms.catchtable.reservation.repository.ReservationTimeRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.dto.request.RegisterShopRequest;
 import com.prgrms.catchtable.shop.dto.response.GetAllShopResponses;
@@ -28,6 +31,10 @@ class ShopServiceTest {
 
     @Mock
     private ShopRepository shopRepository;
+    @Mock
+    private ReservationTimeRepository reservationTimeRepository;
+    @Mock
+    private OwnerRepository ownerRepository;
     @InjectMocks
     private MemberShopService memberShopService;
     @InjectMocks
@@ -82,6 +89,6 @@ class ShopServiceTest {
         //then
         assertThat(memberShopService.getById(1L).name()).isEqualTo(shop.getName());
         assertThatThrownBy(() -> memberShopService.getById(2L)).isInstanceOf(
-            BadRequestCustomException.class);
+            NotFoundCustomException.class);
     }
 }
