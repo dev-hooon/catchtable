@@ -72,6 +72,18 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
         return -1L;
     }
 
+    public Long findRankThirdValue(Long shopId) {
+        Queue<Long> waitingLine = waitingLines.get(shopId);
+        int index = 0;
+        for (Long element : waitingLine) {
+            if (index == 2) {
+                return element;
+            }
+            index++;
+        }
+        return null;
+    }
+
     public Long getWaitingLineSize(Long shopId) { //postpone에서 사용
         Queue<Long> waitingLine = waitingLines.get(shopId);
         return (long) (waitingLine != null ? waitingLine.size() : 0);
