@@ -11,9 +11,11 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.notification.dto.request.SendMessageToMemberRequest;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
+import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListResponse;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,7 @@ public class MemberWaitingService {
     private final WaitingRepository waitingRepository;
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
+    private final ApplicationEventPublisher publisher;
 
     public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {
@@ -57,6 +61,7 @@ public class MemberWaitingService {
 
         waitingLineRepository.save(shopId, waiting.getId());
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
+        sendMessageToMember(member, PROGRESS, rank);
 
         return toMemberWaitingResponse(savedWaiting, rank);
     }
@@ -64,24 +69,31 @@ public class MemberWaitingService {
     @Transactional
     public MemberWaitingResponse postponeWaiting(Member member) {
         Waiting waiting = getWaitingEntityInProgress(member);
-
         Shop shop = waiting.getShop();
+        Long previousRank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
 
         waiting.decreasePostponeRemainingCount();
         waitingLineRepository.postpone(shop.getId(), waiting.getId());
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
-
+        if (previousRank < 3) {
+            sendMessageToThirdRankMember(shop.getId());
+        }
         return toMemberWaitingResponse(waiting, rank);
     }
 
     @Transactional
     public MemberWaitingResponse cancelWaiting(Member member) {
         Waiting waiting = getWaitingEntityInProgress(member);
-
         Shop shop = waiting.getShop();
+        Long previousRank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
+
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
         waiting.changeStatusCanceled();
 
+        sendMessageToMember(member, PROGRESS, -1L);
+        if (previousRank < 3) {
+            sendMessageToThirdRankMember(shop.getId());
+        }
         return toMemberWaitingResponse(waiting, -1L);
     }
 
@@ -97,10 +109,36 @@ public class MemberWaitingService {
 
     @Transactional(readOnly = true)
     public MemberWaitingHistoryListResponse getMemberWaitingHistory(Member member) {
-        List<Waiting> waitings = waitingRepository.findWaitingWithMember(member);
+        List<Waiting> waitings = waitingRepository.findWaitingWithMemberAndShop(member);
         return toMemberWaitingListResponse(waitings);
     }
 
+    public void sendMessageToThirdRankMember(Long shopId) {
+        Long thirdRankWaitingId = waitingLineRepository.findThirdRankValue(shopId);
+        if (thirdRankWaitingId != null) {
+            Member thirdRankMember = waitingRepository.findWaitingWithMember(thirdRankWaitingId)
+                .getMember();
+            SendMessageToMemberRequest request = SendMessageToMemberRequest.builder()
+                .member(thirdRankMember)
+                .content("3번째 순서로 곧 입장하실 차례입니다.")
+                .build();
+            publisher.publishEvent(request);
+        }
+    }
+
+    public void sendMessageToMember(Member member, WaitingStatus status, Long rank) {
+        String content;
+        if (status == PROGRESS) {
+            content = String.format("웨이팅이 등록되었습니다. %d번째 순서입니다.", rank);
+        } else {
+            content = "웨이팅이 취소되었습니다.";
+        }
+        SendMessageToMemberRequest request = SendMessageToMemberRequest.builder()
+            .member(member)
+            .content(content)
+            .build();
+        publisher.publishEvent(request);
+    }
 
     private void validateIfMemberWaitingExists(Member member) {
         if (waitingRepository.existsByMember(member)) {

@@ -7,6 +7,7 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toOwnerWaitingResp
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.waiting.domain.Waiting;
+import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
@@ -22,6 +23,7 @@ public class OwnerWaitingService {
 
     private final WaitingRepository waitingRepository;
     private final WaitingLineRepository waitingLineRepository;
+    private final MemberWaitingService memberWaitingService;
 
     @Transactional(readOnly = true)
     public OwnerWaitingListResponse getShopAllWaiting(Owner owner) {
@@ -33,10 +35,12 @@ public class OwnerWaitingService {
 
     @Transactional
     public OwnerWaitingResponse entryWaiting(Owner owner) {
-        Long enteredWaitingId = waitingLineRepository.entry(owner.getShop().getId());
+        Long shopId = owner.getShop().getId();
+        Long enteredWaitingId = waitingLineRepository.entry(shopId);
         Waiting waiting = waitingRepository.findById(enteredWaitingId)
             .orElseThrow(() -> new NotFoundCustomException(WAITING_DOES_NOT_EXIST));
         waiting.changeStatusCompleted();
+        memberWaitingService.sendMessageToThirdRankMember(shopId);
         return toOwnerWaitingResponse(waiting, 0L);
     }
 }
