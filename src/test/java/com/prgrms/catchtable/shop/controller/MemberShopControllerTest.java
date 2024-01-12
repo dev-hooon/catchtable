@@ -69,12 +69,8 @@ class MemberShopControllerTest extends BaseIntegrationTest {
                 .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopResponses.[0].name").value(shop.getName()))
-            .andExpect(jsonPath("$.shopResponses.[0].rating").value(shop.getRating()))
-            .andExpect(jsonPath("$.shopResponses.[0].category").value(shop.getCategory().getType()))
-            .andExpect(jsonPath("$.shopResponses.[0].city").value(shop.getAddress().getCity()))
-            .andExpect(
-                jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
-            .andExpect(jsonPath("$.shopResponses.[0].capacity").value(shop.getCapacity()));
+            .andExpect(jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
+            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(shop.getClosingTime().toString()));
     }
 
     @Test
@@ -117,12 +113,7 @@ class MemberShopControllerTest extends BaseIntegrationTest {
                 .params(params))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopResponses.[0].name").value(shop.getName()))
-            .andExpect(jsonPath("$.shopResponses.[0].rating").value(shop.getRating()))
-            .andExpect(jsonPath("$.shopResponses.[0].category").value(shop.getCategory().getType()))
-            .andExpect(jsonPath("$.shopResponses.[0].city").value(shop.getAddress().getCity()))
-            .andExpect(
-                jsonPath("$.shopResponses.[0].district").value(shop.getAddress().getDistrict()))
-            .andExpect(jsonPath("$.shopResponses.[0].capacity").value(shop.getCapacity()));
-
+            .andExpect(jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
+            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(shop.getClosingTime().toString()));
     }
 }
