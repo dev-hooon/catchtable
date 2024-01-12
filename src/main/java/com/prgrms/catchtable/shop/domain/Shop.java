@@ -64,7 +64,7 @@ public class Shop extends BaseEntity {
 
     @Builder
     public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
-        LocalTime openingTime, LocalTime closingTime, List<Menu> menuList) {
+        LocalTime openingTime, LocalTime closingTime) {
         this.name = name;
         this.rating = rating;
         this.category = category;
@@ -72,8 +72,11 @@ public class Shop extends BaseEntity {
         this.capacity = capacity;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
-        this.menuList = menuList;
-        menuList.forEach(menu -> menu.insertShop(this));
+    }
+
+    public void updateMenuList(List<Menu> menuList){
+        this.menuList.addAll(menuList);
+        this.menuList.forEach(menu -> menu.insertShop(this));
     }
 
     public void validateIfShopOpened(LocalTime localTime) {

@@ -26,7 +26,7 @@ public class ShopMapper {
                 .build())
             .toList();
 
-        return Shop.builder()
+        Shop registerShop = Shop.builder()
             .name(registerShopRequest.name())
             .rating(registerShopRequest.rating())
             .category(Category.of(registerShopRequest.category()))
@@ -37,8 +37,9 @@ public class ShopMapper {
             .capacity(registerShopRequest.capacity())
             .openingTime(registerShopRequest.openingTime())
             .closingTime(registerShopRequest.closingTime())
-            .menuList(menuList)
             .build();
+        registerShop.updateMenuList(menuList);
+        return registerShop;
     }
 
     public static RegisterShopResponse toRegisterShopResponse(Shop shop,
