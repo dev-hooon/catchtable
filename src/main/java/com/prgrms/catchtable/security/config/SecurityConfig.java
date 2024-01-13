@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final String[] memberWhiteList = {"/reservations/**", "/watings/**", "/testMember/**"};
+    private final String[] memberWhiteList = {"/reservations/**", "/watings/**"};
     private final String[] ownerWhiteList = {"/owners/shops/**", "/owners/waitings"};
 
     @Bean
