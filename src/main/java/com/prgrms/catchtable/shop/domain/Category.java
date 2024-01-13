@@ -1,5 +1,10 @@
 package com.prgrms.catchtable.shop.domain;
 
+import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+
+import com.prgrms.catchtable.common.exception.ErrorCode;
+import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
+import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,6 +16,16 @@ public enum Category {
     CHINESE_FOOD("중식"),
     WESTERN_FOOD("양식");
 
-    private final String description;
+    private final String type;
 
+    public static Category of(String input) {
+        return Arrays.stream(values())
+            .filter(category -> category.isEqual(input))
+            .findAny()
+            .orElseThrow(() -> new BadRequestCustomException(INVALID_INPUT_TYPE));
+    }
+
+    private boolean isEqual(String input) {
+        return type.equals(input);
+    }
 }

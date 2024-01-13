@@ -28,13 +28,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class NotificationService {
 
-    @Value("${slack.token}")
-    private String slackToken;
-
     private final NotificationMemberRepository notificationMemberRepository;
     private final NotificationOwnerRepository notificationOwnerRepository;
     private final MemberRepository memberRepository; // 추후 삭제 예정
     private final OwnerRepository ownerRepository; // 추후 삭제 예정
+    @Value("${slack.token}")
+    private String slackToken;
     private JSONObject jsonObject;
 
     public void sendMessageAndSave(Member member, String content) {

@@ -55,6 +55,9 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        memberRepository.deleteAll();
+        shopRepository.deleteAll();
+        ownerRepository.deleteAll();
         Member member1 = MemberFixture.member("test1@naver.com");
         Member member2 = MemberFixture.member("test2@naver.com");
         Member member3 = MemberFixture.member("test3@naver.com");

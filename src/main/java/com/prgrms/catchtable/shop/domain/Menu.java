@@ -47,4 +47,8 @@ public class Menu {
         this.price = price;
         this.description = description;
     }
+
+    public void insertShop(Shop shop) {
+        this.shop = shop;
+    }
 }
