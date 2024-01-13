@@ -44,6 +44,9 @@ class MemberShopControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void init() {
+        memberRepository.deleteAll();
+        shopRepository.deleteAll();
+
         //Member 객체 저장
         member = MemberFixture.member(email);
         memberRepository.save(member);
