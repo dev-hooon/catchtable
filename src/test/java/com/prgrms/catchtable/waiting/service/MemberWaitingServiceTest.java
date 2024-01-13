@@ -90,6 +90,7 @@ class MemberWaitingServiceTest {
 
         given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
             Optional.of(waiting));
+        given(waitingRepository.findWaitingWithMember(anyLong())).willReturn(waiting);
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(PROGRESS);
         given(waitingLineRepository.findRank(anyLong(), anyLong())).willReturn(3L);
