@@ -1,6 +1,8 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static com.prgrms.catchtable.common.Role.MEMBER;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PROGRESS_WAITING_EXISTS;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
@@ -108,11 +110,10 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void createWaiting() throws Exception {
         //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
         Member member4 = MemberFixture.member("test4@naver.com");
         memberRepository.save(member4);
-        CreateWaitingRequest request = CreateWaitingRequest
-            .builder()
-            .peopleCount(2).build();
+
 
         // when, then
         mockMvc.perform(post("/waitings/{shopId}", shop.getId())
@@ -126,6 +127,48 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
             .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @DisplayName("회원이 이미 취소된 웨이팅이 있어도, 해당 회원은 웨이팅을 생성할 수 없다.")
+    @Test
+    void createWaitingSuccess() throws Exception {
+        //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
+
+        waiting1.changeStatusCanceled();
+        waitingRepository.save(waiting1);
+
+        // when, then
+        mockMvc.perform(post("/waitings/{shopId}", shop.getId())
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request))
+                .headers(getHttpHeaders(member1)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(4))
+            .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
+            .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
+            .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @DisplayName("회원이 이미 진행 중인 웨이팅이 있을 경우, 해당 회원은 웨이팅을 생성할 수 없다.")
+    @Test
+    void createWaitingFails() throws Exception {
+        //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
+
+        // when, then
+        mockMvc.perform(post("/waitings/{shopId}", shop.getId())
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request))
+                .headers(getHttpHeaders(member1)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(ALREADY_PROGRESS_WAITING_EXISTS.getMessage()))
             .andDo(MockMvcResultHandlers.print());
 
     }
