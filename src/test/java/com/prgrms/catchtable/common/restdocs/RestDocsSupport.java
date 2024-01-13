@@ -2,6 +2,7 @@ package com.prgrms.catchtable.common.restdocs;
 
 import static com.prgrms.catchtable.common.Role.*;
 import static com.prgrms.catchtable.common.Role.MEMBER;
+import static com.prgrms.catchtable.common.Role.OWNER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.catchtable.common.Role;

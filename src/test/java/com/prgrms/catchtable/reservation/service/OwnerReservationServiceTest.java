@@ -112,9 +112,8 @@ class OwnerReservationServiceTest {
         Owner owner = OwnerFixture.getOwner("email", "password");
         when(reservationRepository.findAllWithReservationTimeAndShopByShopId(
             any(Long.class))).thenReturn(reservations);
-        when(ownerRepository.findById(any(Long.class))).thenReturn(Optional.of(owner));
         List<OwnerGetAllReservationResponse> allReservation = ownerReservationService.getAllReservation(
-            1L);
+            owner);
 
         assertAll(
             () -> assertThat(allReservation.get(0).date()).isEqualTo(
@@ -131,10 +130,9 @@ class OwnerReservationServiceTest {
 
         when(reservationRepository.findAllWithReservationTimeAndShopByShopId(
             any(Long.class))).thenReturn(List.of());
-        when(ownerRepository.findById(any(Long.class))).thenReturn(Optional.of(owner));
 
         List<OwnerGetAllReservationResponse> allReservation = ownerReservationService.getAllReservation(
-            1L);
+            owner);
 
         assertThat(allReservation).isEmpty();
     }

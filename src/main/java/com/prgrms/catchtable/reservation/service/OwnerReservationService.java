@@ -59,8 +59,8 @@ public class OwnerReservationService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<OwnerGetAllReservationResponse> getAllReservation(Long ownerId) {
-        Owner owner = ownerRepository.findById(ownerId).orElseThrow();
+    public List<OwnerGetAllReservationResponse> getAllReservation(Owner owner) {
+
         List<Reservation> reservations = reservationRepository.findAllWithReservationTimeAndShopByShopId(
             owner.getShop().getId());
 
