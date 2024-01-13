@@ -44,6 +44,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorization -> authorization
                 .requestMatchers(memberWhiteList).hasRole("MEMBER")
                 .requestMatchers(ownerWhiteList).hasRole("OWNER")
+                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             )
             .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler))
             .exceptionHandling(exhandle -> exhandle
