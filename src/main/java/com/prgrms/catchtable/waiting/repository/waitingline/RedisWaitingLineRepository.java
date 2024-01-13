@@ -56,45 +56,19 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
 
     public Long entry(Long shopId) {
         Long waitingId = getShopWaitingIdsInOrder(shopId).get(0);
-        redisTemplate.execute(new SessionCallback<>() {
-            @Override
-            public <K, V> Object execute(RedisOperations<K, V> operations)
-                throws DataAccessException {
-                try {
-                    operations.multi();
-                    redisTemplate.opsForList().rightPop("s" + shopId);
-                    return operations.exec();
-                } catch (Exception e) {
-                    operations.discard();
-                }
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForList().rightPop("s" + shopId);
         return waitingId;
     }
 
     public void cancel(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
-        redisTemplate.execute(new SessionCallback<>() {
-            @Override
-            public <K, V> Object execute(RedisOperations<K, V> operations)
-                throws DataAccessException {
-                try {
-                    operations.multi();
-                    redisTemplate.opsForList().remove("s" + shopId, 1, waitingId.toString());
-                    return operations.exec();
-                } catch (Exception e) {
-                    operations.discard();
-                }
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForList().remove("s" + shopId, 1, waitingId.toString());
     }
 
     public void postpone(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
         validateIfPostponeAvailable(shopId, waitingId);
-
+        String key = "s"+shopId;
         if (Objects.equals(findRank(shopId, waitingId), getWaitingLineSize(shopId))) {
             throw new BadRequestCustomException(ALREADY_END_LINE);
         }
@@ -104,13 +78,14 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
                 throws DataAccessException {
                 try {
                     operations.multi();
-                    redisTemplate.opsForList().rightPop("s" + shopId);
-                    redisTemplate.opsForList().leftPush("s" + shopId, waitingId.toString());
+
+                    redisTemplate.opsForList().remove(key, 1, waitingId.toString());
+                    redisTemplate.opsForList().leftPush(key, waitingId.toString());
                     return operations.exec();
                 } catch (Exception e) {
                     operations.discard();
                 }
-                return operations.exec();
+                return null;
             }
         });
     }

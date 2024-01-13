@@ -74,13 +74,13 @@ class RedisWaitingLineRepositoryTest {
         repository.save(shopId, 3L);
 
         //when
-        repository.postpone(1L, 1L);
+        repository.postpone(1L, 2L);
 
         //then
         assertThat(repository.findRank(1L, 1L))
-            .isEqualTo(3);
-        assertThat(repository.findRank(1L, 2L))
             .isEqualTo(1);
+        assertThat(repository.findRank(1L, 2L))
+            .isEqualTo(3);
         assertThat(repository.findRank(1L, 3L))
             .isEqualTo(2);
 
@@ -172,4 +172,6 @@ class RedisWaitingLineRepositoryTest {
         //then
         assertThat(waitingId).isNull();
     }
+
+
 }
