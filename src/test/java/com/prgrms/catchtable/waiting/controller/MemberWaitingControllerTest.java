@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static com.prgrms.catchtable.common.Role.MEMBER;
-import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_OCCUPIED_RESERVATION_TIME;
 import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PROGRESS_WAITING_EXISTS;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
@@ -113,7 +112,6 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
         Member member4 = MemberFixture.member("test4@naver.com");
         memberRepository.save(member4);
-
 
         // when, then
         mockMvc.perform(post("/waitings/{shopId}", shop.getId())

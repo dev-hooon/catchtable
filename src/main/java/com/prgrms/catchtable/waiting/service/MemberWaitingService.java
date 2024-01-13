@@ -45,6 +45,7 @@ public class MemberWaitingService {
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
     private final ApplicationEventPublisher publisher;
+
     @Transactional
     public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {

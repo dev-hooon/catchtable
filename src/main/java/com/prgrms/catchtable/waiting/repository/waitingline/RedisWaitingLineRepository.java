@@ -68,7 +68,7 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
     public void postpone(Long shopId, Long waitingId) {
         validateIfWaitingExists(shopId, waitingId);
         validateIfPostponeAvailable(shopId, waitingId);
-        String key = "s"+shopId;
+        String key = "s" + shopId;
         if (Objects.equals(findRank(shopId, waitingId), getWaitingLineSize(shopId))) {
             throw new BadRequestCustomException(ALREADY_END_LINE);
         }

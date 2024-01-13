@@ -30,7 +30,7 @@ public class WaitingFixture {
         return waiting;
     }
 
-    public static CreateWaitingRequest createWaitingRequest(){
+    public static CreateWaitingRequest createWaitingRequest() {
         return CreateWaitingRequest
             .builder()
             .peopleCount(2).build();
