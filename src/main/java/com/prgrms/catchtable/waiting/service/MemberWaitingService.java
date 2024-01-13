@@ -6,6 +6,7 @@ import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.CANCELED;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.REGISTERED;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.THIRD_RANK;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingListResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingResponse;
@@ -14,6 +15,7 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.notification.dto.request.SendMessageToMemberRequest;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -45,7 +47,7 @@ public class MemberWaitingService {
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
     private final ApplicationEventPublisher publisher;
-
+    @Transactional
     public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {
         // 연관 엔티티 조회
@@ -78,7 +80,7 @@ public class MemberWaitingService {
         waiting.decreasePostponeRemainingCount();
         waitingLineRepository.postpone(shop.getId(), waiting.getId());
         Long rank = waitingLineRepository.findRank(shop.getId(), waiting.getId());
-        if (previousRank < 3) {
+        if (previousRank <= 3) {
             sendMessageToThirdRankMember(shop.getId());
         }
         return toMemberWaitingResponse(waiting, rank);
@@ -93,8 +95,8 @@ public class MemberWaitingService {
         waitingLineRepository.cancel(shop.getId(), waiting.getId());
         waiting.changeStatusCanceled();
 
-        sendMessageToMember(member, PROGRESS, -1L);
-        if (previousRank < 3) {
+        sendMessageToMember(member, WaitingStatus.CANCELED, -1L);
+        if (previousRank <= 3) {
             sendMessageToThirdRankMember(shop.getId());
         }
         return toMemberWaitingResponse(waiting, -1L);
