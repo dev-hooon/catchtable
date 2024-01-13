@@ -21,7 +21,7 @@ public enum ErrorCode {
     SLACK_ID_IS_WRONG("요청한 슬랙 Id를 찾을 수 없거나 잘못 되었습니다"),
 
     CAN_NOT_COMPLETE_WAITING("입장 처리가 불가한 대기 상태입니다."),
-    EXISTING_MEMBER_WAITING("이미 회원이 웨이팅 중인 가게가 존재합니다."),
+    ALREADY_PROGRESS_WAITING_EXISTS("이미 회원이 웨이팅 중인 가게가 존재합니다."),
     ALREADY_END_LINE("이미 맨뒤라 웨이팅을 미룰 수 없습니다."),
     NOT_EXIST_PROGRESS_WAITING("진행 중인 웨이팅이 존재하지 않습니다."),
 
