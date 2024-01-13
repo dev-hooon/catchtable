@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
-    boolean existsByMember(Member member);
+    boolean existsByMemberAndStatus(Member member, WaitingStatus status);
 
     Long countByShopAndCreatedAtBetween(Shop shop, LocalDateTime start, LocalDateTime end);
 

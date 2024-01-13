@@ -66,7 +66,7 @@ class MemberWaitingServiceTest {
         given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
         given(shop.getId()).willReturn(1L);
 
-        given(waitingRepository.existsByMember(member)).willReturn(false);
+        given(waitingRepository.existsByMemberAndStatus(member,PROGRESS)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
         given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
 

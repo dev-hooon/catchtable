@@ -1,12 +1,11 @@
 package com.prgrms.catchtable.waiting.service;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.EXISTING_MEMBER_WAITING;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PROGRESS_WAITING_EXISTS;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_PROGRESS_WAITING;
 import static com.prgrms.catchtable.common.exception.ErrorCode.NOT_EXIST_SHOP;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.CANCELED;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.REGISTERED;
 import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.THIRD_RANK;
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingListResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toMemberWaitingResponse;
@@ -15,7 +14,6 @@ import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toWaiting;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.member.domain.Member;
-import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.notification.dto.request.SendMessageToMemberRequest;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -146,8 +144,8 @@ public class MemberWaitingService {
     }
 
     private void validateIfMemberWaitingExists(Member member) {
-        if (waitingRepository.existsByMember(member)) {
-            throw new BadRequestCustomException(EXISTING_MEMBER_WAITING);
+        if (waitingRepository.existsByMemberAndStatus(member, PROGRESS)) {
+            throw new BadRequestCustomException(ALREADY_PROGRESS_WAITING_EXISTS);
         }
     }
 
