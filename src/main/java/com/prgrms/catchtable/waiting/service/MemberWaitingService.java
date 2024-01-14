@@ -112,7 +112,7 @@ public class MemberWaitingService {
     }
 
     @Transactional(readOnly = true)
-    public MemberWaitingHistoryListResponse getMemberWaitingHistory(Member member) {
+    public MemberWaitingHistoryListResponse getWaitingHistory(Member member) {
         List<Waiting> waitings = waitingRepository.findWaitingWithMemberAndShop(member);
         return toMemberWaitingListResponse(waitings);
     }

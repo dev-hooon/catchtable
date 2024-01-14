@@ -235,7 +235,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             () -> waitingLineRepository.findRank(shop.getId(), waiting1.getId()));
     }
 
-    @DisplayName("웨이팅 조회 API를 호출할 수 있다.")
+    @DisplayName("진행 중인 웨이팅 조회 API를 호출할 수 있다.")
     @Test
     void getWaiting() throws Exception {
         //when, then
@@ -259,7 +259,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 23);
         Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 233);
         waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting));
-        mockMvc.perform(get("/waitings/all")
+        mockMvc.perform(get("/waitings/history")
                 .contentType(APPLICATION_JSON)
                 .headers(getHttpHeaders(member1)))
             .andExpect(status().isOk())
