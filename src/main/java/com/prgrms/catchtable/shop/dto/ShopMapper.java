@@ -93,7 +93,8 @@ public class ShopMapper {
             .build();
     }
 
-    public static GetShopResponse toGetShopResponse(Shop shop, List<ReservationTime> reservationTimeList) {
+    public static GetShopResponse toGetShopResponse(Shop shop,
+        List<ReservationTime> reservationTimeList) {
 
         List<MenuResponse> menuResponses = shop.getMenuList().stream()
             .map(menu -> MenuResponse.builder()

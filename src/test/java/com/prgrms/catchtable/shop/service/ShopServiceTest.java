@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import com.prgrms.catchtable.common.exception.custom.NotFoundCustomException;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;

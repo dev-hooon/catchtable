@@ -1,8 +1,7 @@
 package com.prgrms.catchtable.security.controller;
 
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.prgrms.catchtable.common.Role;
@@ -10,7 +9,6 @@ import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
 import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
-import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
