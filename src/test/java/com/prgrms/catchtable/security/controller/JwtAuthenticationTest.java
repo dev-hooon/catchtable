@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.prgrms.catchtable.common.Role;
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
+import com.prgrms.catchtable.jwt.domain.RefreshToken;
 import com.prgrms.catchtable.jwt.provider.JwtTokenProvider;
+import com.prgrms.catchtable.jwt.repository.RefreshTokenRepository;
 import com.prgrms.catchtable.jwt.service.RefreshTokenService;
 import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
@@ -32,7 +34,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
-    private RefreshTokenService refreshTokenService;
+    private RefreshTokenRepository refreshTokenRepository;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -47,6 +49,10 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
     @BeforeEach
     public void init() {
+        memberRepository.deleteAll();
+        ownerRepository.deleteAll();
+        refreshTokenRepository.deleteAll();
+
         //Member 객체 저장
         loginMember = MemberFixture.member(memberEmail);
         memberRepository.save(loginMember);
@@ -57,11 +63,19 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
         //Member 토큰 발급
         memberToken = jwtTokenProvider.createToken(memberEmail, Role.MEMBER);
-        refreshTokenService.saveRefreshToken(memberToken);
+        refreshTokenRepository.save(RefreshToken.builder()
+            .token(memberToken.getRefreshToken())
+            .email(memberEmail)
+            .role(Role.MEMBER)
+            .build());
 
         //Owner 토큰 발급
         ownerToken = jwtTokenProvider.createToken(ownerEmail, Role.OWNER);
-        refreshTokenService.saveRefreshToken(ownerToken);
+        refreshTokenRepository.save(RefreshToken.builder()
+            .token(ownerToken.getRefreshToken())
+            .email(ownerEmail)
+            .role(Role.OWNER)
+            .build());
     }
 
     @Test
