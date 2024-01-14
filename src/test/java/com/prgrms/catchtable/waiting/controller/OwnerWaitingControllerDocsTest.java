@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.waiting.controller;
 
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -14,6 +15,7 @@ import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
+import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.service.OwnerWaitingService;
@@ -49,9 +51,9 @@ class OwnerWaitingControllerDocsTest extends RestDocsSupport {
         OwnerWaitingResponse response = OwnerWaitingResponse.builder()
             .waitingId(1L)
             .waitingNumber(20)
-            .rank(1L)
+            .rank(0L)
             .peopleCount(2)
-            .status("진행 중")
+            .status(COMPLETED.getDescription())
             .build();
         given(ownerWaitingService.entryWaiting(owner)).willReturn(response);
         //when, then
@@ -85,14 +87,14 @@ class OwnerWaitingControllerDocsTest extends RestDocsSupport {
             .waitingNumber(20)
             .rank(1L)
             .peopleCount(2)
-            .status("진행 중")
+            .status(PROGRESS.getDescription())
             .build();
         OwnerWaitingResponse response2 = OwnerWaitingResponse.builder()
             .waitingId(2L)
             .waitingNumber(21)
             .rank(2L)
             .peopleCount(2)
-            .status("진행 중")
+            .status(PROGRESS.getDescription())
             .build();
         OwnerWaitingListResponse responses = OwnerWaitingListResponse.builder()
             .shopWaitings(List.of(response1, response2))
