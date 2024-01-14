@@ -59,7 +59,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
         memberRepository.save(loginMember);
 
         //Owner 객체 저장
-        loginOwner = OwnerFixture.getOwner();
+        loginOwner = OwnerFixture.getOwner(ownerEmail, "1234");
         ownerRepository.save(loginOwner);
 
         //Member 토큰 발급
@@ -86,10 +86,9 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
         httpHeaders.add("RefreshToken", memberToken.getRefreshToken());
 
         //Reservation 도메인
-        mockMvc.perform(post("/reservations")
+        mockMvc.perform(get("/reservations")
                 .headers(httpHeaders)
-                .contentType(APPLICATION_JSON)
-                .content(asJsonString(createReservationRequest)))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -99,10 +98,9 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
         httpHeaders.add("AccessToken", memberToken.getAccessToken() + "abc");
         httpHeaders.add("RefreshToken", memberToken.getRefreshToken());
 
-        mockMvc.perform(post("/reservations")
+        mockMvc.perform(get("/reservations")
                 .headers(httpHeaders)
-                .contentType(APPLICATION_JSON)
-                .content(asJsonString(createReservationRequest)))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -130,15 +128,14 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Member가 OwnerWhiteList의 접근 시 403 에러를 반환한다. (인가 테스트)")
+    @DisplayName("Owner가 MemberWhiteList의 접근 시 403 에러를 반환한다. (인가 테스트)")
     void testAuthorization() throws Exception {
-        httpHeaders.add("AccessToken", memberToken.getAccessToken());
-        httpHeaders.add("RefreshToken", memberToken.getRefreshToken());
+        httpHeaders.add("AccessToken", ownerToken.getAccessToken());
+        httpHeaders.add("RefreshToken", ownerToken.getRefreshToken());
 
-        mockMvc.perform(get("/owners/shop")
+        mockMvc.perform(get("/reservations")
                 .headers(httpHeaders)
-                .contentType(APPLICATION_JSON)
-                .content(asJsonString(createReservationRequest)))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
 }
