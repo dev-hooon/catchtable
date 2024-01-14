@@ -55,7 +55,7 @@ class OwnerWaitingControllerDocsTest extends RestDocsSupport {
             .build();
         given(ownerWaitingService.entryWaiting(owner)).willReturn(response);
         //when, then
-        mockMvc.perform(patch("/owner/waitings")
+        mockMvc.perform(patch("/owners/waitings")
                 .contentType(APPLICATION_JSON)
                 .headers(getHttpHeaders(owner)))
             .andExpect(status().isOk())
@@ -101,7 +101,7 @@ class OwnerWaitingControllerDocsTest extends RestDocsSupport {
         given(ownerWaitingService.getShopAllWaiting(owner)).willReturn(responses);
 
         //when, then
-        mockMvc.perform(get("/owner/waitings")
+        mockMvc.perform(get("/owners/waitings")
                 .contentType(APPLICATION_JSON)
                 .headers(getHttpHeaders(owner)))
             .andExpect(status().isOk())

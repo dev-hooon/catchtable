@@ -112,7 +112,7 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void getWaiting() throws Exception {
         //when, then
-        mockMvc.perform(get("/owner/waitings")
+        mockMvc.perform(get("/owners/waitings")
                 .contentType(APPLICATION_JSON)
                 .headers(httpHeaders))
             .andExpect(status().isOk())
@@ -134,7 +134,7 @@ class OwnerWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void entryWaiting() throws Exception {
         //when, then
-        mockMvc.perform(patch("/owner/waitings")
+        mockMvc.perform(patch("/owners/waitings")
                 .contentType(APPLICATION_JSON)
                 .headers(httpHeaders))
             .andExpect(status().isOk())

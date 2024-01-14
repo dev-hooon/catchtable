@@ -54,7 +54,7 @@ public class OwnerReservationControllerDocsTest extends RestDocsSupport {
             CANCELLED);
         doNothing().when(ownerReservationService).modifyReservationStatus(1L, request);
 
-        mockMvc.perform(patch("/owners/shop/{reservationId}", 1)
+        mockMvc.perform(patch("/owners/shops/{reservationId}", 1)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
                 .headers(getHttpHeaders(owner)))
@@ -87,7 +87,7 @@ public class OwnerReservationControllerDocsTest extends RestDocsSupport {
 
         Mockito.when(ownerReservationService.getAllReservation(owner)).thenReturn(response);
 
-        mockMvc.perform(get("/owners/shop")
+        mockMvc.perform(get("/owners/shops")
                 .headers(getHttpHeaders(owner)))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
