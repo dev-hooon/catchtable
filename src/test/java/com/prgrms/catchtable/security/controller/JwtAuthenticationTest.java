@@ -1,5 +1,6 @@
 package com.prgrms.catchtable.security.controller;
 
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,7 +88,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
         //Reservation 도메인
         mockMvc.perform(post("/reservations")
                 .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(createReservationRequest)))
             .andExpect(status().isOk());
     }
@@ -100,7 +101,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
         mockMvc.perform(post("/reservations")
                 .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(createReservationRequest)))
             .andExpect(status().isOk());
     }
@@ -113,7 +114,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
         mockMvc.perform(get("/reservations")
                 .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(createReservationRequest)))
             .andExpect(status().isBadRequest());
     }
@@ -123,7 +124,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
     void testNotContainsToken() throws Exception {
         mockMvc.perform(get("/reservations")
                 .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(createReservationRequest)))
             .andExpect(status().isUnauthorized());
     }
@@ -136,7 +137,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
         mockMvc.perform(get("/owners/shop")
                 .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(asJsonString(createReservationRequest)))
             .andExpect(status().isForbidden());
     }
