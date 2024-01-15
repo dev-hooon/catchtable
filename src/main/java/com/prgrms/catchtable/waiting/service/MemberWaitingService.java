@@ -59,8 +59,8 @@ public class MemberWaitingService {
         Waiting savedWaiting = waitingRepository.save(waiting);
 
         waitingLineRepository.save(shopId, waiting.getId()); // 대기열 저장
-
         Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
+
         notification.sendMessageAsCreated(member, owner,rank);
 
         return toMemberWaitingResponse(savedWaiting, rank);
@@ -121,7 +121,7 @@ public class MemberWaitingService {
         }
     }
 
-    public Shop getShopEntity(Long shopId) {
+    private Shop getShopEntity(Long shopId) {
         Shop shop = shopRepository.findById(shopId).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_SHOP)
         );
@@ -129,13 +129,13 @@ public class MemberWaitingService {
         return shop;
     }
 
-    public Owner getOwnerEntity(Shop shop) {
+    private Owner getOwnerEntity(Shop shop) {
         return ownerRepository.findOwnerByShop(shop).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_OWNER)
         );
     }
 
-    public Waiting getWaitingEntityInProgress(Member member) {
+    private Waiting getWaitingEntityInProgress(Member member) {
         return waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)
             .orElseThrow(() -> new NotFoundCustomException(NOT_EXIST_PROGRESS_WAITING));
     }
