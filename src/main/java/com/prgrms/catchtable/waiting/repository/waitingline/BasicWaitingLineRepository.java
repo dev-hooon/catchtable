@@ -20,9 +20,10 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
 
     public final Map<Long, Queue<Long>> waitingLines = new ConcurrentHashMap<>();
 
-    public void save(Long shopId, Long waitingId) {
+    public Long save(Long shopId, Long waitingId) {
         Queue<Long> waitingLine = waitingLines.computeIfAbsent(shopId, k -> new LinkedList<>());
         waitingLine.add(waitingId);
+        return findRank(shopId, waitingId);
     }
 
     public Long entry(Long shopId) {
@@ -46,7 +47,7 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
         }
     }
 
-    public void postpone(Long shopId, Long waitingId) {
+    public Long postpone(Long shopId, Long waitingId) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         validateIfWaitingExists(waitingLine, waitingId);
         validateIfPostponeAvailable(shopId, waitingId);
@@ -57,6 +58,7 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
                 break;
             }
         }
+        return findRank(shopId, waitingId);
     }
 
     public Long findRank(Long shopId, Long waitingId) {

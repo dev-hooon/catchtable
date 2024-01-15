@@ -4,13 +4,13 @@ import java.util.List;
 
 public interface WaitingLineRepository {
 
-    void save(Long shopId, Long waitingId);
+    Long save(Long shopId, Long waitingId);
 
     Long entry(Long shopId);
 
     void cancel(Long shopId, Long waitingId);
 
-    void postpone(Long shopId, Long waitingId);
+    Long postpone(Long shopId, Long waitingId);
 
     Long findRank(Long shopId, Long waitingId);
 
