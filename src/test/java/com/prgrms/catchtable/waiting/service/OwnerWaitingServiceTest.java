@@ -32,7 +32,7 @@ class OwnerWaitingServiceTest {
     private OwnerRepository ownerRepository;
 
     @Mock
-    private MemberWaitingService memberWaitingService;
+    private WaitingNotification waitingNotification;
 
     @Mock
     private WaitingRepository waitingRepository;
