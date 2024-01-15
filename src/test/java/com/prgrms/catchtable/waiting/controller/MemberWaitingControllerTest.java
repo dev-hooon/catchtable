@@ -22,6 +22,9 @@ import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.fixture.OwnerFixture;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -48,19 +51,19 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
+    private OwnerRepository ownerRepository;
+    @Autowired
     private WaitingRepository waitingRepository;
-
     @Autowired
     private WaitingLineRepository waitingLineRepository;
     @Autowired
     private ShopRepository shopRepository;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     private Member member1, member2, member3;
     private Shop shop;
     private Waiting waiting1, waiting2, waiting3;
     private List<Waiting> waitings;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +74,11 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
 
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
+
+        Owner owner = OwnerFixture.getOwner("owner@naver.com", "owner");
+        owner.insertShop(shop);
+        ownerRepository.save(owner);
+
         waiting1 = Waiting.builder()
             .member(member1)
             .shop(shop)
@@ -270,8 +278,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.memberWaitings[1].status").value(CANCELED.getDescription()))
             .andExpect(jsonPath("$.memberWaitings[2].waitingId").value(completedWaiting.getId()))
             .andExpect(jsonPath("$.memberWaitings[2].status").value(COMPLETED.getDescription()))
-            .andDo(MockMvcResultHandlers.print())
-        ;
+            .andDo(MockMvcResultHandlers.print());
     }
 
     private HttpHeaders getHttpHeaders(Member member) {
