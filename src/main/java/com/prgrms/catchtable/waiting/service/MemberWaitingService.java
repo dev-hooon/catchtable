@@ -58,8 +58,7 @@ public class MemberWaitingService {
         Waiting waiting = toWaiting(request, waitingNumber, member, shop); //waiting 생성 후 저장
         Waiting savedWaiting = waitingRepository.save(waiting);
 
-        waitingLineRepository.save(shopId, waiting.getId()); // 대기열 저장
-        Long rank = waitingLineRepository.findRank(shopId, waiting.getId());
+        Long rank = waitingLineRepository.save(shopId, waiting.getId());// 대기열 저장
 
         notification.sendMessageAsCreated(member, owner,rank);
 
@@ -73,8 +72,7 @@ public class MemberWaitingService {
         Long previousRank = waitingLineRepository.findRank(shopId, waiting.getId()); // 미루기 전 rank 저장
 
         waiting.decreasePostponeRemainingCount();
-        waitingLineRepository.postpone(shopId, waiting.getId());
-        Long rank = waitingLineRepository.findRank(shopId, waiting.getId()); // 미룬 후 rank 저장
+        Long rank = waitingLineRepository.postpone(shopId, waiting.getId());// 미룬 후 rank 저장
 
         notification.sendEntryMessageToOthers(shopId, previousRank);
         notification.sendMessageAsPostponed(member,previousRank);
