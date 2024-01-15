@@ -76,7 +76,7 @@ public class MemberWaitingService {
         Long rank = waitingLineRepository.postpone(shopId, waiting.getId());// 미룬 후 rank 저장
 
         notification.sendEntryMessageToOthers(shopId, previousRank);
-        notification.sendMessageAsPostponed(member, previousRank);
+        notification.sendMessageAsPostponed(member, rank);
 
         return toMemberWaitingResponse(waiting, rank);
     }
