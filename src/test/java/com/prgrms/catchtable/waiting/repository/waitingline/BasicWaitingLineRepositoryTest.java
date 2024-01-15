@@ -130,4 +130,31 @@ class BasicWaitingLineRepositoryTest {
         assertThat(waitingIds.get(2)).isEqualTo(3L);
     }
 
+    @DisplayName("웨이팅 3번째 waitingId 반환한다.")
+    @Test
+    void findThirdRankValue() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
+        //when
+        Long waitingId = repository.findRankValue(shopId, 3);
+        //then
+        assertThat(waitingId).isEqualTo(3L);
+    }
+
+    @DisplayName("웨이팅 3번째 waitingId 없으면 null을 반환한다.")
+    @Test
+    void findThirdRankValueNull() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        //when
+        Long waitingId = repository.findRankValue(shopId, 3);
+        //then
+        assertThat(waitingId).isNull();
+    }
+
 }
