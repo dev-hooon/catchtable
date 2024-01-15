@@ -74,11 +74,11 @@ public class BasicWaitingLineRepository implements WaitingLineRepository {
         return -1L;
     }
 
-    public Long findRankValue(Long shopId,int rank) {
+    public Long findRankValue(Long shopId, int rank) {
         Queue<Long> waitingLine = waitingLines.get(shopId);
         int index = 0;
         for (Long element : waitingLine) {
-            if (index == rank-1) {
+            if (index == rank - 1) {
                 return element;
             }
             index++;

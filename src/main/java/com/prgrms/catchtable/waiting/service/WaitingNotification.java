@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WaitingNotification {
+
     private final ApplicationEventPublisher publisher;
     private final WaitingLineRepository waitingLineRepository;
     private final WaitingRepository waitingRepository;
@@ -41,7 +42,7 @@ public class WaitingNotification {
     }
 
     public void sendMessageAsCanceled(Member member, Owner owner, Long rank) {
-        sendMessageToMember(member,MEMBER_CANCELED.getContent());
+        sendMessageToMember(member, MEMBER_CANCELED.getContent());
         sendMessageToOwner(owner, String.format(OWNER_CANCELED.getContent(), rank));
     }
 

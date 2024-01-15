@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
-import static com.prgrms.catchtable.waiting.domain.WaitingStatus.*;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
+import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -15,7 +16,6 @@ import com.prgrms.catchtable.common.restdocs.RestDocsSupport;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
-import com.prgrms.catchtable.waiting.domain.WaitingStatus;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingListResponse;
 import com.prgrms.catchtable.waiting.dto.response.OwnerWaitingResponse;
 import com.prgrms.catchtable.waiting.service.OwnerWaitingService;

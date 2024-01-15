@@ -1,7 +1,6 @@
 package com.prgrms.catchtable.waiting.service;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.WAITING_DOES_NOT_EXIST;
-import static com.prgrms.catchtable.common.notification.WaitingNotificationContent.*;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toOwnerWaitingListResponse;
 import static com.prgrms.catchtable.waiting.dto.WaitingMapper.toOwnerWaitingResponse;
 
@@ -41,12 +40,12 @@ public class OwnerWaitingService {
         waiting.changeStatusCompleted();
 
         waitingNotification.sendMessageAsCompleted(waiting.getMember());
-        waitingNotification.sendEntryMessageToOthers(shopId,1L);
+        waitingNotification.sendEntryMessageToOthers(shopId, 1L);
 
         return toOwnerWaitingResponse(waiting, 0L);
     }
 
-    private Waiting getWaitingEntity(Long waitingId){
+    private Waiting getWaitingEntity(Long waitingId) {
         return waitingRepository.findById(waitingId)
             .orElseThrow(() -> new NotFoundCustomException(WAITING_DOES_NOT_EXIST));
     }
