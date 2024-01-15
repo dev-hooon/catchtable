@@ -98,8 +98,8 @@ public class RedisWaitingLineRepository implements WaitingLineRepository {
         return getWaitingLineSize(shopId) - index;
     }
 
-    public Long findThirdRankValue(Long shopId) {
-        String waitingId = redisTemplate.opsForList().index("s" + shopId, -3);
+    public Long findRankValue(Long shopId, int rank) {
+        String waitingId = redisTemplate.opsForList().index("s" + shopId, -rank);
         if (waitingId == null) {
             return null;
         }

@@ -14,7 +14,7 @@ public interface WaitingLineRepository {
 
     Long findRank(Long shopId, Long waitingId);
 
-    Long findThirdRankValue(Long shopId);
+    Long findRankValue(Long shopId, int rank);
 
     Long getWaitingLineSize(Long shopId);
 
