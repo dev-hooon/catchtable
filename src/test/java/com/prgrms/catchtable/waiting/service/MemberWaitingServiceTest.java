@@ -11,6 +11,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
@@ -33,10 +35,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MemberWaitingServiceTest {
 
     @Mock
+    WaitingNotification waitingNotification;
+
+    @Mock
+    private OwnerRepository ownerRepository;
+    @Mock
     private WaitingRepository waitingRepository;
     @Mock
     private ShopRepository shopRepository;
-
     @Mock
     private WaitingLineRepository waitingLineRepository;
     @InjectMocks
@@ -51,20 +57,20 @@ class MemberWaitingServiceTest {
             .build();
         Shop shop = mock(Shop.class);
         Member member = mock(Member.class);
+        Owner owner = mock(Owner.class);
         Waiting waiting = Waiting.builder()
             .member(member)
             .shop(shop)
             .waitingNumber(1)
             .peopleCount(2)
             .build();
-
+        given(ownerRepository.findOwnerByShop(shop)).willReturn(Optional.of(owner));
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
         given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
         given(shop.getId()).willReturn(1L);
-
-        given(waitingRepository.existsByMember(member)).willReturn(false);
+        given(waitingRepository.existsByMemberAndStatus(member, PROGRESS)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);
-        given(waitingLineRepository.findRank(shop.getId(), waiting.getId())).willReturn(1L);
+        given(waitingLineRepository.save(shop.getId(), waiting.getId())).willReturn(1L);
 
         //when
         MemberWaitingResponse response = memberWaitingService.createWaiting(1L, member, request);
@@ -108,9 +114,11 @@ class MemberWaitingServiceTest {
         Shop shop = mock(Shop.class);
         Member member = mock(Member.class);
         Waiting waiting = mock(Waiting.class);
+        Owner owner = mock(Owner.class);
 
         given(waitingRepository.findByMemberAndStatusWithShop(member, PROGRESS)).willReturn(
             Optional.of(waiting));
+        given(ownerRepository.findOwnerByShop(shop)).willReturn(Optional.of(owner));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
         doNothing().when(waiting).changeStatusCanceled();
@@ -157,13 +165,13 @@ class MemberWaitingServiceTest {
         Shop shop = mock(Shop.class);
         Waiting waiting = mock(Waiting.class);
 
-        given(waitingRepository.findWaitingWithMember(member)).willReturn(
+        given(waitingRepository.findWaitingWithMemberAndShop(member)).willReturn(
             List.of(waiting));
         given(waiting.getShop()).willReturn(shop);
         given(waiting.getStatus()).willReturn(CANCELED);
 
         //when
-        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
+        MemberWaitingHistoryListResponse response = memberWaitingService.getWaitingHistory(
             member);
 
         //then

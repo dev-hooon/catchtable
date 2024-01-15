@@ -22,6 +22,7 @@ public class OwnerWaitingService {
 
     private final WaitingRepository waitingRepository;
     private final WaitingLineRepository waitingLineRepository;
+    private final WaitingNotification waitingNotification;
 
     @Transactional(readOnly = true)
     public OwnerWaitingListResponse getShopAllWaiting(Owner owner) {
@@ -33,10 +34,19 @@ public class OwnerWaitingService {
 
     @Transactional
     public OwnerWaitingResponse entryWaiting(Owner owner) {
-        Long enteredWaitingId = waitingLineRepository.entry(owner.getShop().getId());
-        Waiting waiting = waitingRepository.findById(enteredWaitingId)
-            .orElseThrow(() -> new NotFoundCustomException(WAITING_DOES_NOT_EXIST));
+        Long shopId = owner.getShop().getId();
+        Long enteredWaitingId = waitingLineRepository.entry(shopId);
+        Waiting waiting = getWaitingEntity(enteredWaitingId);
         waiting.changeStatusCompleted();
+
+        waitingNotification.sendMessageAsCompleted(waiting.getMember());
+        waitingNotification.sendEntryMessageToOthers(shopId, 1L);
+
         return toOwnerWaitingResponse(waiting, 0L);
+    }
+
+    private Waiting getWaitingEntity(Long waitingId) {
+        return waitingRepository.findById(waitingId)
+            .orElseThrow(() -> new NotFoundCustomException(WAITING_DOES_NOT_EXIST));
     }
 }

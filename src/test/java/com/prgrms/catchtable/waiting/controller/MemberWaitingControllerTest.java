@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.waiting.controller;
 
 import static com.prgrms.catchtable.common.Role.MEMBER;
+import static com.prgrms.catchtable.common.exception.ErrorCode.ALREADY_PROGRESS_WAITING_EXISTS;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.CANCELED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.COMPLETED;
 import static com.prgrms.catchtable.waiting.domain.WaitingStatus.PROGRESS;
@@ -21,6 +22,9 @@ import com.prgrms.catchtable.jwt.token.Token;
 import com.prgrms.catchtable.member.MemberFixture;
 import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.member.repository.MemberRepository;
+import com.prgrms.catchtable.owner.domain.Owner;
+import com.prgrms.catchtable.owner.fixture.OwnerFixture;
+import com.prgrms.catchtable.owner.repository.OwnerRepository;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
@@ -47,19 +51,19 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
+    private OwnerRepository ownerRepository;
+    @Autowired
     private WaitingRepository waitingRepository;
-
     @Autowired
     private WaitingLineRepository waitingLineRepository;
     @Autowired
     private ShopRepository shopRepository;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     private Member member1, member2, member3;
     private Shop shop;
     private Waiting waiting1, waiting2, waiting3;
     private List<Waiting> waitings;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @BeforeEach
     void setUp() {
@@ -70,6 +74,11 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
 
         shop = ShopFixture.shopWith24();
         shopRepository.save(shop);
+
+        Owner owner = OwnerFixture.getOwner("owner@naver.com", "owner");
+        owner.insertShop(shop);
+        ownerRepository.save(owner);
+
         waiting1 = Waiting.builder()
             .member(member1)
             .shop(shop)
@@ -108,11 +117,9 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
     @Test
     void createWaiting() throws Exception {
         //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
         Member member4 = MemberFixture.member("test4@naver.com");
         memberRepository.save(member4);
-        CreateWaitingRequest request = CreateWaitingRequest
-            .builder()
-            .peopleCount(2).build();
 
         // when, then
         mockMvc.perform(post("/waitings/{shopId}", shop.getId())
@@ -126,6 +133,48 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
             .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @DisplayName("회원이 이미 취소된 웨이팅이 있어도, 해당 회원은 웨이팅을 생성할 수 없다.")
+    @Test
+    void createWaitingSuccess() throws Exception {
+        //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
+
+        waiting1.changeStatusCanceled();
+        waitingRepository.save(waiting1);
+
+        // when, then
+        mockMvc.perform(post("/waitings/{shopId}", shop.getId())
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request))
+                .headers(getHttpHeaders(member1)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.shopId").value(shop.getId()))
+            .andExpect(jsonPath("$.shopName").value(shop.getName()))
+            .andExpect(jsonPath("$.rank").value(4))
+            .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
+            .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
+            .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
+            .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @DisplayName("회원이 이미 진행 중인 웨이팅이 있을 경우, 해당 회원은 웨이팅을 생성할 수 없다.")
+    @Test
+    void createWaitingFails() throws Exception {
+        //given
+        CreateWaitingRequest request = WaitingFixture.createWaitingRequest();
+
+        // when, then
+        mockMvc.perform(post("/waitings/{shopId}", shop.getId())
+                .contentType(APPLICATION_JSON)
+                .content(asJsonString(request))
+                .headers(getHttpHeaders(member1)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(ALREADY_PROGRESS_WAITING_EXISTS.getMessage()))
             .andDo(MockMvcResultHandlers.print());
 
     }
@@ -194,7 +243,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             () -> waitingLineRepository.findRank(shop.getId(), waiting1.getId()));
     }
 
-    @DisplayName("웨이팅 조회 API를 호출할 수 있다.")
+    @DisplayName("진행 중인 웨이팅 조회 API를 호출할 수 있다.")
     @Test
     void getWaiting() throws Exception {
         //when, then
@@ -218,7 +267,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 23);
         Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 233);
         waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting));
-        mockMvc.perform(get("/waitings/all")
+        mockMvc.perform(get("/waitings/history")
                 .contentType(APPLICATION_JSON)
                 .headers(getHttpHeaders(member1)))
             .andExpect(status().isOk())
@@ -229,8 +278,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.memberWaitings[1].status").value(CANCELED.getDescription()))
             .andExpect(jsonPath("$.memberWaitings[2].waitingId").value(completedWaiting.getId()))
             .andExpect(jsonPath("$.memberWaitings[2].status").value(COMPLETED.getDescription()))
-            .andDo(MockMvcResultHandlers.print())
-        ;
+            .andDo(MockMvcResultHandlers.print());
     }
 
     private HttpHeaders getHttpHeaders(Member member) {

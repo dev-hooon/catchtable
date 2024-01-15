@@ -11,6 +11,28 @@ include::{snippets}/member-waiting-controller-docs-test/create-waiting/request-f
 include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-response.adoc[]
 include::{snippets}/member-waiting-controller-docs-test/create-waiting/response-fields.adoc[]
 
+=== 회원 진행 중인 웨이팅 조회 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/response-fields.adoc[]
+
+=== 회원 웨이팅 이력 조회 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/response-fields.adoc[]
+
 === 웨이팅 지연 API
 
 ==== HTTP Request
@@ -33,17 +55,6 @@ include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-requ
 include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-response.adoc[]
 include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/response-fields.adoc[]
 
-=== 회원 진행 중인 웨이팅 조회 API
-
-==== HTTP Request
-
-include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-request.adoc[]
-
-==== HTTP Response
-
-include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-response.adoc[]
-include::{snippets}/member-waiting-controller-docs-test/get-waiting/response-fields.adoc[]
-
 
 === 웨이팅 입장 API
 
@@ -56,7 +67,7 @@ include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/http-reques
 include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/http-response.adoc[]
 include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/response-fields.adoc[]
 
-=== 가게 웨이팅 이력 조회 API
+=== 가게 웨이팅 조회 API
 
 ==== HTTP Request
 

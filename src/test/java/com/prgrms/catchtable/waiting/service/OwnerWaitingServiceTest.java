@@ -32,6 +32,9 @@ class OwnerWaitingServiceTest {
     private OwnerRepository ownerRepository;
 
     @Mock
+    private WaitingNotification waitingNotification;
+
+    @Mock
     private WaitingRepository waitingRepository;
 
     @Mock

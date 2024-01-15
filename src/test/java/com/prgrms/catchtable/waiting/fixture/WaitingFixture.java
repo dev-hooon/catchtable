@@ -4,6 +4,7 @@ import com.prgrms.catchtable.member.domain.Member;
 import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.domain.WaitingStatus;
+import com.prgrms.catchtable.waiting.dto.request.CreateWaitingRequest;
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 
 public class WaitingFixture {
@@ -27,6 +28,12 @@ public class WaitingFixture {
         Waiting waiting = progressWaiting(member, shop, waitingNumber);
         waiting.changeStatusCanceled();
         return waiting;
+    }
+
+    public static CreateWaitingRequest createWaitingRequest() {
+        return CreateWaitingRequest
+            .builder()
+            .peopleCount(2).build();
     }
 
     public static MemberWaitingResponse memberWaitingResponse(int remainingPostponeCount,

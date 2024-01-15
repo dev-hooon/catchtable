@@ -106,7 +106,7 @@ class WaitingRepositoryTest {
 
     @DisplayName("특정 멤버의 웨이팅 목록을 조회할 수 있다.")
     @Test
-    void findWaitingWithMember() {
+    void findWaitingWithShopAndMember() {
         //given
         Waiting canceledWaiting = WaitingFixture.canceledWaiting(member1, shop, 1);
         Waiting completedWaiting = WaitingFixture.completedWaiting(member1, shop, 2);
@@ -114,7 +114,7 @@ class WaitingRepositoryTest {
 
         waitingRepository.saveAll(List.of(canceledWaiting, completedWaiting, progressWaiting));
         //when
-        List<Waiting> memberAllWaitings = waitingRepository.findWaitingWithMember(member1);
+        List<Waiting> memberAllWaitings = waitingRepository.findWaitingWithMemberAndShop(member1);
         //then
         assertThat(memberAllWaitings).containsExactly(canceledWaiting, completedWaiting,
             progressWaiting);

@@ -212,9 +212,9 @@ class MemberWaitingControllerDocsTest extends RestDocsSupport {
         MemberWaitingHistoryListResponse responses = MemberWaitingHistoryListResponse.builder()
             .memberWaitings(List.of(response1, response2))
             .build();
-        given(memberWaitingService.getMemberWaitingHistory(member)).willReturn(responses);
+        given(memberWaitingService.getWaitingHistory(member)).willReturn(responses);
         //when, then
-        mockMvc.perform(get("/waitings/all")
+        mockMvc.perform(get("/waitings/history")
                 .contentType(APPLICATION_JSON)
                 .headers(getHttpHeaders(member)))
             .andExpect(status().isOk())

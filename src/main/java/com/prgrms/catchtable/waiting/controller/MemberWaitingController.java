@@ -55,10 +55,10 @@ public class MemberWaitingController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<MemberWaitingHistoryListResponse> getMemberWaitingHistory(
+    @GetMapping("/history")
+    public ResponseEntity<MemberWaitingHistoryListResponse> getWaitingHistory(
         @LogIn Member member) {
-        MemberWaitingHistoryListResponse response = memberWaitingService.getMemberWaitingHistory(
+        MemberWaitingHistoryListResponse response = memberWaitingService.getWaitingHistory(
             member);
         return ResponseEntity.ok(response);
     }

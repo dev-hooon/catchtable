@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
-    boolean existsByMember(Member member);
+    boolean existsByMemberAndStatus(Member member, WaitingStatus status);
 
     Long countByShopAndCreatedAtBetween(Shop shop, LocalDateTime start, LocalDateTime end);
 
@@ -28,9 +28,13 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
     List<Waiting> findByIds(@Param("ids") List<Long> ids);
 
     @Query("select w from Waiting w "
+        + "join fetch w.member where w.id = :waitingId")
+    Waiting findWaitingWithMember(@Param("waitingId") Long waitingId);
+
+    @Query("select w from Waiting w "
         + "join fetch w.shop "
         + "join fetch w.member where w.member = :member")
-    List<Waiting> findWaitingWithMember(@Param("member") Member member);
+    List<Waiting> findWaitingWithMemberAndShop(@Param("member") Member member);
 
     @Transactional
     @Modifying(clearAutomatically = true)

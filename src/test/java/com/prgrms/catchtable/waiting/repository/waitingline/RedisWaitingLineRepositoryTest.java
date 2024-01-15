@@ -74,13 +74,13 @@ class RedisWaitingLineRepositoryTest {
         repository.save(shopId, 3L);
 
         //when
-        repository.postpone(1L, 1L);
+        repository.postpone(1L, 2L);
 
         //then
         assertThat(repository.findRank(1L, 1L))
-            .isEqualTo(3);
-        assertThat(repository.findRank(1L, 2L))
             .isEqualTo(1);
+        assertThat(repository.findRank(1L, 2L))
+            .isEqualTo(3);
         assertThat(repository.findRank(1L, 3L))
             .isEqualTo(2);
 
@@ -144,5 +144,46 @@ class RedisWaitingLineRepositoryTest {
         Long waitingLineSize = repository.getWaitingLineSize(shopId);
         //then
         assertThat(waitingLineSize).isZero();
+    }
+
+    @DisplayName("웨이팅 1번째 waitingId 반환한다.")
+    @Test
+    void findThirdFirstValue() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
+        //when
+        Long waitingId = repository.findRankValue(shopId, 1);
+        //then
+        assertThat(waitingId).isEqualTo(1L);
+    }
+
+    @DisplayName("웨이팅 3번째 waitingId 반환한다.")
+    @Test
+    void findThirdRankValue() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        repository.save(shopId, 3L);
+        //when
+        Long waitingId = repository.findRankValue(shopId, 3);
+        //then
+        assertThat(waitingId).isEqualTo(3L);
+    }
+
+    @DisplayName("웨이팅 3번째 waitingId 없으면 null을 반환한다.")
+    @Test
+    void findThirdRankValueNull() {
+        //given
+        Long shopId = 1L;
+        repository.save(shopId, 1L);
+        repository.save(shopId, 2L);
+        //when
+        Long waitingId = repository.findRankValue(shopId, 3);
+        //then
+        assertThat(waitingId).isNull();
     }
 }
