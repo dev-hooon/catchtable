@@ -1,6 +1,7 @@
 package com.prgrms.catchtable.shop.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 import com.prgrms.catchtable.shop.domain.Category;
@@ -72,5 +73,27 @@ class ShopRepositoryTest {
 
         //then
         assertThat(searchList.size()).isZero();
+    }
+
+    @Test
+    @DisplayName("벌크 연산으로 가게 웨이팅 수를 0으로 만들 수 있다.")
+    void updateWaitingStatus() {
+        //given
+        Shop shop1 = ShopFixture.shop();
+        shop1.findWaitingNumber(); // waitingCount 증가
+        Shop shop2 = ShopFixture.shop();
+        shop2.findWaitingNumber();
+        shopRepository.saveAll(List.of(shop1, shop2));
+
+        //when
+        shopRepository.initWaitingCount();
+        Shop savedShop1 = shopRepository.findById(shop1.getId()).orElseThrow();
+        Shop savedShop2 = shopRepository.findById(shop2.getId()).orElseThrow();
+
+        //then
+        assertAll(
+            () -> assertThat(savedShop1.getWaitingCount()).isZero(),
+            () -> assertThat(savedShop2.getWaitingCount()).isZero()
+        );
     }
 }
