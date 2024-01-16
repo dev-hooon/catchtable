@@ -1,15 +1,13 @@
 package com.prgrms.catchtable.shop.domain;
 
 import static com.prgrms.catchtable.common.exception.ErrorCode.SHOP_NOT_RUNNING;
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.prgrms.catchtable.common.BaseEntity;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
-import com.prgrms.catchtable.reservation.domain.ReservationTime;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -52,6 +50,9 @@ public class Shop extends BaseEntity {
     @Column(name = "capacity")
     private int capacity;
 
+    @Column(name = "waiting_count")
+    private int waitingCount;
+
     @Column(name = "opening_time")
     private LocalTime openingTime;
 
@@ -70,11 +71,16 @@ public class Shop extends BaseEntity {
         this.category = category;
         this.address = address;
         this.capacity = capacity;
+        this.waitingCount = 0;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
     }
 
-    public void updateMenuList(List<Menu> menuList){
+    public int findWaitingNumber(){
+        return ++waitingCount;
+    }
+
+    public void updateMenuList(List<Menu> menuList) {
         this.menuList.addAll(menuList);
         this.menuList.forEach(menu -> menu.insertShop(this));
     }
