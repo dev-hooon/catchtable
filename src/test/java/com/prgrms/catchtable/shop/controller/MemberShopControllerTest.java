@@ -44,6 +44,9 @@ class MemberShopControllerTest extends BaseIntegrationTest {
 
     @BeforeEach
     void init() {
+        memberRepository.deleteAll();
+        shopRepository.deleteAll();
+
         //Member 객체 저장
         member = MemberFixture.member(email);
         memberRepository.save(member);
@@ -69,8 +72,10 @@ class MemberShopControllerTest extends BaseIntegrationTest {
                 .headers(httpHeaders))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopResponses.[0].name").value(shop.getName()))
-            .andExpect(jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
-            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(shop.getClosingTime().toString()));
+            .andExpect(
+                jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
+            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(
+                shop.getClosingTime().toString()));
     }
 
     @Test
@@ -113,7 +118,9 @@ class MemberShopControllerTest extends BaseIntegrationTest {
                 .params(params))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.shopResponses.[0].name").value(shop.getName()))
-            .andExpect(jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
-            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(shop.getClosingTime().toString()));
+            .andExpect(
+                jsonPath("$.shopResponses.[0].openingTime").value(shop.getOpeningTime().toString()))
+            .andExpect(jsonPath("$.shopResponses.[0].closingTime").value(
+                shop.getClosingTime().toString()));
     }
 }
