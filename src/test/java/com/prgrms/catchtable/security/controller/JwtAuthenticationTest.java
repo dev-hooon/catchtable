@@ -38,8 +38,8 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
 
     private Member loginMember;
     private Owner loginOwner;
-    private String memberEmail = "abc1234@gmail.com";
-    private String ownerEmail = "qwer5678@naver.com";
+    private final String memberEmail = "abc1234@gmail.com";
+    private final String ownerEmail = "qwer5678@naver.com";
     private Token memberToken;
     private Token ownerToken;
     private CreateReservationRequest createReservationRequest = ReservationFixture.getCreateReservationRequest();
