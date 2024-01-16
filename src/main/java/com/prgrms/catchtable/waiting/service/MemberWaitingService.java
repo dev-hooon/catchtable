@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class MemberWaitingService {
+
     private final WaitingRepository waitingRepository;
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
@@ -40,10 +41,10 @@ public class MemberWaitingService {
     @Transactional
     public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {
-        Shop shop = getShopEntity(shopId); // 연관 엔티티 조회
-        Owner owner = getOwnerEntity(shop);
-
         validateIfMemberWaitingExists(member); // 기존 진행 중인 waiting이 있는지 검증
+
+        Shop shop = getShopEntityWithPessimisticLock(shopId); // 연관 엔티티 조회
+        Owner owner = getOwnerEntity(shop);
 
         int waitingNumber = shop.findWaitingNumber();// 대기 번호 생성
         Waiting waiting = toWaiting(request, waitingNumber, member, shop); //waiting 생성 후 저장
@@ -111,8 +112,8 @@ public class MemberWaitingService {
         }
     }
 
-    private Shop getShopEntity(Long shopId) {
-        Shop shop = shopRepository.findById(shopId).orElseThrow(
+    private Shop getShopEntityWithPessimisticLock(Long shopId) {
+        Shop shop = shopRepository.findByIdWithPessimisticLock(shopId).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_SHOP)
         );
         shop.validateIfShopOpened(LocalTime.now());
