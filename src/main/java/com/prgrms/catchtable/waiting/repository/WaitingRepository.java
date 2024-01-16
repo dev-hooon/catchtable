@@ -17,8 +17,6 @@ public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
     boolean existsByMemberAndStatus(Member member, WaitingStatus status);
 
-    Long countByShopAndCreatedAtBetween(Shop shop, LocalDateTime start, LocalDateTime end);
-
     @Query("select w from Waiting w join fetch w.shop "
         + "where w.member = :member and w.status = :status")
     Optional<Waiting> findByMemberAndStatusWithShop(@Param("member") Member member,
