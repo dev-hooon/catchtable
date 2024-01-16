@@ -77,7 +77,7 @@ class JwtAuthenticationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("Member의 AceessToken이 유효하다면, MemberWhiteList 접근이 가능하다.")
+    @DisplayName("Member의 AcceessToken이 유효하다면, MemberWhiteList 접근이 가능하다.")
     void testMemberAccessToken() throws Exception {
         httpHeaders.add("AccessToken", memberToken.getAccessToken());
         httpHeaders.add("RefreshToken", memberToken.getRefreshToken());
