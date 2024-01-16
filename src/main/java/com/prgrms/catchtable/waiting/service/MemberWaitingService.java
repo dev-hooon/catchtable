@@ -22,8 +22,6 @@ import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListRespon
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class MemberWaitingService {
-
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(0, 0, 0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(23, 59, 59));
     private final WaitingRepository waitingRepository;
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
@@ -52,9 +45,7 @@ public class MemberWaitingService {
 
         validateIfMemberWaitingExists(member); // 기존 진행 중인 waiting이 있는지 검증
 
-        int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
-            START_DATE_TIME, END_DATE_TIME)).intValue() + 1; // 대기 번호 생성
-
+        int waitingNumber = shop.findWaitingNumber();// 대기 번호 생성
         Waiting waiting = toWaiting(request, waitingNumber, member, shop); //waiting 생성 후 저장
         Waiting savedWaiting = waitingRepository.save(waiting);
 
