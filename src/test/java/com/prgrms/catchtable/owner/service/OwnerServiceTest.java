@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.prgrms.catchtable.common.Role;
@@ -89,6 +91,17 @@ class OwnerServiceTest {
 
         //then
         assertThat(ownerService.loginOwner(loginOwnerRequest)).isEqualTo(token);
+    }
+
+    @Test
+    @DisplayName("로그아웃이 성공하면, RefreshToken을 삭제한다.")
+    void logoutSuccess() {
+        //when
+        ownerService.logout(email);
+
+        //then
+        verify(refreshTokenService, times(1)).deleteRefreshToken(any());
+
     }
 
     @Test
