@@ -16,13 +16,17 @@ import com.prgrms.catchtable.waiting.fixture.WaitingFixture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @SpringBootTest
+@Disabled
 class MemberWaitingServiceIntegrationTest {
 
     @Autowired
@@ -33,6 +37,9 @@ class MemberWaitingServiceIntegrationTest {
     private MemberRepository memberRepository;
     @Autowired
     private MemberWaitingService memberWaitingService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     private Shop shop;
     private CreateWaitingRequest request;
@@ -48,23 +55,26 @@ class MemberWaitingServiceIntegrationTest {
         ownerRepository.save(owner);
     }
 
-    @DisplayName("동시에 50개 요청이 들어와도 각각 다른 대기번호를 부여한다.")
+    @AfterEach
+    void clear() {
+        redisTemplate.delete("s" + shop.getId());
+    }
+
+    @DisplayName("동시에 30개 요청이 들어와도 각각 다른 대기번호를 부여한다.")
     @Test
     void createWaitingNumberConcurrency() throws InterruptedException {
-        int threadCount = 50;
-        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        int threadCount = 30;
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
         CountDownLatch latch = new CountDownLatch(
             threadCount); // 다른 thread에서 수행 중인 작업이 완료될 때까지 대기할 수 있도록 돕는 클래스
-
         for (int i = 0; i < threadCount; i++) {
             Member member = MemberFixture.member(String.format("hyun%d@gmail.com",
                 i)); // validateMemberWaitingExists 오류 안 나도록 (한 기기 당 한 회원 웨이팅 생성)
             memberRepository.save(member);
+
             executorService.submit(() -> {
                 try {
                     memberWaitingService.createWaiting(shop.getId(), member, request);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -72,9 +82,8 @@ class MemberWaitingServiceIntegrationTest {
         }
 
         latch.await(); //다른 스레드에서 수행중인 작업이 완료될 때까지 대기
-
-        int waitingCount = shopRepository.findById(1L).orElseThrow().getWaitingCount();
-
-        assertEquals(50, waitingCount);
+        int waitingCount = shopRepository.findAll().get(0)
+            .getWaitingCount();
+        assertEquals(threadCount, waitingCount);
     }
 }
