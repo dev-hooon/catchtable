@@ -73,7 +73,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         memberRepository.saveAll(List.of(member1, member2, member3));
 
         shop = ShopFixture.shopWith24();
-        ReflectionTestUtils.setField(shop,"waitingCount",3);
+        ReflectionTestUtils.setField(shop, "waitingCount", 3);
         shopRepository.save(shop);
 
         Owner owner = OwnerFixture.getOwner("owner@naver.com", "owner");
@@ -155,7 +155,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.shopId").value(shop.getId()))
             .andExpect(jsonPath("$.shopName").value(shop.getName()))
             .andExpect(jsonPath("$.rank").value(4))
-            .andExpect(jsonPath("$.waitingNumber").value(waitings.size()+1))
+            .andExpect(jsonPath("$.waitingNumber").value(waitings.size() + 1))
             .andExpect(jsonPath("$.peopleCount").value(request.peopleCount()))
             .andExpect(jsonPath("$.status").value(PROGRESS.getDescription()))
             .andDo(MockMvcResultHandlers.print());

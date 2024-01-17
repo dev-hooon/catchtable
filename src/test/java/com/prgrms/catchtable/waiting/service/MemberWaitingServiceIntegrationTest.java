@@ -57,7 +57,8 @@ class MemberWaitingServiceIntegrationTest {
             threadCount); // 다른 thread에서 수행 중인 작업이 완료될 때까지 대기할 수 있도록 돕는 클래스
 
         for (int i = 0; i < threadCount; i++) {
-            Member member = MemberFixture.member(String.format("hyun%d@gmail.com", i)); // validateMemberWaitingExists 오류 안 나도록 (한 기기 당 한 회원 웨이팅 생성)
+            Member member = MemberFixture.member(String.format("hyun%d@gmail.com",
+                i)); // validateMemberWaitingExists 오류 안 나도록 (한 기기 당 한 회원 웨이팅 생성)
             memberRepository.save(member);
             executorService.submit(() -> {
                 try {

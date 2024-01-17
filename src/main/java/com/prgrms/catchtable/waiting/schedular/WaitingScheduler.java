@@ -39,7 +39,7 @@ public class WaitingScheduler {
 
     // 매일 자정 대기 수 초기화
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    public void initWaitingCount(){
+    public void initWaitingCount() {
         shopRepository.initWaitingCount();
     }
 }

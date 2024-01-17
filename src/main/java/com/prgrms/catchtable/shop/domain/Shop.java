@@ -76,7 +76,7 @@ public class Shop extends BaseEntity {
         this.closingTime = closingTime;
     }
 
-    public int findWaitingNumber(){
+    public int findWaitingNumber() {
         return ++waitingCount;
     }
 
