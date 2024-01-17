@@ -66,7 +66,7 @@ class MemberWaitingServiceTest {
             .build();
         given(ownerRepository.findOwnerByShop(shop)).willReturn(Optional.of(owner));
         doNothing().when(shop).validateIfShopOpened(any(LocalTime.class));
-        given(shopRepository.findById(1L)).willReturn(Optional.of(shop));
+        given(shopRepository.findByIdWithPessimisticLock(1L)).willReturn(Optional.of(shop));
         given(shop.getId()).willReturn(1L);
         given(waitingRepository.existsByMemberAndStatus(member, PROGRESS)).willReturn(false);
         given(waitingRepository.save(any(Waiting.class))).willReturn(waiting);

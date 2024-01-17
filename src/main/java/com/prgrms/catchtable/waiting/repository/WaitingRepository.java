@@ -1,10 +1,8 @@
 package com.prgrms.catchtable.waiting.repository;
 
 import com.prgrms.catchtable.member.domain.Member;
-import com.prgrms.catchtable.shop.domain.Shop;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.domain.WaitingStatus;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
     boolean existsByMemberAndStatus(Member member, WaitingStatus status);
-
-    Long countByShopAndCreatedAtBetween(Shop shop, LocalDateTime start, LocalDateTime end);
 
     @Query("select w from Waiting w join fetch w.shop "
         + "where w.member = :member and w.status = :status")

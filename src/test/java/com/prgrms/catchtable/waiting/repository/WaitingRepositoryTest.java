@@ -15,9 +15,6 @@ import com.prgrms.catchtable.shop.fixture.ShopFixture;
 import com.prgrms.catchtable.shop.repository.ShopRepository;
 import com.prgrms.catchtable.waiting.domain.Waiting;
 import com.prgrms.catchtable.waiting.fixture.WaitingFixture;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,16 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 class WaitingRepositoryTest {
 
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(0, 0, 0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(23, 59, 59));
     @Autowired
     private WaitingRepository waitingRepository;
     @Autowired
@@ -53,26 +45,6 @@ class WaitingRepositoryTest {
 
         shop = ShopFixture.shop();
         shopRepository.save(shop);
-    }
-
-    @DisplayName("특정 가게의 당일 대기 번호를 조회할 수 있다.")
-    @Test
-    void countByShopAndCreatedAtBetween() {
-        //given
-        Waiting yesterdayWaiting = WaitingFixture.progressWaiting(member1, shop, 1);
-        Waiting completedWaiting = WaitingFixture.completedWaiting(member2, shop, 2);
-        Waiting normalWaiting = WaitingFixture.progressWaiting(member3, shop, 3);
-        waitingRepository.saveAll(List.of(yesterdayWaiting, completedWaiting, normalWaiting));
-
-        ReflectionTestUtils.setField(yesterdayWaiting, "createdAt",
-            LocalDateTime.now().minusDays(1));
-        waitingRepository.save(yesterdayWaiting);
-
-        //when
-        Long count = waitingRepository.countByShopAndCreatedAtBetween(shop, START_DATE_TIME,
-            END_DATE_TIME);
-        //then
-        assertThat(count).isEqualTo(2L); //waiting2, waiting3
     }
 
     @DisplayName("멤버의 아이디 리스트로 waiting 목록을 조회 가능하다.")

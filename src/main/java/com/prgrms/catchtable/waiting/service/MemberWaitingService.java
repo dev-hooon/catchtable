@@ -22,8 +22,6 @@ import com.prgrms.catchtable.waiting.dto.response.MemberWaitingHistoryListRespon
 import com.prgrms.catchtable.waiting.dto.response.MemberWaitingResponse;
 import com.prgrms.catchtable.waiting.repository.WaitingRepository;
 import com.prgrms.catchtable.waiting.repository.waitingline.WaitingLineRepository;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberWaitingService {
 
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(0, 0, 0));
-    private final LocalDateTime END_DATE_TIME = LocalDateTime.of(LocalDate.now(),
-        LocalTime.of(23, 59, 59));
     private final WaitingRepository waitingRepository;
     private final ShopRepository shopRepository;
     private final WaitingLineRepository waitingLineRepository;
@@ -47,14 +41,12 @@ public class MemberWaitingService {
     @Transactional
     public MemberWaitingResponse createWaiting(Long shopId, Member member,
         CreateWaitingRequest request) {
-        Shop shop = getShopEntity(shopId); // 연관 엔티티 조회
-        Owner owner = getOwnerEntity(shop);
-
         validateIfMemberWaitingExists(member); // 기존 진행 중인 waiting이 있는지 검증
 
-        int waitingNumber = (waitingRepository.countByShopAndCreatedAtBetween(shop,
-            START_DATE_TIME, END_DATE_TIME)).intValue() + 1; // 대기 번호 생성
+        Shop shop = getShopEntityWithPessimisticLock(shopId); // 연관 엔티티 조회
+        Owner owner = getOwnerEntity(shop);
 
+        int waitingNumber = shop.findWaitingNumber();// 대기 번호 생성
         Waiting waiting = toWaiting(request, waitingNumber, member, shop); //waiting 생성 후 저장
         Waiting savedWaiting = waitingRepository.save(waiting);
 
@@ -120,8 +112,8 @@ public class MemberWaitingService {
         }
     }
 
-    private Shop getShopEntity(Long shopId) {
-        Shop shop = shopRepository.findById(shopId).orElseThrow(
+    private Shop getShopEntityWithPessimisticLock(Long shopId) {
+        Shop shop = shopRepository.findByIdWithPessimisticLock(shopId).orElseThrow(
             () -> new NotFoundCustomException(NOT_EXIST_SHOP)
         );
         shop.validateIfShopOpened(LocalTime.now());

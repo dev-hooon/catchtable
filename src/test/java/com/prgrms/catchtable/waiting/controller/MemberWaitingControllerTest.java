@@ -73,6 +73,7 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
         memberRepository.saveAll(List.of(member1, member2, member3));
 
         shop = ShopFixture.shopWith24();
+        ReflectionTestUtils.setField(shop, "waitingCount", 3);
         shopRepository.save(shop);
 
         Owner owner = OwnerFixture.getOwner("owner@naver.com", "owner");
@@ -145,7 +146,6 @@ class MemberWaitingControllerTest extends BaseIntegrationTest {
 
         waiting1.changeStatusCanceled();
         waitingRepository.save(waiting1);
-
         // when, then
         mockMvc.perform(post("/waitings/{shopId}", shop.getId())
                 .contentType(APPLICATION_JSON)

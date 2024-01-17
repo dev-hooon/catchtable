@@ -47,6 +47,8 @@ public class Shop extends BaseEntity {
     private Address address;
     @Column(name = "capacity")
     private int capacity;
+    @Column(name = "waiting_count")
+    private int waitingCount;
     @Column(name = "opening_time")
     private LocalTime openingTime;
     @Column(name = "closing_time")
@@ -60,10 +62,15 @@ public class Shop extends BaseEntity {
         this.category = category;
         this.address = address;
         this.capacity = capacity;
+        this.waitingCount = 0;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
     }
 
+    public int findWaitingNumber() {
+        return ++waitingCount;
+    }
+  
     public void updateMenuList(List<Menu> menuList) {
         this.menuList.addAll(menuList);
         this.menuList.forEach(menu -> menu.insertShop(this));
