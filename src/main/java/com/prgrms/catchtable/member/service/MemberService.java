@@ -34,6 +34,11 @@ public class MemberService {
         return createTotalToken(email);
     }
 
+    @Transactional
+    public void logout(String email){
+        refreshTokenService.deleteRefreshToken(email);
+    }
+
     private Token createTotalToken(String email) {
         Token totalToken = jwtTokenProvider.createToken(email, Role.MEMBER);
         refreshTokenService.saveRefreshToken(totalToken);
