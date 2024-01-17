@@ -66,7 +66,7 @@ public class OwnerService {
     }
 
     @Transactional
-    public void logout(String email){
+    public void logout(String email) {
         refreshTokenService.deleteRefreshToken(email);
     }
 

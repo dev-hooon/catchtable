@@ -42,7 +42,7 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public void deleteRefreshToken(String email){
+    public void deleteRefreshToken(String email) {
         refreshTokenRepository.deleteRefreshTokenByEmail(email);
     }
 }

@@ -62,7 +62,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         Member member = MemberFixture.member("qwe@naver.com");
         Member savedMember = memberRepository.save(member);
         Reservation reservation = reservationRepository.save(
-            ReservationFixture.getReservationWithMember(savedReservationTime,savedMember));
+            ReservationFixture.getReservationWithMember(savedReservationTime, savedMember));
 
         ReservationTime reservationTime2 = ReservationFixture.getAnotherReservationTimeNotPreOccupied();
         reservationTime2.insertShop(shop);

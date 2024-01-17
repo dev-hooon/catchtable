@@ -39,7 +39,7 @@ public class OwnerController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@LogIn Owner owner){
+    public ResponseEntity<String> logout(@LogIn Owner owner) {
         ownerService.logout(owner.getEmail());
         return ResponseEntity.ok("logout");
     }

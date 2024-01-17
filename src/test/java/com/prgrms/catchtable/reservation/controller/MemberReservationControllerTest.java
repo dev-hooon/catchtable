@@ -172,7 +172,8 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
         Member member1 = memberRepository.findAll().get(0);
         reservationTime.setOccupiedTrue();
-        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime, member1);
+        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime,
+            member1);
         Reservation savedReservation = reservationRepository.save(reservation);
         /**
          * 수정하려는 예약시간 예제 데이터 생성
@@ -206,7 +207,8 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     void cancelReservation() throws Exception {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
         Member member1 = memberRepository.findAll().get(0);
-        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime, member1);
+        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime,
+            member1);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())
