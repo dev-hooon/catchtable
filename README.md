@@ -18,10 +18,13 @@
 <img width="800" alt="3" src="https://github.com/dev-hooon/catchtable/assets/102799700/e7eaf48a-acd9-4a36-9a24-a9dc7351dadf">
 
 ### Tool
-<img width="300" alt="4" src="https://github.com/dev-hooon/catchtable/assets/102799700/df5204f8-beea-4d6f-80d6-1afb27635046">
+<img width="400" alt="4" src="https://github.com/dev-hooon/catchtable/assets/102799700/df5204f8-beea-4d6f-80d6-1afb27635046">
 
 ## ERD 📈
 <img width="1276" alt="Untitled" src="https://github.com/dev-hooon/catchtable/assets/102799700/310f45e9-404d-44e8-b664-32148b69e27b">
 
 ## API 명세 📝
 <img width="1276" alt="7" src="https://github.com/dev-hooon/catchtable/assets/102799700/2b7511eb-605a-49aa-a87e-8785db576b96">
+
+### 링크
+https://www.notion.so/API-9f1947b68644404d9b3d5871f4e825e1?pvs=4
