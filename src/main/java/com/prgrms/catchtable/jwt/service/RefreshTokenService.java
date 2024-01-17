@@ -40,4 +40,9 @@ public class RefreshTokenService {
         return refreshTokenRepository.findRefreshTokenByToken(refreshToken)
             .orElseThrow(() -> new NotFoundCustomException(NOT_FOUND_REFRESH_TOKEN));
     }
+
+    @Transactional
+    public void deleteRefreshToken(String email){
+        refreshTokenRepository.deleteRefreshTokenByEmail(email);
+    }
 }

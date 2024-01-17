@@ -65,6 +65,11 @@ public class OwnerService {
         return createTotalToken(loginOwner.getEmail());
     }
 
+    @Transactional
+    public void logout(String email){
+        refreshTokenService.deleteRefreshToken(email);
+    }
+
     private void validatePassword(LoginOwnerRequest loginRequest, Owner loginOwner) {
         if (!passwordEncoder.matches(loginRequest.password(), loginOwner.getPassword())) {
             throw new BadRequestCustomException(INVALID_EMAIL_OR_PASSWORD);

@@ -1,6 +1,8 @@
 package com.prgrms.catchtable.owner.controller;
 
+import com.prgrms.catchtable.common.login.LogIn;
 import com.prgrms.catchtable.jwt.token.Token;
+import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.dto.request.JoinOwnerRequest;
 import com.prgrms.catchtable.owner.dto.request.LoginOwnerRequest;
 import com.prgrms.catchtable.owner.dto.response.JoinOwnerResponse;
@@ -34,6 +36,12 @@ public class OwnerController {
         Token responseToken = ownerService.loginOwner(loginOwnerRequest);
 
         return ResponseEntity.ok(responseToken);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@LogIn Owner owner){
+        ownerService.logout(owner.getEmail());
+        return ResponseEntity.ok("logout");
     }
 
 }
