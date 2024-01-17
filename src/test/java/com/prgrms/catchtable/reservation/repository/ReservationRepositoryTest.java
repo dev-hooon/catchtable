@@ -70,7 +70,10 @@ class ReservationRepositoryTest {
         reservationTime.insertShop(savedShop);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        Reservation reservation = ReservationFixture.getReservation(savedReservationTime);
+        Member member = MemberFixture.member("dlswns661035@gmail.com");
+        Member savedMember = memberRepository.save(member);
+
+        Reservation reservation = ReservationFixture.getReservationWithMember(savedReservationTime, savedMember);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         Reservation findReservation = reservationRepository.findByIdWithReservationTimeAndShop(

@@ -170,8 +170,9 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @DisplayName("예약 수정 api 호출에 성공한다.")
     void modifyReservation() throws Exception {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
+        Member member1 = memberRepository.findAll().get(0);
         reservationTime.setOccupiedTrue();
-        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime, member1);
         Reservation savedReservation = reservationRepository.save(reservation);
         /**
          * 수정하려는 예약시간 예제 데이터 생성
@@ -204,7 +205,8 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
     @DisplayName("예약 삭제 api 호출에 성공한다")
     void cancelReservation() throws Exception {
         ReservationTime reservationTime = reservationTimeRepository.findAll().get(0);
-        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+        Member member1 = memberRepository.findAll().get(0);
+        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime, member1);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc.perform(delete("/reservations/{reservationId}", savedReservation.getId())

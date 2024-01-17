@@ -12,6 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.prgrms.catchtable.common.base.BaseIntegrationTest;
 import com.prgrms.catchtable.common.data.shop.ShopData;
 import com.prgrms.catchtable.jwt.token.Token;
+import com.prgrms.catchtable.member.MemberFixture;
+import com.prgrms.catchtable.member.domain.Member;
+import com.prgrms.catchtable.member.repository.MemberRepository;
 import com.prgrms.catchtable.owner.domain.Owner;
 import com.prgrms.catchtable.owner.fixture.OwnerFixture;
 import com.prgrms.catchtable.owner.repository.OwnerRepository;
@@ -44,6 +47,8 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
     private ShopRepository shopRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
@@ -53,8 +58,11 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         savedReservationTime.setOccupiedTrue();
         log.info("예약 시간 차지 여부 : {}", savedReservationTime.isOccupied());
+
+        Member member = MemberFixture.member("qwe@naver.com");
+        Member savedMember = memberRepository.save(member);
         Reservation reservation = reservationRepository.save(
-            ReservationFixture.getReservation(savedReservationTime));
+            ReservationFixture.getReservationWithMember(savedReservationTime,savedMember));
 
         ReservationTime reservationTime2 = ReservationFixture.getAnotherReservationTimeNotPreOccupied();
         reservationTime2.insertShop(shop);

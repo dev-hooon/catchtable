@@ -204,7 +204,7 @@ class MemberReservationServiceTest {
         ReservationTime modifyTime = ReservationFixture.getAnotherReservationTimeNotPreOccupied();
         ReflectionTestUtils.setField(modifyTime, "id", 2L); //수정하려는 예약시간 객체 -> Id : 2
 
-        Reservation reservation = ReservationFixture.getReservation(reservationTime);
+        Reservation reservation = ReservationFixture.getReservationWithMember(reservationTime, MemberFixture.member("dlsw@gamil.com"));
         ModifyReservationRequest request = ReservationFixture.getModifyReservationRequest(
             2L);
 
