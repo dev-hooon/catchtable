@@ -16,7 +16,7 @@ public class ReservationMapper {
     public static CreateReservationResponse toCreateReservationResponse(Reservation reservation) {
         return CreateReservationResponse.builder()
             .shopName(reservation.getShop().getName())
-            .memberName("memberA")
+            .memberName(reservation.getMember().getName())
             .date(reservation.getReservationTime().getTime())
             .peopleCount(reservation.getPeopleCount())
             .build();
@@ -35,7 +35,7 @@ public class ReservationMapper {
     public static ModifyReservationResponse toModifyReservationResponse(Reservation reservation) {
         return ModifyReservationResponse.builder()
             .shopName(reservation.getShop().getName())
-            .memberName("memberA")
+            .memberName(reservation.getMember().getName())
             .date(reservation.getReservationTime().getTime())
             .peopleCount(reservation.getPeopleCount())
             .build();
