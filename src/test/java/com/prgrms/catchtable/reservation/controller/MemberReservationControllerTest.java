@@ -188,6 +188,7 @@ class MemberReservationControllerTest extends BaseIntegrationTest {
             request.reservationTimeId(), reservation.getShop().getId()).orElseThrow(); // 수정하려는 예약시간
 
         mockMvc.perform(patch("/reservations/{reservaionId}", savedReservation.getId())
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk())

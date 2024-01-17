@@ -85,7 +85,8 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
 
         //then
         assertThat(reservation.getReservationTime().isOccupied()).isTrue(); // 취소처리 전엔 예약시간 차있음
-        mockMvc.perform(patch("/owners/shop/{reservationId}", reservation.getId())
+        mockMvc.perform(patch("/owners/shops/{reservationId}", reservation.getId())
+                .headers(httpHeaders)
                 .contentType(APPLICATION_JSON)
                 .content(asJsonString(request)))
             .andExpect(status().isOk());
@@ -104,7 +105,7 @@ class OwnerReservationControllerTest extends BaseIntegrationTest {
         Reservation reservation1 = reservations.get(0);
         Reservation reservation2 = reservations.get(1);
 
-        mockMvc.perform(get("/owners/shop")
+        mockMvc.perform(get("/owners/shops")
                 .contentType(APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(asJsonString(owner.getId())))

@@ -29,39 +29,30 @@ import org.hibernate.annotations.BatchSize;
 @Entity
 public class Shop extends BaseEntity {
 
+    @BatchSize(size = 30)
+    @OneToMany(mappedBy = "shop", cascade = ALL, orphanRemoval = true)
+    List<Menu> menuList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "shop_id")
     private Long id;
-
     @Column(name = "shop_name")
     private String name;
-
     @Column(name = "rating")
     private BigDecimal rating;
-
     @Column(name = "category")
     @Enumerated(STRING)
     private Category category;
-
     @Embedded
     private Address address;
-
     @Column(name = "capacity")
     private int capacity;
-
     @Column(name = "waiting_count")
     private int waitingCount;
-
     @Column(name = "opening_time")
     private LocalTime openingTime;
-
     @Column(name = "closing_time")
     private LocalTime closingTime;
-
-    @BatchSize(size = 30)
-    @OneToMany(mappedBy = "shop", cascade = ALL, orphanRemoval = true)
-    List<Menu> menuList = new ArrayList<>();
 
     @Builder
     public Shop(String name, BigDecimal rating, Category category, Address address, int capacity,
@@ -79,7 +70,7 @@ public class Shop extends BaseEntity {
     public int findWaitingNumber() {
         return ++waitingCount;
     }
-
+  
     public void updateMenuList(List<Menu> menuList) {
         this.menuList.addAll(menuList);
         this.menuList.forEach(menu -> menu.insertShop(this));

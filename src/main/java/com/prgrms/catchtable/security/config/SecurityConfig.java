@@ -25,6 +25,9 @@ public class SecurityConfig {
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private final String[] memberWhiteList = {"/reservations/**", "/waitings/**"};
+    private final String[] ownerWhiteList = {"/owners/shops/**", "/owners/waitings"};
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,7 +42,8 @@ public class SecurityConfig {
                 SessionCreationPolicy.STATELESS))
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorization -> authorization
-                .requestMatchers(new AntPathRequestMatcher("/testMember/**")).hasRole("MEMBER")
+                .requestMatchers(memberWhiteList).hasRole("MEMBER")
+                .requestMatchers(ownerWhiteList).hasRole("OWNER")
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             )
             .oauth2Login(oauth2Login -> oauth2Login.successHandler(successHandler))

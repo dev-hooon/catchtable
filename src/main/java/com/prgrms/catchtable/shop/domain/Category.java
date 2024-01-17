@@ -1,8 +1,7 @@
 package com.prgrms.catchtable.shop.domain;
 
-import static com.prgrms.catchtable.common.exception.ErrorCode.*;
+import static com.prgrms.catchtable.common.exception.ErrorCode.INVALID_INPUT_TYPE;
 
-import com.prgrms.catchtable.common.exception.ErrorCode;
 import com.prgrms.catchtable.common.exception.custom.BadRequestCustomException;
 import java.util.Arrays;
 import lombok.Getter;
