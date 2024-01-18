@@ -13,3 +13,7 @@ endif::[]
 == Waiting API
 
 include::api/waiting/waiting.adoc[]
+
+== Reservation API
+
+include::api/reservation/reservation.adoc[]
