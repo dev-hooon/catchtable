@@ -21,14 +21,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login/kakao")
-    public ResponseEntity<?> loginRedirect(){
+    public ResponseEntity<?> loginRedirect() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/oauth2/authorization/kakao"));
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@LogIn Member member){
+    public ResponseEntity<String> logout(@LogIn Member member) {
         memberService.logout(member.getEmail());
         return ResponseEntity.ok("logout");
     }

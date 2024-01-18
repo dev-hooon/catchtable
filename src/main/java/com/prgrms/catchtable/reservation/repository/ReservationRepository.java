@@ -18,6 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllWithReservationTimeAndShopByMemberId(@Param("member") Member member);
 
     @Query("select r from Reservation r "
+        + "join fetch r.member m "
         + "join fetch r.reservationTime rt "
         + "join fetch rt.shop "
         + "where r.id = :reservationId")

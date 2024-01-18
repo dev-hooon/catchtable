@@ -70,7 +70,7 @@ public class Shop extends BaseEntity {
     public int findWaitingNumber() {
         return ++waitingCount;
     }
-  
+
     public void updateMenuList(List<Menu> menuList) {
         this.menuList.addAll(menuList);
         this.menuList.forEach(menu -> menu.insertShop(this));

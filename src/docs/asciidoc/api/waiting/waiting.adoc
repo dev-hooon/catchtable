@@ -55,7 +55,6 @@ include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-requ
 include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-response.adoc[]
 include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/response-fields.adoc[]
 
-
 === 웨이팅 입장 API
 
 ==== HTTP Request

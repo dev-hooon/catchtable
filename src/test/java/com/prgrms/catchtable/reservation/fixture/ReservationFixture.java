@@ -108,4 +108,16 @@ public class ReservationFixture {
             .build();
     }
 
+    public static Reservation getReservationWithMember(ReservationTime reservationTime,
+        Member member) {
+        if (!reservationTime.isOccupied()) {
+            reservationTime.setOccupiedTrue();
+        }
+        return Reservation.builder()
+            .status(COMPLETED)
+            .peopleCount(4)
+            .reservationTime(reservationTime)
+            .member(member)
+            .build();
+    }
 }
