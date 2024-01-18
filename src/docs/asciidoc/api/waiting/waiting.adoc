@@ -1,0 +1,78 @@
+[[waiting-create]]
+=== 웨이팅 등록 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-request.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/create-waiting/response-fields.adoc[]
+
+=== 회원 진행 중인 웨이팅 조회 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/get-waiting/response-fields.adoc[]
+
+=== 회원 웨이팅 이력 조회 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/get-member-waiting-history/response-fields.adoc[]
+
+=== 웨이팅 지연 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/postpone-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/postpone-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/postpone-waiting/response-fields.adoc[]
+
+=== 웨이팅 취소 API
+
+==== HTTP Request
+
+include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/http-response.adoc[]
+include::{snippets}/member-waiting-controller-docs-test/cancel-waiting/response-fields.adoc[]
+
+=== 웨이팅 입장 API
+
+==== HTTP Request
+
+include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/http-response.adoc[]
+include::{snippets}/owner-waiting-controller-docs-test/entry-waiting/response-fields.adoc[]
+
+=== 가게 웨이팅 조회 API
+
+==== HTTP Request
+
+include::{snippets}/owner-waiting-controller-docs-test/get-shop-all-waiting/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/owner-waiting-controller-docs-test/get-shop-all-waiting/http-response.adoc[]
+include::{snippets}/owner-waiting-controller-docs-test/get-shop-all-waiting/response-fields.adoc[]
