@@ -1,6 +1,9 @@
-## Catch-Takza
-프로그래머스 백엔드 5기 훈팀 - 캐치테이블 클론코딩 프로젝트
-____
+## Catch Takza 
+![Free_Sample_By_Wix](https://github.com/dev-hooon/catchtable/assets/54973090/0d4ebc7d-0ee8-4275-b1a9-45be69ed8d86)
+
+> 캐치테이블 클론 프로젝트 <br>
+> (2023.12 ~ 2023.1)
+
 
 ## 프로젝트 목표 🎯
 
