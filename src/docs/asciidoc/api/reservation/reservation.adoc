@@ -1,0 +1,80 @@
+[[reservation-create]]
+=== 예약 선점 API
+
+==== HTTP Request
+
+include::{snippets}/member-reservation-controller-docs-test/pre-occupy/http-request.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/pre-occupy/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-reservation-controller-docs-test/pre-occupy/http-response.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/pre-occupy/response-fields.adoc[]
+
+=== 가게 예약 API
+
+==== HTTP Request
+
+include::{snippets}/member-reservation-controller-docs-test/register/http-request.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/register/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-reservation-controller-docs-test/register/http-response.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/register/response-fields.adoc[]
+
+=== 예약 전체 조회 API
+
+==== HTTP Request
+
+include::{snippets}/member-reservation-controller-docs-test/get-all/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-reservation-controller-docs-test/get-all/http-response.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/get-all/response-fields.adoc[]
+
+=== 예약 수정 API
+
+==== HTTP Request
+
+include::{snippets}/member-reservation-controller-docs-test/modify/http-request.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/modify/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-reservation-controller-docs-test/modify/http-response.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/modify/response-fields.adoc[]
+
+=== 예약 삭제 API
+
+==== HTTP Request
+
+include::{snippets}/member-reservation-controller-docs-test/cancel/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-reservation-controller-docs-test/cancel/http-response.adoc[]
+include::{snippets}/member-reservation-controller-docs-test/cancel/response-fields.adoc[]
+
+=== 예약 노쇼, 취소 처리 API
+
+==== HTTP Request
+
+include::{snippets}/owner-reservation-controller-docs-test/noshow-and-cancel/http-request.adoc[]
+include::{snippets}/owner-reservation-controller-docs-test/noshow-and-cancel/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/owner-reservation-controller-docs-test/noshow-and-cancel/http-response.adoc[]
+
+=== 예약 정보 전체 조회 API
+
+==== HTTP Request
+
+include::{snippets}/owner-reservation-controller-docs-test/get-all-reservation/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/owner-reservation-controller-docs-test/get-all-reservation/http-response.adoc[]
+include::{snippets}/owner-reservation-controller-docs-test/get-all-reservation/response-fields.adoc[]
